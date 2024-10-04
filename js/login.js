@@ -8,12 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const response = await fetch(`${window.currentConfig.apiUrl}/api/account/login`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: window.corsHeaders,
                 body: JSON.stringify({ email, password }),
-                mode: 'cors',
-                
             });
             debugger;
 
