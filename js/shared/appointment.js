@@ -41,7 +41,7 @@ function checkUserLoggedIn() {
 }
 
 function fetchDepartments() {
-  fetch('http://localhost:5018/api/department') // Adjust the URL to your actual API endpoint
+  fetch(`${window.currentEnv.apiUrl}/api/department`) // Adjust the URL to your actual API endpoint
     .then(response => response.json())
     .then(data => {
       const departmentSelect = document.getElementById('departmentSelect');
@@ -57,7 +57,7 @@ function fetchDoctors() {
   const departmentId = document.getElementById('departmentSelect').value;
   if (!departmentId) return;
 
-  fetch(`http://localhost:5018/api/doctor`) // Adjust URL to your actual API
+  fetch(`${window.currentEnv.apiUrl}/api/doctor`) // Adjust URL to your actual API
     .then(response => response.json())
     .then(data => {
       const doctorSelect = document.getElementById('doctorSelect');
@@ -78,7 +78,7 @@ function bookAppointment() {
   const patientPhone = document.getElementById('patientPhone').value;
   const message = document.getElementById('message').value;
 
-  fetch('http://localhost:5018/api/appointment', {
+  fetch(`${window.currentEnv.apiUrl}/api/appointment`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

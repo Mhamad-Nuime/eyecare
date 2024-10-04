@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function fetchServices() {
     // Fetch services from the backend API
-    fetch('http://localhost:5018/api/service') // Update this URL with the actual API endpoint
+    fetch(`${window.currentEnv.apiUrl}/api/service`) // Update this URL with the actual API endpoint
         .then(response => response.json())
         .then(data => {
             const servicesList = document.getElementById('services-list');

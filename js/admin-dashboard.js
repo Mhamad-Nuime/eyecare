@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function fetchAdminDetails(token) {
-    fetch('http://localhost:7276/api/admin/details', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/details`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -43,7 +43,7 @@ function fetchAdminDetails(token) {
 }
 
 function fetchUsers(token) {
-    fetch('http://localhost:7276/api/admin/users', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -92,7 +92,7 @@ function addUser(token) {
         return;
     }
 
-    fetch('http://localhost:7276/api/admin/users', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -115,7 +115,7 @@ function addUser(token) {
 }
 
 function deleteUser(token, userId) {
-    fetch(`http://localhost:7276/api/admin/users/${userId}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users/${userId}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -134,7 +134,7 @@ function deleteUser(token, userId) {
     });
 }
 function fetchAppointments(token) {
-    fetch('http://localhost:7276/api/admin/appointments', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/appointments`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -157,7 +157,7 @@ function fetchAppointments(token) {
     });
 }
 function fetchFeedback(token) {
-    fetch('http://localhost:7276/api/admin/feedback', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/feedback`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -183,7 +183,7 @@ function fetchFeedback(token) {
 function fetchUsers(token) {
     const searchQuery = document.getElementById('userSearch').value;
 
-    fetch(`http://localhost:7276/api/admin/users?search=${searchQuery}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users?search=${searchQuery}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -223,7 +223,7 @@ function fetchUsers(token) {
 // Assign roles while editing a user
 function editUser(userId) {
     // Fetch user details
-    fetch(`http://localhost:7276/api/admin/users/${userId}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users/${userId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -251,7 +251,7 @@ function fetchAppointments(token) {
     const filterDoctor = document.getElementById('doctorFilter').value;
     const filterPatient = document.getElementById('patientFilter').value;
 
-    fetch(`http://localhost:7276/api/admin/appointments?date=${filterDate}&doctor=${filterDoctor}&patient=${filterPatient}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/appointments?date=${filterDate}&doctor=${filterDoctor}&patient=${filterPatient}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -295,7 +295,7 @@ function rescheduleAppointment(appointmentId) {
     // Handle rescheduling logic here...
 }
 function fetchClinicsAndDepartments(token) {
-    fetch('http://localhost:7276/api/admin/clinics', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/clinics`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -326,7 +326,7 @@ function fetchClinicsAndDepartments(token) {
     });
 }
 function fetchFeedback(token) {
-    fetch('http://localhost:7276/api/admin/feedback', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/feedback`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -363,7 +363,7 @@ function respondToFeedback(feedbackId) {
     // Handle response logic here...
 }
 function fetchSystemLogs(token) {
-    fetch('http://localhost:7276/api/admin/logs', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/logs`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -387,7 +387,7 @@ function fetchSystemLogs(token) {
 }
 
 function fetchActiveSessions(token) {
-    fetch('http://localhost:7276/api/admin/sessions', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/sessions`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -417,7 +417,7 @@ function fetchActiveSessions(token) {
     });
 }
 function fetchDashboardMetrics(token) {
-    fetch('http://localhost:7276/api/admin/metrics', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/metrics`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -435,7 +435,7 @@ function fetchDashboardMetrics(token) {
 }
 
 function renderCharts(token) {
-    fetch('http://localhost:7276/api/admin/charts', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/charts`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -464,7 +464,7 @@ function renderCharts(token) {
     });
 }
 function enforceRoleBasedAccess(token) {
-    fetch('http://localhost:7276/api/admin/access', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/access`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -488,7 +488,7 @@ function enforceRoleBasedAccess(token) {
 function editUser(userId) {
     const token = localStorage.getItem('token');
 
-    fetch(`http://localhost:7276/api/admin/users/${userId}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users/${userId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -527,7 +527,7 @@ function updateUser(token, userId) {
         return;
     }
 
-    fetch(`http://localhost:7276/api/admin/users/${userId}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users/${userId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -556,7 +556,7 @@ function rescheduleAppointment(appointmentId) {
         const newDate = document.getElementById('newAppointmentDate').value;
         const token = localStorage.getItem('token');
 
-        fetch(`http://localhost:7276/api/admin/appointments/${appointmentId}/reschedule`, {
+        fetch(`${window.currentEnv.apiUrl}/api/admin/appointments/${appointmentId}/reschedule`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -581,7 +581,7 @@ function rescheduleAppointment(appointmentId) {
 function manageDepartments(clinicId) {
     const token = localStorage.getItem('token');
 
-    fetch(`http://localhost:7276/api/admin/clinics/${clinicId}/departments`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/clinics/${clinicId}/departments`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -621,7 +621,7 @@ function assignDoctor(departmentId) {
         const doctorId = document.getElementById('doctorSelect').value;
         const token = localStorage.getItem('token');
 
-        fetch(`http://localhost:7276/api/admin/departments/${departmentId}/assign`, {
+        fetch(`${window.currentEnv.apiUrl}/api/admin/departments/${departmentId}/assign`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -650,7 +650,7 @@ function respondToFeedback(feedbackId) {
         const responseText = document.getElementById('responseText').value;
         const token = localStorage.getItem('token');
 
-        fetch(`http://localhost:7276/api/admin/feedback/${feedbackId}/respond`, {
+        fetch(`${window.currentEnv.apiUrl}/api/admin/feedback/${feedbackId}/respond`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -675,7 +675,7 @@ function respondToFeedback(feedbackId) {
 function terminateSession(sessionId) {
     const token = localStorage.getItem('token');
 
-    fetch(`http://localhost:7276/api/admin/sessions/${sessionId}/terminate`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/sessions/${sessionId}/terminate`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`

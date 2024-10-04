@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function fetchDoctorDetails(id) {
-    fetch(`http://localhost:5018/api/doctors/${id}`)
+    fetch(`${window.currentEnv.apiUrl}/api/doctors/${id}`)
         .then(response => response.json())
         .then(data => {
             document.querySelector('.doctor-img img').src = data.imageUrl;

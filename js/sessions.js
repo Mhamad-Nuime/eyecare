@@ -1,7 +1,7 @@
 async function storeSessionData(key, value) {
     const token = localStorage.getItem('token');
 
-    await fetch(`http://localhost:7276/api/session/${key}`, {
+    await fetch(`${window.currentEnv.apiUrl}/api/session/${key}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -14,7 +14,7 @@ async function storeSessionData(key, value) {
 async function retrieveSessionData(key) {
     const token = localStorage.getItem('token');
 
-    const response = await fetch(`http://localhost:7276/api/session/${key}`, {
+    const response = await fetch(`${window.currentEnv.apiUrl}/api/session/${key}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`

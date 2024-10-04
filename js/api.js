@@ -1,5 +1,5 @@
 // api.js
-constAPI_BASE_URL = "http://localhost:5000/api"; // Update based on your backend
+constAPI_BASE_URL = `${window.currentEnv.apiUrl}/api`; // Update based on your backend
 // Fetch all departments 
 async function fetchDepartments() {
     const response = awaitfetch(`${API_BASE_URL}/departments`);

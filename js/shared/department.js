@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function fetchClinicsWithDepartments() {
-    fetch('http://localhost:5018/api/clinic') // Replace with the actual clinics endpoint
+    fetch(`${window.currentEnv.apiUrl}/api/clinic`) // Replace with the actual clinics endpoint
         .then(response => response.json())
         .then(clinics => {
             const clinicsList = document.getElementById('clinics-list');
@@ -41,7 +41,7 @@ function fetchClinicsWithDepartments() {
 }
 
 function fetchDepartmentsForClinic(clinicId) {
-    fetch(`http://localhost:5018/api/clinic/department/${clinicId}`) // Replace with actual endpoint for clinic departments
+    fetch(`${window.currentEnv.apiUrl}/api/clinic/department/${clinicId}`) // Replace with actual endpoint for clinic departments
         .then(response => response.json())
         .then(departments => {
             const departmentList = document.getElementById(`clinic-departments-${clinicId}`);

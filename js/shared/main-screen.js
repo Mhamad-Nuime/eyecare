@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function populateDepartments() {
-        fetch('http://localhost:5018/api/department')
+        fetch(`${window.currentEnv.apiUrl}/api/department`)
             .then(response => response.json())
             .then(data => {
                 const departmentSelect = document.getElementById('departmentSelect');
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function populateDoctors() {
-        fetch('http://localhost:5018/api/doctor')
+        fetch(`${window.currentEnv.apiUrl}/api/doctor`)
             .then(response => response.json())
             .then(data => {
                 const doctorSelect = document.getElementById('doctorSelect');
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
             message: document.getElementById('message').value,
         };
     
-        fetch('http://localhost:5018/api/appointment', {
+        fetch(`${window.currentEnv.apiUrl}/api/appointment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });  
 function fetchWorkHours() {
-    fetch('http://localhost:5018/api/clinic-schedule/work-hours')
+    fetch(`${window.currentEnv.apiUrl}/api/clinic-schedule/work-hours`)
         .then(response => response.json())
         .then(data => {
             document.getElementById('work-hours').textContent = `${data.openTime} - ${data.closeTime} (${data.daysOpen})`;
@@ -121,7 +121,7 @@ function fetchWorkHours() {
         .catch(error => console.error('Error fetching work hours:', error));
 }
 function fetchEmergencyContact() {
-    fetch('http://localhost:5018/api/clinic-schedule/emergency-contact')
+    fetch(`${window.currentEnv.apiUrl}/api/clinic-schedule/emergency-contact`)
     .then(response => response.text()) // Use text() if the response might not be valid JSON
     .then(data => {
         // Since we expect plain text, directly use it

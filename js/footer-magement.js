@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function fetchFooterSettings(token) {
-    fetch('http://localhost:7276/api/admin/footer', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/footer`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -44,7 +44,7 @@ function updateFooterSettings(token) {
     const supportPhone = document.getElementById('footerPhone').value;
     const footerLinks = JSON.parse(document.getElementById('footerLinks').value);
 
-    fetch('http://localhost:7276/api/admin/footer', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/footer`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

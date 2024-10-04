@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function fetchFeedback(token) {
-    fetch('http://localhost:7276/api/admin/feedback', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/feedback`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -53,7 +53,7 @@ function respondToFeedback(feedbackId) {
         const responseText = document.getElementById('responseText').value;
         const token = localStorage.getItem('token');
 
-        fetch(`http://localhost:7276/api/admin/feedback/${feedbackId}/respond`, {
+        fetch(`${window.currentEnv.apiUrl}/api/admin/feedback/${feedbackId}/respond`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

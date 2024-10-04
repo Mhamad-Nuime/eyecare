@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function fetchPatientAppointments(token) {
-    fetch('http://localhost:7276/api/patient/appointments', {
+    fetch(`${window.currentEnv.apiUrl}/api/patient/appointments`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -41,7 +41,7 @@ function fetchPatientAppointments(token) {
 }
 
 function fetchPatientFeedback(token) {
-    fetch('http://localhost:7276/api/patient/feedback', {
+    fetch(`${window.currentEnv.apiUrl}/api/patient/feedback`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`

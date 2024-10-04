@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   
   function fetchUserProfile(token) {
-    fetch('http://localhost:5018/api/user/profile', {
+    fetch(`${window.currentEnv.apiUrl}/api/user/profile`, {
       headers: {
         'Authorization': `Bearer ${token}`,
       }

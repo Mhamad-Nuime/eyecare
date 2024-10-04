@@ -24,7 +24,7 @@ function setupLoginForm() {
       };
   
       try {
-        const response = await fetch('http://localhost:5000/api/login', {  // Replace with your actual API endpoint
+        const response = await fetch(`${window.currentEnv.apiUrl}/api/login`, {  // Replace with your actual API endpoint
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ function setupLoginForm() {
       };
   
       try {
-        const response = await fetch('http://localhost:5000/api/register', {  // Replace with your actual API endpoint
+        const response = await fetch(`${window.currentEnv.apiUrl}/api/register`, {  // Replace with your actual API endpoint
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

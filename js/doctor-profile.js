@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function fetchDoctorProfile(token) {
-    fetch('http://localhost:7276/api/doctor/profile', {
+    fetch(`${window.currentEnv.apiUrl}/api/doctor/profile`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -50,7 +50,7 @@ function updateDoctorProfile(token) {
         return;
     }
 
-    fetch('http://localhost:7276/api/doctor/profile', {
+    fetch(`${window.currentEnv.apiUrl}/api/doctor/profile`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

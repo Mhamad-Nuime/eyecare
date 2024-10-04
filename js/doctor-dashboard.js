@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function fetchDoctorDetails(token) {
-    fetch('http://localhost:7276/api/doctor/details', {
+    fetch(`${window.currentEnv.apiUrl}/api/doctor/details`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -43,7 +43,7 @@ function fetchDoctorDetails(token) {
 }
 
 function fetchAppointments(token) {
-    fetch('http://localhost:7276/api/doctor/appointments', {
+    fetch(`${window.currentEnv.apiUrl}/api/doctor/appointments`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -67,7 +67,7 @@ function fetchAppointments(token) {
 }
 
 function fetchMessages(token) {
-    fetch('http://localhost:7276/api/doctor/messages', {
+    fetch(`${window.currentEnv.apiUrl}/api/doctor/messages`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -94,7 +94,7 @@ function updateProfile(token) {
     const specialization = document.getElementById('specialization').value;
     const availability = document.getElementById('availability').value;
 
-    fetch('http://localhost:7276/api/doctor/profile', {
+    fetch(`${window.currentEnv.apiUrl}/api/doctor/profile`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
