@@ -4,10 +4,23 @@
     width: 400px;
     margin: 0 auto;
     padding: 20px;
+    box-shadow: #89898a 0px 0px 1px !important;
+    font-family: "Roboto";
+    letter-spacing: 2px;
+}
+label{
+    color : #007bff;
+    text-shadow: black 0px 0px 1px;
+}
+label.label2{
+    color : #007bff;
+    text-shadow: black 0px 0px 1px;
 }
 .login {
-   
     padding: 00px;
+}
+div.login{
+    background-color: white;
 }
 .login, .signup {
     display: flex;
