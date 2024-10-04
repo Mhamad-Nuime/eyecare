@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Doctor Profile for Eye Care">
+  <meta name="author" content="eyecare.com">
+  <title>Eye Care - Doctor Profile</title>
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="../mock-updata/logo.png" />
+
+  <!-- Plugins CSS -->
+  <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
+  <link rel="stylesheet" href="../plugins/slick-carousel/slick/slick.css">
+  <link rel="stylesheet" href="../plugins/slick-carousel/slick/slick-theme.css">
+   <!-- jQuery and Bootstrap from CDN -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- Google Translate -->
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+
+<body id="top">
+  <!-- Include Header -->
+  <div id="header-placeholder"></div>
+
+  <section class="page-title bg-1">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="block text-center">
+            <span class="text-white">Doctor Profile</span>
+            <h1 class="text-capitalize mb-5 text-lg" id="doctor-name">Dr. [Name]</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Doctor Profile Section -->
+  <section class="section doctor-profile">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-md-6">
+          <div class="doctor-img">
+            <img src="images/doctor/doctor-1.jpg" alt="Doctor Image" class="img-fluid">
+          </div>
+        </div>
+        <div class="col-lg-8 col-md-6">
+          <div class="doctor-details">
+            <h4 id="doctor-specialization">[Specialization]</h4>
+            <p class="bio">[Bio]</p>
+            <ul class="list-unstyled">
+              <li><strong>Qualifications:</strong> <span id="doctor-qualifications">[Qualifications]</span></li>
+              <li><strong>Experience:</strong> <span id="doctor-experience">[Years of Experience]</span></li>
+              <li><strong>Skills:</strong> <span id="doctor-skills">[Skills]</span></li>
+            </ul>
+            <a href="appointment.html" class="btn btn-primary">Book an Appointment</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Include Footer -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Google Translate Initialization -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
+    }
+  </script>
+
+  <!-- Plugins JS -->
+ 
+  <script src="../plugins/bootstrap/js/popper.js"></script>
+  <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../plugins/slick-carousel/slick/slick.min.js"></script>
+
+  <!-- Main JS -->
+  <script src="../js/shared/header.js"></script>
+  <script src="../js/shared/footer.js"></script>
+  <script src="../js/shared/doctor-profile.js"></script>
+
+  <script>
+    // Load the shared header and footer
+    $(function() {
+      $("#header-placeholder").load("header.html");
+      $("#footer-placeholder").load("footer.html");
+    });
+
+    // Fetch doctor profile details
+    const urlParams = new URLSearchParams(window.location.search);
+    const doctorId = urlParams.get('id');
+    if (doctorId) {
+      fetchDoctorDetails(doctorId);
+    }
+  </script>
+</body>
+</html>

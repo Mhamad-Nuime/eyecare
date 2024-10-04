@@ -1,0 +1,37 @@
+/* login.css */
+
+.main {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.login {
+   
+    padding: 00px;
+}
+.login, .signup {
+    display: flex;
+    flex-direction: column;
+}
+
+input {
+    margin-bottom: 15px;
+    padding: 10px;
+    width: 100%;
+}
+
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.text-danger {
+    color: red;
+}

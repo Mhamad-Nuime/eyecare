@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="User Profile - Eye Care">
+  <meta name="author" content="eyecare.com">
+
+  <title>Eye Care - Profile</title>
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" type="image/x-icon" href="../mock-updata/logo.png" />
+ <!-- jQuery and Bootstrap from CDN -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Plugins CSS -->
+  <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
+  <link rel="stylesheet" href="../plugins/slick-carousel/slick/slick.css">
+  <link rel="stylesheet" href="../plugins/slick-carousel/slick/slick-theme.css">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+  <!-- Include Header -->
+  <div id="header-placeholder"></div>
+
+  <!-- User Profile Section -->
+  <div class="main">
+    <h1 class="profile-padding">User Profile</h1>
+    <div class="profile-details">
+      <img class="img-prof" src="images/logo.png" alt="Avatar">
+      <p class="profile-padding">Username: <span id="username">Loading...</span></p>
+      <p class="profile-padding">Email: <span id="email">Loading...</span></p>
+      <button id="edit-profile">Edit Profile</button>
+    </div>
+    <div class="edit-profile-container" style="display:none;">
+      <form id="edit-profile-form">
+        <input type="text" id="edit-username" placeholder="Username" required>
+        <input type="email" id="edit-email" placeholder="Email" required>
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Include Footer -->
+  <div id="footer-placeholder"></div>
+
+  <!-- Google Translate Initialization -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
+    }
+  </script>
+  <script>
+   // Load the shared header and footer
+   $(function() {
+     $("#header-placeholder").load("header.html");
+     $("#footer-placeholder").load("footer.html");
+   });</script>
+  <!-- Plugins JS -->
+ 
+  <script src="../plugins/bootstrap/js/popper.js"></script>
+  <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../plugins/slick-carousel/slick/slick.min.js"></script>
+
+  <!-- Main JS -->
+  <script src="../js/shared/header.js"></script>
+  <script src="../js/shared/footer.js"></script>
+  <script src="../js/shared/profile.js"></script>
+
+</body>
+</html>

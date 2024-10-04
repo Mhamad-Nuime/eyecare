@@ -1,0 +1,18 @@
+[
+    {
+        "title": "Comprehensive Eye Exams",
+        "description": "Detailed eye exams to check your vision and eye health.",
+        "imageUrl": "/images/services/eye-exam.jpg"
+    },
+    {
+        "title": "Pediatric Eye Care",
+        "description": "Specialized eye care services for children.",
+        "imageUrl": "/images/services/pediatric-eye-care.jpg"
+    },
+    {
+        "title": "Laser Eye Surgery",
+        "description": "Advanced laser surgery for correcting vision problems.",
+        "imageUrl": "/images/services/laser-eye-surgery.jpg"
+    }
+   
+]

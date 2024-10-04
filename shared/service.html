@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Orbitor,business,company,agency,modern,bootstrap4,tech,software">
+	<meta name="author" content="eyecare.com">
+	<title>Eye Care - Services</title>
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" type="image/x-icon" href="../mock-updata/logo.png">
+
+	<!-- Plugins CSS -->
+	<link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
+	<link rel="stylesheet" href="../plugins/slick-carousel/slick/slick.css">
+	<link rel="stylesheet" href="../plugins/slick-carousel/slick/slick-theme.css">
+
+  <!-- jQuery and Bootstrap from CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+	<!-- Main Stylesheet -->
+	<link rel="stylesheet" href="../css/style.css">
+	<link rel="stylesheet" href="../css/styles.css">
+</head>
+
+<body id="top">
+	<!-- Include Header -->
+	<div id="header-placeholder"></div>
+
+	<section class="page-title bg-1">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="block text-center">
+						<span class="text-white">Our services</span>
+						<h1 class="text-capitalize mb-5 text-lg">What We Do</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="section service-2">
+		<div class="container">
+			<h2>Our Services</h2>
+			<div class="row" id="services-list">
+				<!-- Services will be dynamically loaded here -->
+			</div>
+		</div>
+	</section>
+
+	<section class="section cta-page">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-7">
+					<div class="cta-content">
+						<div class="divider mb-4"></div>
+						<h2 class="mb-5 text-lg">We are pleased to offer you the <span class="title-color">chance to have the healthy</span></h2>
+						<a href="appointment.html" class="btn btn-main-2 btn-round-full">Get appointment <i class="icofont-simple-right  ml-2"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Include Footer -->
+	<div id="footer-placeholder"></div>
+
+	<!--google translate-->
+	<script type="text/javascript">
+		function googleTranslateElementInit() {
+			new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+		}
+	</script>
+	<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+	<!-- Plugins JS -->
+	
+	<script src="../plugins/bootstrap/js/popper.js"></script>
+	<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../plugins/slick-carousel/slick/slick.min.js"></script>
+
+	<!-- Main JS -->
+	<script src="../js/shared/header.js"></script>
+	<script src="../js/shared/footer.js"></script>
+	<script src="../js/shared/service.js"></script>
+
+	<script>
+		// Load the shared header and footer
+		$(function() {
+      $("#header-placeholder").load("header.html");
+      $("#footer-placeholder").load("footer.html");
+    });
+
+	
+	</script>
+</body>
+</html>

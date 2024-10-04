@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "name": "Main Clinic",
+        "description": "Our flagship clinic offering a range of services.",
+        "imageUrl": "/images/service/clinic-1.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Downtown Clinic",
+        "description": "Conveniently located clinic with specialized departments.",
+        "imageUrl": "/images/service/clinic-2.jpg"
+    }
+]

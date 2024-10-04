@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Monitoring</title>
+  <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- jQuery and Bootstrap from CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body id="top">
+
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+
+  <main class="container mt-5">
+    <h2>System Monitoring</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Active Sessions</th>
+          <th>System Logs</th>
+        </tr>
+      </thead>
+      <tbody id="system-log-list">
+        <!-- System logs and sessions will be dynamically loaded here -->
+      </tbody>
+    </table>
+  </main>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+
+  <script src="../plugins/jquery/jquery.min.js"></script>
+  <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/admin/system-monitoring.js"></script>
+
+  <script>
+    $(function() {
+      $("#header-placeholder").load("../shared/header.html");
+      $("#footer-placeholder").load("../shared/footer.html");
+    });
+  </script>
+</body>
+</html>

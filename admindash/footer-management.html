@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Footer Management</title>
+  <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
+  <link rel="stylesheet" href="../css/style.css">
+  
+  <!-- jQuery and Bootstrap from CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body id="top">
+
+  <!-- Header -->
+  <div id="header-placeholder"></div>
+
+  <main class="container mt-5">
+    <h2>Footer Management</h2>
+    <form id="footerForm">
+      <div class="form-group">
+        <label for="footerDescription">Description</label>
+        <textarea class="form-control" id="footerDescription" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="footerDepartments">Departments</label>
+        <input type="text" class="form-control" id="footerDepartments" placeholder="Department Names (comma-separated)">
+      </div>
+      <div class="form-group">
+        <label for="footerLinks">Support Links</label>
+        <input type="text" class="form-control" id="footerLinks" placeholder="Support Links (comma-separated)">
+      </div>
+      <button type="submit" class="btn btn-primary">Save Footer</button>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <div id="footer-placeholder"></div>
+
+  <script src="../plugins/jquery/jquery.min.js"></script>
+  <script src="../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/admin/footer-management.js"></script>
+
+  <script>
+    $(function() {
+      $("#header-placeholder").load("../shared/header.html");
+      $("#footer-placeholder").load("../shared/footer.html");
+    });
+  </script>
+</body>
+</html>

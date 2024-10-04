@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "name": "Ophthalmology",
+        "description": "Specialized care for eye diseases and vision problems."
+    },
+    {
+        "id": 2,
+        "name": "Cardiology",
+        "description": "Comprehensive heart care services."
+    }
+]

@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Active Sessions</h1>
+    <ul id="sessionList"></ul>
+
+    <script>
+        async function loadActiveSessions() {
+            const token = localStorage.getItem('token');
+
+            const response = await fetch('http://localhost:7276/api/admin/active-sessions', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const sessions = await response.json();
+                const sessionList = document.getElementById('sessionList');
+                sessionList.innerHTML = '';
+
+                sessions.forEach(sessionId => {
+                    const li = document.createElement('li');
+                    li.textContent = `Session ID: ${sessionId}`;
+                    const terminateButton = document.createElement('button');
+                    terminateButton.textContent = 'Terminate';
+                    terminateButton.onclick = () => terminateSession(sessionId);
+                    li.appendChild(terminateButton);
+                    sessionList.appendChild(li);
+                });
+            }
+        }
+
+        async function terminateSession(sessionId) {
+            const token = localStorage.getItem('token');
+
+            await fetch(`http://localhost:7276/api/admin/terminate-session/${sessionId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            loadActiveSessions(); // Reload sessions after terminating one
+        }
+
+        loadActiveSessions();
+    </script>
+</body>
+</html>
