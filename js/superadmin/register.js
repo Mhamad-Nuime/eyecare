@@ -14,7 +14,7 @@ function setupSuperAdminRegisterForm() {
       };
   
       try {
-        const response = await fetch('http://localhost:5000/api/superadmin/register', {  // Replace with your actual API endpoint
+        const response = await fetch(`${window.currentEnv.apiUrl}/api/superadmin/register`, {  // Replace with your actual API endpoint
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

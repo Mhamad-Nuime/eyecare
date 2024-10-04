@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function fetchDoctors() {
-    fetch('http://localhost:5018/api/doctor') // Update with correct API endpoint
+    fetch(`${window.currentEnv.apiUrl}/api/doctor`) // Update with correct API endpoint
         .then(response => response.json())
         .then(doctors => {
             const doctorList = document.getElementById('doctor-list'); // Make sure this ID matches your HTML

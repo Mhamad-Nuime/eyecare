@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function fetchActiveSessions(token) {
-    fetch('http://localhost:7276/api/admin/sessions', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/sessions`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -47,7 +47,7 @@ function fetchActiveSessions(token) {
 }
 
 function terminateSession(token, sessionId) {
-    fetch(`http://localhost:7276/api/admin/sessions/${sessionId}/terminate`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/sessions/${sessionId}/terminate`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -67,7 +67,7 @@ function terminateSession(token, sessionId) {
 }
 
 function fetchSystemLogs(token) {
-    fetch('http://localhost:7276/api/admin/logs', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/logs`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`

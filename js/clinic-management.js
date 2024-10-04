@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function fetchClinicSettings(token) {
-    fetch('http://localhost:7276/api/admin/clinic', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/clinic`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -44,7 +44,7 @@ function updateClinicSettings(token) {
     const closeTime = document.getElementById('closeTime').value;
     const daysOpen = document.getElementById('daysOpen').value.split(',').map(day => day.trim());
 
-    fetch('http://localhost:7276/api/admin/clinic', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/clinic`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

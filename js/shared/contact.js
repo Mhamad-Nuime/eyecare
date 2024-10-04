@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   function fetchContactInfo() {
-    fetch('http://localhost:5018/api/admin/footer') // Adjust to the correct API URL if needed
+    fetch(`${window.currentEnv.apiUrl}/api/admin/footer`) // Adjust to the correct API URL if needed
       .then(response => response.json())
       .then(data => {
         document.getElementById('contact_phone').textContent = data.SupportPhone || 'Not available';
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const phone = document.getElementById('p1').value;
     const message = document.getElementById('message').value;debugger
   
-    fetch('http://localhost:5018/api/message/contact', {
+    fetch(`${window.currentEnv.apiUrl}/api/message/contact`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 function loadDepartments() {
-    fetch('http://localhost:7276/api/departments')
+    fetch(`${window.currentEnv.apiUrl}/api/departments`)
         .then(response => response.json())
         .then(data => {
             const departmentSelect = document.getElementById('departmentSelect');
@@ -48,7 +48,7 @@ function loadDepartments() {
 }
 
 function loadWorkingHours() {
-    fetch('http://localhost:7276/api/clinic/hours')
+    fetch(`${window.currentEnv.apiUrl}/api/clinic/hours`)
         .then(response => response.json())
         .then(data => {
             const scheduleList = document.getElementById('feature_2_schedule');
@@ -63,7 +63,7 @@ function loadWorkingHours() {
 }
 
 function populateAppointmentForm() {
-    fetch('http://localhost:7276/api/doctors')
+    fetch(`${window.currentEnv.apiUrl}/api/doctors`)
         .then(response => response.json())
         .then(data => {
             const doctorSelect = document.getElementById('doctorSelect');
@@ -88,7 +88,7 @@ function bookAppointment() {
         message: document.getElementById('message').value
     };
 
-    fetch('http://localhost:7276/api/appointments', {
+    fetch(`${window.currentEnv.apiUrl}/api/appointments`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

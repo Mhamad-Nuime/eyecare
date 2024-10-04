@@ -3,10 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     googleTranslateElementInit();
 });
 function fetchHeaderContactInfo() {
-    fetch(`${window.currentConfig.apiUrl}/api/admin/footer`,{
-        mode: 'cors',
-        credentials : 'include',
-    })
+    fetch(`${window.currentConfig.apiUrl}/api/admin/footer`)
         .then(response => response.json())
         .then(data => {
             if (data) {

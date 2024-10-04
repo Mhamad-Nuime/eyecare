@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function fetchUsers(token) {
     const searchQuery = document.getElementById('userSearch').value;
 
-    fetch(`http://localhost:7276/api/admin/users?search=${searchQuery}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users?search=${searchQuery}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -84,7 +84,7 @@ function addUser(token) {
         return;
     }
 
-    fetch('http://localhost:7276/api/admin/users', {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -107,7 +107,7 @@ function addUser(token) {
 }
 
 function editUser(token, userId) {
-    fetch(`http://localhost:7276/api/admin/users/${userId}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users/${userId}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -145,7 +145,7 @@ function updateUser(token, userId) {
         return;
     }
 
-    fetch(`http://localhost:7276/api/admin/users/${userId}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users/${userId}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -168,7 +168,7 @@ function updateUser(token, userId) {
 }
 
 function deleteUser(token, userId) {
-    fetch(`http://localhost:7276/api/admin/users/${userId}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/users/${userId}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`

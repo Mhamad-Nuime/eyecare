@@ -31,7 +31,7 @@ function fetchAppointments(token) {
     const filterDoctor = document.getElementById('doctorFilter').value;
     const filterPatient = document.getElementById('patientFilter').value;
 
-    fetch(`http://localhost:7276/api/admin/appointments?date=${filterDate}&doctor=${filterDoctor}&patient=${filterPatient}`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/appointments?date=${filterDate}&doctor=${filterDoctor}&patient=${filterPatient}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -75,7 +75,7 @@ function rescheduleAppointment(appointmentId) {
         const newDate = document.getElementById('newAppointmentDate').value;
         const token = localStorage.getItem('token');
 
-        fetch(`http://localhost:7276/api/admin/appointments/${appointmentId}/reschedule`, {
+        fetch(`${window.currentEnv.apiUrl}/api/admin/appointments/${appointmentId}/reschedule`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -99,7 +99,7 @@ function rescheduleAppointment(appointmentId) {
 }
 
 function cancelAppointment(token, appointmentId) {
-    fetch(`http://localhost:7276/api/admin/appointments/${appointmentId}/cancel`, {
+    fetch(`${window.currentEnv.apiUrl}/api/admin/appointments/${appointmentId}/cancel`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`
