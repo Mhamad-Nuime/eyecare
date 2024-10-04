@@ -10,7 +10,8 @@ function fetchHeaderContactInfo() {
         .then(response => response.json())
         .then(data => {
             if (data) {
-                document.getElementById('email').textContent = data.SupportEmail || "Not Available";
+                console.log(data)
+                document.getElementById('email').innerText = data.supportEmail || "Not Available";
                 document.getElementById('address').textContent = data.Description || "Not Available";
                 document.getElementById('phone').textContent = data.SupportPhone || "Not Available";
             } else {
