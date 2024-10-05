@@ -12,7 +12,7 @@ function loadUsers() {
 //       return;
 //   }
 
-  fetch(`${window.currentConfig.apiUrl}/api/users`, {
+  fetch(`${window.currentConfig.apiUrl}/api/Users`, {
       headers: {
         //   'Authorization': `Bearer ${token}`,  // Include token in Authorization header
           'Content-Type': 'application/json'

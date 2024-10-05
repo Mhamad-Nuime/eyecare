@@ -6,15 +6,16 @@ function setupAdminRegisterForm() {
       event.preventDefault();
   
       const data = {
+        userName: document.getElementById('registerEmail').value,
         name: document.getElementById('registerName').value,
         email: document.getElementById('registerEmail').value,
         password: document.getElementById('registerPassword').value,
-        phone: document.getElementById('registerPhone').value,
+        confirmPassword: document.getElementById('registerPassword').value,
         role: document.getElementById('registerRole').value,
       };
   
       try {
-        const response = await fetch(`${window.currentConfig.apiUrl}/api/admin/register`, {  // Replace with your actual API endpoint
+        const response = await fetch(`${window.currentConfig.apiUrl}/api/Account/register`, {  // Replace with your actual API endpoint
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -28,10 +29,10 @@ function setupAdminRegisterForm() {
           registerForm.reset();
           registerForm.classList.remove('was-validated');
         } else {
-          alert('Registration failed: ' + result.message);
+          alert('Registration failed: ' + result.$values[0].description);
         }
       } catch (error) {
-        alert('An error occurred: ' + error.message);
+        console.log('An error occurred: ' + error);
       }
     });
   }
