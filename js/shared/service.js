@@ -11,19 +11,24 @@ function fetchServices() {
             const servicesList = document.getElementById('services-list');
             servicesList.innerHTML = ''; // Clear existing content
 
-            data.forEach(service => {
-                const serviceBlock = `
-                    <div class="col-lg-4 col-md-6 col-sm-6">
-                        <div class="service-block mb-5">
-                            <img src="${service.imageUrl}" alt="${service.name}" class="img-fluid">
-                            <div class="content">
-                                <h4 class="mt-4 mb-2 title-color">${service.name}</h4>
-                                <p class="mb-4">${service.description}</p>
+            // Access the $values array from the response
+            if (data && data.$values) {
+                data.$values.forEach(service => {
+                    const serviceBlock = `
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="service-block mb-5">
+                                <img src="${service.serviceImageUrl || 'default-image-url.jpg'}" alt="${service.name}" class="img-fluid">
+                                <div class="content">
+                                    <h4 class="mt-4 mb-2 title-color">${service.name}</h4>
+                                    <p class="mb-4">${service.description}</p>
+                                </div>
                             </div>
-                        </div>
-                    </div>`;
-                servicesList.innerHTML += serviceBlock;
-            });
+                        </div>`;
+                    servicesList.innerHTML += serviceBlock;
+                });
+            } else {
+                console.error('No services found');
+            }
         })
         .catch(error => console.error('Error fetching services:', error));
 }

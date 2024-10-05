@@ -1543,3 +1543,232 @@ div.goog-te-banner-frame{ display: none !important;}
   border-color: #007bff;
   color: white;
 }
+#clinics-list {
+  display: flex;
+  flex-wrap: wrap; /* Allow cards to wrap to the next line */
+  justify-content: space-between; /* Space between cards */
+  gap: 20px; /* Space between cards */
+  margin: 20px 0; /* Margin for the entire list */
+}
+
+.clinic-card {
+  background-color: #fff; /* White background for cards */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 20px; /* Padding inside cards */
+  width: calc(33.33% - 20px); /* Three cards per row with margin */
+  min-width: 300px; /* Minimum width for smaller screens */
+  transition: transform 0.2s; /* Smooth transition for hover effect */
+}
+
+.clinic-card-header {
+  border-bottom: 2px solid #007bff; /* Blue bottom border */
+  margin-bottom: 10px; /* Space below header */
+}
+
+.clinic-card h3 {
+  margin: 0; /* Remove default margin */
+  font-size: 1.5em; /* Adjust header size */
+  color: #007bff; /* Blue text color for the header */
+}
+
+.clinic-card-body {
+  padding: 10px 0; /* Padding for body content */
+}
+
+.clinic-card ul {
+  list-style-type: none; /* Remove bullets from list */
+  padding: 0; /* Remove padding */
+}
+
+.clinic-card li {
+  padding: 5px 0; /* Space between list items */
+}
+
+.clinic-card:hover {
+  transform: translateY(-5px); /* Slight lift effect on hover */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* More pronounced shadow on hover */
+}
+.clinic-card {
+  border: 1px solid #007bff; /* Example border color */
+  border-radius: 10px;
+  padding: 20px;
+  margin: 15px 0;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.clinic-card:hover {
+  transform: scale(1.02); /* Scale effect on hover */
+}
+
+.clinic-card-header {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px 10px 0 0;
+}
+
+.clinic-card-body {
+  padding: 15px;
+}
+
+#clinic-details {
+  margin-top: 20px; /* Space above the details section */
+}
+/* Clinic Details Section */
+#clinic-details {
+  background-color: #f9f9f9; /* Light background for contrast */
+  border: 1px solid #ddd;    /* Border for distinction */
+  border-radius: 8px;        /* Rounded corners */
+  padding: 20px;             /* Spacing inside the container */
+  margin-top: 20px;          /* Space above the details section */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+}
+
+#clinic-details h2 {
+  font-size: 24px;           /* Larger font size for the clinic name */
+  color: #333;               /* Darker color for the text */
+  margin-bottom: 10px;       /* Space below the title */
+}
+
+#clinic-details p {
+  font-size: 16px;           /* Standard font size for paragraphs */
+  color: #666;               /* Lighter color for text */
+  margin-bottom: 15px;       /* Space below each paragraph */
+}
+
+#clinic-details ul {
+  list-style-type: none;     /* Remove default list styling */
+  padding: 0;                /* Remove default padding */
+}
+
+#clinic-details li {
+  background: #fff;          /* White background for each department */
+  border: 1px solid #ddd;    /* Light border around each item */
+  border-radius: 5px;        /* Rounded corners for items */
+  padding: 10px;             /* Padding inside each item */
+  margin-bottom: 10px;       /* Space between items */
+  transition: transform 0.2s; /* Smooth transition on hover */
+}
+
+#clinic-details li:hover {
+  transform: scale(1.02);    /* Slightly enlarge item on hover */
+}
+
+#clinic-details img {
+  float: left;               /* Float image to the left */
+  margin-right: 10px;        /* Space between the image and text */
+  border-radius: 5px;        /* Rounded corners for images */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  #clinic-details {
+      padding: 15px;         /* Less padding on smaller screens */
+  }
+  
+  #clinic-details h2 {
+      font-size: 20px;       /* Smaller title on mobile */
+  }
+
+  #clinic-details p {
+      font-size: 14px;       /* Smaller paragraph text on mobile */
+  }
+  
+  #clinic-details li {
+      font-size: 14px;       /* Smaller list items on mobile */
+  }
+}
+/* Doctor List Section */
+#doctor-list {
+  display: flex;               /* Use flexbox for responsive layout */
+  flex-wrap: wrap;            /* Allow wrapping of cards */
+  justify-content: center;     /* Center the cards */
+}
+
+.card {
+  border: 1px solid #ddd;     /* Light border for cards */
+  border-radius: 10px;        /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  transition: transform 0.2s; /* Smooth scale transition */
+}
+
+.card:hover {
+  transform: scale(1.05);      /* Slightly scale up on hover */
+}
+
+.card-img-top {
+  height: 200px;              /* Fixed height for images */
+  object-fit: cover;          /* Cover the image area */
+  border-top-left-radius: 10px;  /* Match card border radius */
+  border-top-right-radius: 10px; /* Match card border radius */
+}
+
+.card-title {
+  font-size: 1.25rem;         /* Larger title font size */
+  color: #333;                /* Dark color for title */
+}
+
+.card-text {
+  color: #555;                /* Medium color for text */
+}
+
+/* Button styling */
+.btn-primary {
+  background-color: #007bff; /* Bootstrap primary color */
+  border-color: #007bff;     /* Match border color */
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  border-color: #0056b3;     /* Match border on hover */
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .card {
+      margin-bottom: 20px;    /* Space below cards on small screens */
+  }
+
+  .card-img-top {
+      height: 150px;          /* Smaller image height on mobile */
+  }
+}
+.doctor-profile {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 30px 0;
+}
+.doctor-img img {
+  border-radius: 10px;
+  max-width: 100%; /* Responsive image */
+  height: auto; /* Maintain aspect ratio */
+}
+.doctor-details {
+  padding-left: 20px;
+}
+.doctor-details h4 {
+  color: #007bff; /* Primary color */
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+.doctor-details p {
+  margin: 5px 0;
+}
+.bio, .qualifications, .skills {
+  background-color: #e9ecef; /* Light gray background for details */
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 10px;
+}
+.btn-back {
+  background-color: #28a745; /* Success button color */
+  color: white;
+  margin-top: 20px;
+}
+.btn-back:hover {
+  background-color: #218838; /* Darker green on hover */
+}
