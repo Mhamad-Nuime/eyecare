@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   function loadFeedback() {
-    fetch("http://localhost:5018/api/admin/feedback")
+    fetch(`${window.currentConfig.apiUrl}/api/admin/feedback`)
       .then((response) => response.json())
       .then((data) => {
         const feedbackTable = document.getElementById("feedback-list");
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   function deleteFeedback(feedbackId) {
-    fetch(`http://localhost:5018/api/admin/feedback/${feedbackId}`, {
+    fetch(`${window.currentConfig.apiUrl}/api/admin/feedback/${feedbackId}`, {
       method: "DELETE",
     })
       .then(() => loadFeedback())

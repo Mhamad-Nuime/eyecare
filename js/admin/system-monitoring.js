@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   function loadSystemLogs() {
-    fetch("http://localhost:5018/api/admin/system-logs")
+    fetch(`${window.currentConfig.apiUrl}/api/admin/system-logs`)
       .then((response) => response.json())
       .then((data) => {
         const logTable = document.getElementById("system-log-list");

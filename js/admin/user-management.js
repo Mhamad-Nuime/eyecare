@@ -6,15 +6,15 @@ function loadUsers() {
   // Get the JWT token from localStorage
   const token = localStorage.getItem('token');
   
-  if (!token) {
-      console.error("No token found. Redirecting to login.");
-      window.location.href = '../login.html'; // Redirect to login if no token
-      return;
-  }
+//   if (!token) {
+//       console.error("No token found. Redirecting to login.");
+//       window.location.href = '../login.html'; // Redirect to login if no token
+//       return;
+//   }
 
-  fetch("http://localhost:5018/api/admin/users", {
+  fetch(`${window.currentConfig.apiUrl}/api/users`, {
       headers: {
-          'Authorization': `Bearer ${token}`,  // Include token in Authorization header
+        //   'Authorization': `Bearer ${token}`,  // Include token in Authorization header
           'Content-Type': 'application/json'
       }
   })
@@ -47,7 +47,7 @@ function loadUsers() {
 function deleteUser(userId) {
   const token = localStorage.getItem('token');
   
-  fetch(`http://localhost:5018/api/admin/users/${userId}`, {
+  fetch(`${window.currentConfig.apiUrl}/api/admin/users/${userId}`, {
       method: "DELETE",
       headers: {
           'Authorization': `Bearer ${token}`,  // Include token in Authorization header

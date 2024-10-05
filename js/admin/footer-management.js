@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   function loadFooterContent() {
-    fetch("http://localhost:5018/api/admin/footer")
+    fetch(`${window.currentConfig.apiUrl}/api/admin/footer`)
       .then((response) => response.json())
       .then((data) => {
         document.getElementById("footerDescription").value = data.description;
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
       links: document.getElementById("footerLinks").value.split(","),
     };
   
-    fetch("http://localhost:5018/api/admin/footer", {
+    fetch(`${window.currentConfig.apiUrl}/api/admin/footer`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

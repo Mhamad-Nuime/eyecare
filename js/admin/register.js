@@ -14,7 +14,7 @@ function setupAdminRegisterForm() {
       };
   
       try {
-        const response = await fetch('http://localhost:5000/api/admin/register', {  // Replace with your actual API endpoint
+        const response = await fetch(`${window.currentConfig.apiUrl}/api/admin/register`, {  // Replace with your actual API endpoint
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

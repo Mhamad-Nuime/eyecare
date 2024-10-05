@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   function loadAppointments() {
-    fetch("http://localhost:5018/api/admin/appointments")
+    fetch(`${window.currentConfig.apiUrl}/api/admin/appointments`)
       .then((response) => response.json())
       .then((data) => {
         const appointmentTable = document.getElementById("appointment-list");
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   function deleteAppointment(appointmentId) {
-    fetch(`http://localhost:5018/api/admin/appointments/${appointmentId}`, {
+    fetch(`${window.currentConfig.apiUrl}/api/admin/appointments/${appointmentId}`, {
       method: "DELETE",
     })
       .then(() => loadAppointments())
