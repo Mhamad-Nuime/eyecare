@@ -84,7 +84,7 @@ function bookAppointment() {
   const patientPhone = document.getElementById('patientPhone').value;
   const message = document.getElementById('message').value;
 
-  fetch(`${window.currentEnv.apiUrl}/api/appointment`, {
+  fetch(`${window.currentEnv.apiUrl}/api/admin/appointments`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
