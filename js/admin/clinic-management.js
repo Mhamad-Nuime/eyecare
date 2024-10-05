@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   
   function loadClinics() {
-    fetch("http://localhost:5018/api/admin/clinics")
+    fetch(`${window.currentConfig.apiUrl}/api/admin/clinics`)
       .then((response) => response.json())
       .then((data) => {
         const clinicTable = document.getElementById("clinic-list");
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   
   function deleteClinic(clinicId) {
-    fetch(`http://localhost:5018/api/admin/clinics/${clinicId}`, {
+    fetch(`${window.currentConfig.apiUrl}/api/admin/clinics/${clinicId}`, {
       method: "DELETE",
     })
       .then(() => loadClinics())

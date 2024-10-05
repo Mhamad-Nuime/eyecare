@@ -8,35 +8,35 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             const response = await fetch(`${window.currentConfig.apiUrl}/api/account/login`, {
                 method: 'POST',
-                headers: window.corsHeaders,
+                headers : {
+                    "Content-Type" : "Application/json",
+                },
                 body: JSON.stringify({ email, password }),
             });
-            debugger;
+            
 
             if (response.ok) {
                 const data = await response.json();
-                localStorage.setItem('userToken', data.token); // Store JWT token
-
+                // localStorage.setItem('userToken', data.token); // Store JWT token
                 // Use jwt-decode to decode token
-                const decodedToken = jwt_decode(data.token);
-                const userRole = decodedToken.role; // Ensure role is part of the token payload
-
+                // const decodedToken = jwt_decode(data.token);
+                // const userRole = decodedToken.role; // Ensure role is part of the token payload
                 // Redirect based on role
-                switch (userRole) {
+                switch (data.user.role) {
                     case 'Patient':
-                        window.location.href = '/clientapp/Patientdashboard/patient-dashboard.html';
+                        window.location.href = '/Patientdashboard/patient-dashboard.html';
                         break;
                     case 'Doctor':
-                        window.location.href = '/clientapp/doctordash/doctor-dashboard.html';
+                        window.location.href = '/doctordash/doctor-dashboard.html';
                         break;
                     case 'Admin':
-                        window.location.href = '/clientapp/admindash/admin-dashboard.html';
+                        window.location.href = '/admindash/admin-dashboard.html';
                         break;
                     case 'SuperAdmin':
-                        window.location.href = '/clientapp/Superadmindash/superadmin-dashboard.html';
+                        window.location.href = '/Superadmindash/superadmin-dashboard.html';
                         break;
                     default:
-                        window.location.href = '/clientapp/shared/profile.html'; // Default fallback
+                        window.location.href = '/shared/profile.html'; // Default fallback
                         break;
                 }
             } else {
@@ -95,19 +95,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Redirect based on role
                 switch (userRole) {
                     case 'Patient':
-                        window.location.href = '/clientapp/Patientdashboard/patient-dashboard.html';
+                        window.location.href = '/Patientdashboard/patient-dashboard.html';
                         break;
                     case 'Doctor':
-                        window.location.href = '/clientapp/doctordash/doctor-dashboard.html';
+                        window.location.href = '/doctordash/doctor-dashboard.html';
                         break;
                     case 'Admin':
-                        window.location.href = '/clientapp/admindash/admin-dashboard.html';
+                        window.location.href = 'admindash/admin-dashboard.html';
                         break;
                     case 'SuperAdmin':
-                        window.location.href = '/clientapp/Superadmindash/superadmin-dashboard.html';
+                        window.location.href = 'Superadmindash/superadmin-dashboard.html';
                         break;
                     default:
-                        window.location.href = '/clientapp/shared/profile.html'; // Default fallback
+                        window.location.href = 'shared/profile.html'; // Default fallback
                         break;
                 }
             } else {

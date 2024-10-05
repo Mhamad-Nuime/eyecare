@@ -1,0 +1,36 @@
+<!-- logs.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Logs</title>
+</head>
+<body>
+    <h1>Recent Logs</h1>
+    <pre id="logContainer"></pre>
+
+    <script>
+        async function loadLogs() {
+            const token = localStorage.getItem('token');
+
+            const response = await fetch('http://localhost:7276/api/admin/logs', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (response.ok) {
+                const logs = await response.json();
+                const logContainer = document.getElementById('logContainer');
+                logContainer.textContent = logs.join('\n');
+            } else {
+                alert('Failed to load logs.');
+            }
+        }
+
+        loadLogs();
+    </script>
+</body>
+</html>
