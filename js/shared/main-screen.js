@@ -25,33 +25,60 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function populateDepartments() {
         fetch(`${window.currentEnv.apiUrl}/api/department`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 const departmentSelect = document.getElementById('departmentSelect');
-                data.forEach(department => {
-                    const option = document.createElement('option');
-                    option.value = department.id;
-                    option.textContent = department.name;
-                    departmentSelect.appendChild(option);
-                });
+                
+                // Access the $values array
+                const departments = data.$values; // This is the array we need
+    
+                if (Array.isArray(departments)) {
+                    departments.forEach(department => {
+                        const option = document.createElement('option');
+                        option.value = department.departmentId; // Use departmentId as the value
+                        option.textContent = department.name; // Use department name for display
+                        departmentSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Unexpected data format:', data);
+                }
             })
             .catch(error => console.error('Error fetching departments:', error));
     }
-
+    
     function populateDoctors() {
-        fetch(`${window.currentEnv.apiUrl}/api/doctor`)
-            .then(response => response.json())
+        fetch(`${window.currentEnv.apiUrl}/api/doctorprofile/getalldoctorprofiles`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 const doctorSelect = document.getElementById('doctorSelect');
-                data.forEach(doctor => {
-                    const option = document.createElement('option');
-                    option.value = doctor.id;
-                    option.textContent = doctor.name;
-                    doctorSelect.appendChild(option);
-                });
+    
+                // Access the $values array
+                const doctors = data.$values; // Get the doctors array from $values
+    
+                if (Array.isArray(doctors)) {
+                    doctors.forEach(doctor => {
+                        const option = document.createElement('option');
+                        option.value = doctor.id; // Use doctor id as the value
+                        option.textContent = doctor.name; // Use doctor name for display
+                        doctorSelect.appendChild(option);
+                    });
+                } else {
+                    console.error('Unexpected data format:', data);
+                }
             })
             .catch(error => console.error('Error fetching doctors:', error));
     }
+    
 
     function checkUserLoggedIn() {
         const token = localStorage.getItem('userToken');

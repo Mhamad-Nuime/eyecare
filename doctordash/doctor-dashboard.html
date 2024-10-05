@@ -1,31 +1,56 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Doctor Dashboard</title>
-    <link rel="stylesheet" href="../css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Dashboard</title>
+ 
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
+  <link rel="stylesheet" href="../css/doctor.css">
+   <script src="../js/config.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="../js/doctor/doctor.js"></script>
+  <!-- jQuery and Bootstrap from CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ 
 </head>
 <body>
+  <div id="header-placeholder"></div>
+
+  <main class="container mt-5">
     <h1>Doctor Dashboard</h1>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Appointments</h5>
+            <p class="card-text">Manage and track your appointments.</p>
+            <a href="appointment-management.html" class="btn btn-primary">Manage Appointments</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Patients</h5>
+            <p class="card-text">View your patient details.</p>
+            <a href="patient-management.html" class="btn btn-primary">View Patients</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-    <!-- Appointments Section -->
-    <section id="appointments">
-        <h2>Your Appointments</h2>
-        <ul id="doctor-appointments-list">
-            <!-- Dynamically populated list of appointments -->
-        </ul>
-    </section>
+  <div id="footer-placeholder"></div>
 
-    <!-- Patient Profiles Section -->
-    <section id="patient-profiles">
-        <h2>Your Patients</h2>
-        <ul id="patient-profiles-list">
-            <!-- Dynamically populated list of patient profiles -->
-        </ul>
-    </section>
-
-    <script src="../scripts.js"></script>
+  <script>
+    $(function() {
+      $("#header-placeholder").load("../shared/header.html");
+      $("#footer-placeholder").load("../shared/footer.html");
+    });
+  </script>
 </body>
 </html>

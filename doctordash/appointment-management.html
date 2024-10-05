@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Management</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <script src="../js/config.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../js/doctor/appointment-management.js"></script>
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="container mt-5">
+        <h1>Manage Appointments</h1>
+        <button id="addAppointment" class="btn btn-primary mb-3">Add Appointment</button>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="appointment-list"></tbody>
+        </table>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        $(function() {
+            $("#header-placeholder").load("../shared/header.html");
+            $("#footer-placeholder").load("../shared/footer.html");
+        });
+    </script>
+</body>
+</html>

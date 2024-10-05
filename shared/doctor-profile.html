@@ -6,7 +6,7 @@
   <meta name="description" content="Doctor Profile for Eye Care">
   <meta name="author" content="eyecare.com">
   <title>Eye Care - Doctor Profile</title>
-  
+  <script src="../js/config.js"></script>
   <!-- Favicon -->
   <link rel="shortcut icon" type="image/x-icon" href="../mock-updata/logo.png" />
 
@@ -35,38 +35,27 @@
       <div class="row">
         <div class="col-md-12">
           <div class="block text-center">
-            <span class="text-white">Doctor Profile</span>
-            <h1 class="text-capitalize mb-5 text-lg" id="doctor-name">Dr. [Name]</h1>
+            <h1 class="text-capitalize mb-5 text-lg">Doctor Profile</h1>
           </div>
         </div>
       </div>
     </div>
   </section>
-
-  <!-- Doctor Profile Section -->
-  <section class="section doctor-profile">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-4 col-md-6">
-          <div class="doctor-img">
-            <img src="images/doctor/doctor-1.jpg" alt="Doctor Image" class="img-fluid">
-          </div>
-        </div>
-        <div class="col-lg-8 col-md-6">
-          <div class="doctor-details">
-            <h4 id="doctor-specialization">[Specialization]</h4>
-            <p class="bio">[Bio]</p>
-            <ul class="list-unstyled">
-              <li><strong>Qualifications:</strong> <span id="doctor-qualifications">[Qualifications]</span></li>
-              <li><strong>Experience:</strong> <span id="doctor-experience">[Years of Experience]</span></li>
-              <li><strong>Skills:</strong> <span id="doctor-skills">[Skills]</span></li>
-            </ul>
-            <a href="appointment.html" class="btn btn-primary">Book an Appointment</a>
-          </div>
-        </div>
+  <div class="doctor-profile container mt-5">
+    <div class="row">
+      <div class="col-md-4 doctor-img">
+          <img src="default-image.jpg" alt="Doctor's Image" class="img-fluid" />
+      </div>
+      <div class="col-md-8 doctor-details">
+          <h4>No Name Provided</h4>
+          <p><strong>Specialization:</strong> Not Specified</p>
+          <p class="bio"><strong>Bio:</strong> No Bio Available</p>
+          <p class="qualifications"><strong>Qualifications:</strong> Not Specified</p>
+          <p class="skills"><strong>Skills:</strong> Not Specified</p>
+          <a href="doctor.html" class="btn btn-back">Back to Doctors List</a>
       </div>
     </div>
-  </section>
+</div>
 
   <!-- Include Footer -->
   <div id="footer-placeholder"></div>
@@ -96,11 +85,15 @@
       $("#footer-placeholder").load("footer.html");
     });
 
-    // Fetch doctor profile details
-    const urlParams = new URLSearchParams(window.location.search);
+  
+     // Fetch doctor profile details
+     const urlParams = new URLSearchParams(window.location.search);
     const doctorId = urlParams.get('id');
     if (doctorId) {
-      fetchDoctorDetails(doctorId);
+      fetchDoctorDetails(doctorId); // This function is defined in doctor-profile.js
+    } else {
+      console.error('No doctor ID provided in the URL.');
+      document.querySelector('.doctor-details').innerHTML = '<p>Error: No doctor ID specified.</p>';
     }
   </script>
 </body>

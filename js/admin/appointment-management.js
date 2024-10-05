@@ -32,12 +32,12 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       })
       .catch((error) => console.error("Error loading appointments:", error));
-  }
-  
-  function deleteAppointment(appointmentId) {
-    fetch(`${window.currentConfig.apiUrl}/api/admin/appointments/${appointmentId}`, {
+}
+
+function deleteAppointment(appointmentId) {
+  fetch(`${window.currentConfig.apiUrl}/api/admin/appointments/${appointmentId}`, {
       method: "DELETE",
-    })
+  })
       .then(() => loadAppointments())
       .catch((error) => console.error("Error deleting appointment:", error));
   }

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Patient Management</title>
+        
+        <!-- External CSS and JS -->
+        <link rel="stylesheet" href="../css/style.css">
+        <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
+        
+        <!-- DataTables CSS -->
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    
+        <!-- Scripts -->
+        <script src="../js/config.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <script src="../js/doctor/patient-management.js" defer></script>
+    </head>
+<body>
+    <!-- Load Header -->
+    <div id="header-placeholder"></div>
+    
+    <main class="container mt-5">
+        <!-- Back Button -->
+        <a href="doctor-dashboard.html" class="btn btn-secondary mb-4">
+            <i class="icofont-arrow-left"></i> Back to Dashboard
+        </a>
+        
+        <h2>Patient Management</h2>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#addPatientModal">Add Patient</button>
+
+        <table class="table mt-3" id="patientTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Medical History</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Patient rows will be populated here -->
+            </tbody>
+        </table>
+    </main>
+
+  <!-- Add Patient Modal -->
+  <div id="addPatientModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Patient</h5> <!-- This will change dynamically -->
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addPatientForm">
+                    <input type="hidden" id="patientId"> <!-- Hidden input to store the patient ID -->
+                    <div class="form-group">
+                        <label for="patientName">Name</label>
+                        <input type="text" class="form-control" id="patientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientEmail">Email</label>
+                        <input type="email" class="form-control" id="patientEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientPassword">Password</label>
+                        <input type="password" class="form-control" id="patientPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="medicalHistory">Medical History</label>
+                        <input type="text" class="form-control" id="medicalHistory">
+                    </div>
+                    <div class="form-group">
+                        <label for="medications">Medications</label>
+                        <input type="text" class="form-control" id="medications">
+                    </div>
+                    <div class="form-group">
+                        <label for="allergies">Allergies</label>
+                        <input type="text" class="form-control" id="allergies">
+                    </div>
+                    <div class="form-group">
+                        <label for="bloodType">Blood Type</label>
+                        <input type="text" class="form-control" id="bloodType">
+                    </div>
+                    <!-- New file input for medical profile upload -->
+                    <div class="form-group">
+                        <label for="medicalAttachment">Medical Profile Upload</label>
+                        <input type="file" class="form-control" id="medicalAttachment" accept="application/pdf,image/*">
+                    </div>
+                    <button type="submit" id="savePatientBtn" class="btn btn-primary">Add Patient</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- View Profile Modal -->
+    <div id="viewProfileModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Patient Profile</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <!-- Profile Picture -->
+                            <img id="patientProfileImage" src="../images/default-profile.png" alt="Profile Image" class="img-fluid rounded mb-3">
+                        </div>
+                        <div class="col-md-8">
+                            <!-- Patient Details -->
+                            <h5 id="patientNameView"></h5>
+                            <p><strong>Email:</strong> <span id="patientEmailView"></span></p>
+                            <p><strong>Blood Type:</strong> <span id="bloodTypeView"></span></p>
+                            <p><strong>Allergies:</strong> <span id="allergiesView"></span></p>
+                            <p><strong>Medical History:</strong> <span id="medicalHistoryView"></span></p>
+                            <p><strong>Medications:</strong> <span id="medicationsView"></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Medical Profile Attachment -->
+                    <div id="attachmentSection" class="mt-4">
+                        <h6>Medical Documents:</h6>
+                        <a href="#" id="medicalAttachment" class="btn btn-secondary" download>Download Attachment</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Footer -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Load the shared header and footer -->
+    <script>
+        $(function() {
+            $("#header-placeholder").load("../shared/header.html");
+            $("#footer-placeholder").load("../shared/footer.html");
+        });
+    </script>
+</body>
+</html>

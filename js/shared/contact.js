@@ -26,11 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const phone = document.getElementById('p1').value;
     const message = document.getElementById('message').value;debugger
   
-    fetch(`${window.currentEnv.apiUrl}/api/message/contact`, {
+    fetch(`${window.currentEnv.apiUrl}/api/message`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      
       body: JSON.stringify({ name, Email, subject, phone, message }),
     })
       .then(response => response.json())
