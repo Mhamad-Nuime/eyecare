@@ -1,0 +1,30 @@
+div#edit-form{
+  background-color: rgb(185, 232, 253);
+  position: fixed;
+  bottom : 0;
+  left : 0;
+  right : 0;
+  z-index: 100;
+  display: none;
+}
+form{
+  width: fit-content;
+  display: block;
+  margin: auto;
+}
+input.input{
+  width : 80%;
+  margin : auto;
+  border : 1px dashed;
+  border-radius: 4px;
+  box-sizing: border-box;
+  padding-left : 8px;
+}
+.form-group{
+  display : flex;
+  justify-content: center;
+}
+button[type=submit]{
+  margin: auto;
+  display: block;
+}

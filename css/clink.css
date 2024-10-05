@@ -1,0 +1,28 @@
+div#add-form-wrapper{
+  position: fixed;
+  top : 200px;
+  right : 0;
+  left : 0;
+  bottom : 0;
+  background : white;
+  z-index: 100;
+  overflow-y: scroll;
+  box-shadow: 0px 0px 2px black;
+  box-sizing: border-box;
+  padding-block: 50px;
+  display: none;
+}
+button#close-button{
+  position: relative;
+  top : 0;
+  left : 40px;
+}
+form#addClinicForm{
+  width : 70%;
+  display: block;
+  margin: auto;
+}
+td.actions{
+  display: flex;
+  gap: 5px;
+}

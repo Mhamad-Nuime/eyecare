@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/users.css">
   <script src="../js/config.js"></script>
   <!-- jQuery and Bootstrap from CDN -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -33,7 +34,37 @@
       </tbody>
     </table>
   </main>
-
+  <!-- Appointment Reschedule Form -->
+  <div id="edit-form">
+    <button type="button" id="close">Exit</button>
+    <form id="user-form" class="appoinment-form">
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <input class="input" type="text" id="name" class="form-control" placeholder="Name" />
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group">
+            <input class="input" type="email" id="email" class="form-control" placeholder="Email" />
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group">
+            <input class="input" type="text" id="currentPassword" class="form-control" placeholder="Current Password" />
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group">
+            <input class="input" type="text" id="newPassword" class="form-control" placeholder="New Password" />
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-main btn-round-full">Edit</button>
+      <p id="error-message" style="color : red"></p>
+    </form>
+  </div>
+</div>
   <!-- Footer -->
   <div id="footer-placeholder"></div>
 

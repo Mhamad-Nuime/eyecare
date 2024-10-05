@@ -12,7 +12,7 @@ function loadUsers() {
 //       return;
 //   }
 
-  fetch(`${window.currentConfig.apiUrl}/api/Users`, {
+  fetch(`${window.currentConfig.apiUrl}/api/users`, {
       headers: {
         //   'Authorization': `Bearer ${token}`,  // Include token in Authorization header
           'Content-Type': 'application/json'
@@ -28,7 +28,7 @@ function loadUsers() {
   .then((data) => {
       const userTable = document.getElementById("user-list");
       userTable.innerHTML = "";
-      data.forEach((user) => {
+      data.$values.forEach((user) => {
           const row = document.createElement("tr");
           row.innerHTML = `
               <td>${user.name}</td>
@@ -55,10 +55,43 @@ function deleteUser(userId) {
       }
   })
   .then(() => loadUsers())
-  .catch((error) => console.error("Error deleting user:", error));
+  .catch((error) => console.error("Error deleting user:", error.$values[0].description));
 }
 
 function editUser(userId) {
-  // Implement edit functionality
-  console.log(`Edit user with ID: ${userId}`);
+  const editWrapper = document.getElementById("edit-form");
+  editWrapper.style.display = "block";
+  const closeButton = document.getElementById("close");
+  closeButton.addEventListener("click", () => {
+    editWrapper.style.display = "none"
+  });
+  const form = document.getElementById("user-form");
+  const nameField = document.getElementById("name").value;
+  const emailField = document.getElementById("email").value;
+  const currentPasswordField = document.getElementById("currentPassword").value;
+  const newPasswordField = document.getElementById("newPassword").value;
+  form.addEventListener("submit",
+    () => {
+    fetch(`${window.currentConfig.apiUrl}/api/users/${userId}`,{
+      method : "PUT",
+      headers: {
+        'Authorization': `Bearer ${token}`,  // Include token in Authorization header
+        'Content-Type': 'application/json'
+    },
+      body : {
+        "name": nameField,
+        "email": emailField,
+        "currentPassword": currentPasswordField,
+        "newPassword": newPasswordField
+      }
+    })
+    .then(()=>{
+      editWrapper.style.display = "none";
+      loadUsers();
+    })
+    .catch((error)=>{
+      alert(error.$values[0].description);
+    })
+  })
+
 }

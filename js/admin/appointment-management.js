@@ -49,7 +49,8 @@ function deleteAppointment(appointmentId) {
     const errorMessageField = document.getElementById("error-message");
     const exitButton = document.getElementById("close-form").onclick = () => editForm.style.display = "none";
     editForm.style.display = "block";
-    appointmentForm.addEventListener("submit", () => {
+    appointmentForm.addEventListener("submit", (event) => {
+      event.preventDefault();
       fetch(`${window.currentConfig.apiUrl}/api/admin/appointments/${appointmentId}/reschedule?`,
         {
           method : "PUT",
