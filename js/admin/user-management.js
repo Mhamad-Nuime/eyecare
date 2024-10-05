@@ -12,9 +12,9 @@ function loadUsers() {
 //       return;
 //   }
 
-  fetch(`${window.currentConfig.apiUrl}/api/admin/users`, {
+  fetch(`${window.currentConfig.apiUrl}/api/users`, {
       headers: {
-          'Authorization': `Bearer ${token}`,  // Include token in Authorization header
+        //   'Authorization': `Bearer ${token}`,  // Include token in Authorization header
           'Content-Type': 'application/json'
       }
   })
