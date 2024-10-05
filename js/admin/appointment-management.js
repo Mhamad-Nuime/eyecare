@@ -1,41 +1,35 @@
 document.addEventListener("DOMContentLoaded", function () {
-  loadAppointments();
-});
+    loadAppointments();
+    document.getElementById("appoinment-patient-filter").addEventListener("input" , filter("patient"));
+    document.getElementById("appoinment-doctor-filter").addEventListener("input" , filter("doctor"));
+  });
 
-function loadAppointments() {
-  fetch(`${window.currentConfig.apiUrl}/api/admin/appointments`)
-      .then((response) => {
-          if (!response.ok) {
-              throw new Error("Network response was not ok: " + response.statusText);
-          }
-          return response.json();
-      })
+  function loadAppointments(query = undefined) {
+    let url;
+    if(query){
+      url = `${window.currentConfig.apiUrl}/api/admin/appointments?${query}`
+    } else {
+      url =  `${window.currentConfig.apiUrl}/api/admin/appointments`
+    }
+    fetch(url)
+      .then((response) => response.json())
       .then((data) => {
-          console.log("Fetched appointments data:", data); // Log the entire data object
-
-          const appointmentTable = document.getElementById("appointment-list");
-          appointmentTable.innerHTML = "";
-
-          // Check if data and $values exist
-          if (data && Array.isArray(data.$values)) {
-              data.$values.forEach((appointment) => {
-                  const row = document.createElement("tr");
-                  row.innerHTML = `
-                      <td>${appointment.patientName}</td>
-                      <td>${appointment.doctorName}</td>
-                      <td>${appointment.date}</td>
-                      <td>${appointment.time}</td>
-                      <td>${appointment.status}</td>
-                      <td>
-                          <button class="btn btn-sm btn-primary" onclick="editAppointment('${appointment.id}')">Edit</button>
-                          <button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.id}')">Delete</button>
-                      </td>`;
-                  appointmentTable.appendChild(row);
-              });
-          } else {
-              console.error("Expected an array of appointments, but got:", data);
-              appointmentTable.innerHTML = "<tr><td colspan='6'>No appointments found.</td></tr>";
-          }
+        const appointmentTable = document.getElementById("appointment-list");
+        appointmentTable.innerHTML = "";
+        data.$value.forEach((appointment) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${appointment.patient.name}</td>
+            <td>${appointment.doctor.name}</td>
+            <td>${appointment.appointmentDate}</td>
+            <td>${appointment.appointmentTime}</td>
+            <td>${appointment.status}</td>
+            <td>
+              <button class="btn btn-sm btn-primary" onclick="editAppointment('${appointment.appointmentId}')">Reschedule</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.appointmentId}')">Delete</button>
+            </td>`;
+          appointmentTable.appendChild(row);
+        });
       })
       .catch((error) => console.error("Error loading appointments:", error));
 }
@@ -46,8 +40,41 @@ function deleteAppointment(appointmentId) {
   })
       .then(() => loadAppointments())
       .catch((error) => console.error("Error deleting appointment:", error));
-}
-
-function editAppointment(appointmentId) {
-  // Implement edit functionality
-}
+  }
+  
+  function editAppointment(appointmentId) {
+    const editForm = document.getElementById("appoinment-form");
+    const appointmentForm = document.getElementById("appointmentForm");
+    const drescheduleField = document.getElementById("reschedule");
+    const errorMessageField = document.getElementById("error-message");
+    const exitButton = document.getElementById("close-form").onclick = () => editForm.style.display = "none";
+    editForm.style.display = "block";
+    appointmentForm.addEventListener("submit", () => {
+      fetch(`${window.currentConfig.apiUrl}/api/admin/appointments/${appointmentId}/reschedule?`,
+        {
+          method : "PUT",
+          body : {
+            "newDate": drescheduleField.value,
+          }
+        }
+      )
+    .then(() => editForm.style.display = "none")
+    .catch(() => errorMessageField.innerHTML = "Error Occured Retry");
+    })
+    
+  }
+  function filter(type){
+    if(type == "doctor"){
+      return (e) => {
+        const query = e.target.value;
+        loadAppointments(`doctor=${query}`);
+      }
+    }
+    else if(type == "patient"){
+      return (e) => {
+        const query = e.target.value;
+        loadAppointments(`patient=${query}`);
+      }
+    }
+  }
+  

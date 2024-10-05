@@ -1,0 +1,27 @@
+main#container {
+  position: relative;
+}
+div#appoinment-form {
+  position: absolute;
+  padding: 50px;
+  width: fit-content;
+  height: fit-content;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  z-index: 10;
+}
+h2 {
+  text-align: center;
+}
+input.input {
+  border: dashed 1px;
+  border-radius: 4px;
+  outline : none;
+  box-sizing: border-box;
+  padding-left: 16px;
+  margin-left: 10px;
+  color: #008ed6;
+}
