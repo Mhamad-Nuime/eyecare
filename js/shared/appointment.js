@@ -76,28 +76,33 @@ function fetchDoctors() {
 }
 
 function bookAppointment() {
+
   const departmentId = document.getElementById('departmentSelect').value;
-  const doctorId = document.getElementById('doctorSelect').value;
-  const date = document.getElementById('appointmentDate').value;
-  const time = document.getElementById('appointmentTime').value;
+  const doctor = document.getElementById('doctorSelect').value;
+  const appointmentDate = document.getElementById('appointmentDate').value;
+  const appointmentTime = document.getElementById('appointmentTime').value;
   const patientName = document.getElementById('patientName').value;
   const patientPhone = document.getElementById('patientPhone').value;
   const message = document.getElementById('message').value;
 
-  fetch(`${window.currentEnv.apiUrl}/api/admin/appointments`, {
+
+  const appointment = {
+    "appointmentDate": appointmentDate,
+    "appointmentTime": appointmentTime,
+    "doctor": {
+      "id": doctor,
+    },
+    "patient": {
+      "name": patientName,
+    }
+  }
+
+  fetch(`${window.currentEnv.apiUrl}/api/appointment`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      departmentId,
-      doctorId,
-      date,
-      time,
-      patientName,
-      patientPhone,
-      message
-    })
+    body: JSON.stringify(appointment)
   })
   .then(response => response.json())
   .then(data => {

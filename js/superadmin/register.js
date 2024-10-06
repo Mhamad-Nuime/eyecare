@@ -6,15 +6,16 @@ function setupSuperAdminRegisterForm() {
       event.preventDefault();
   
       const data = {
+        userName: document.getElementById('registerName').value,
         name: document.getElementById('registerName').value,
         email: document.getElementById('registerEmail').value,
         password: document.getElementById('registerPassword').value,
-        phone: document.getElementById('registerPhone').value,
+        confirmPassword: document.getElementById('registerPassword').value,
         role: document.getElementById('registerRole').value,
       };
   
       try {
-        const response = await fetch(`${window.currentEnv.apiUrl}/api/superadmin/register`, {  // Replace with your actual API endpoint
+        const response = await fetch(`${window.currentEnv.apiUrl}/api/account/register`, {  // Replace with your actual API endpoint
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
