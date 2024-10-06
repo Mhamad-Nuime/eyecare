@@ -49,7 +49,7 @@ function fetchDepartments() {
 
       if (Array.isArray(departments)) {
         departments.forEach(department => {
-          departmentSelect.innerHTML += `<option value="${department.departmentId}">${department.name}</option>`;
+          departmentSelect.innerHTML += `<option value="${department}">${department.name}</option>`;
         });
       } else {
         console.error('Expected $values array, but got:', data);
@@ -69,7 +69,7 @@ function fetchDoctors() {
       const doctorSelect = document.getElementById('doctorSelect');
       doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
       data.$values.forEach(doctor => {
-        doctorSelect.innerHTML += `<option value="${doctor.id}">${doctor.name}</option>`;
+        doctorSelect.innerHTML += `<option value="${doctor}">${doctor.name}</option>`;
       });
     })
     .catch(error => console.error('Error fetching doctors:', error));
@@ -77,7 +77,7 @@ function fetchDoctors() {
 
 function bookAppointment() {
 
-  const departmentId = document.getElementById('departmentSelect').value;
+  const department = document.getElementById('departmentSelect').value;
   const doctor = document.getElementById('doctorSelect').value;
   const appointmentDate = document.getElementById('appointmentDate').value;
   const appointmentTime = document.getElementById('appointmentTime').value;
@@ -85,17 +85,53 @@ function bookAppointment() {
   const patientPhone = document.getElementById('patientPhone').value;
   const message = document.getElementById('message').value;
 
-
+  
   const appointment = {
-    "appointmentDate": appointmentDate,
+    "appointmentDto": {
+      "appointmentDate": appointmentDate,
     "appointmentTime": appointmentTime,
-    "doctor": {
-      "id": doctor,
-    },
-    "patient": {
-      "name": patientName,
-    }
-  }
+      "status": "Scheduled",
+      "doctor": {
+        "id": doctor.id,
+        "name": doctor.name,
+        "specialization": "Specialization",
+        "bio": "Doctor bio",
+        "phone": "Doctor phone number",
+        "profileImageUrl": "http://example.com/doctor.jpg",
+        "clinics": [
+          {
+            "clinicId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Clinic Name",
+            "address": "Clinic Address",
+            "departments": [
+              {
+                "departmentId": department.id,
+                "name": department.name,
+                "phone": "Department Phone",
+                "departmentImageUrl": "http://example.com/department.jpg",
+                "doctors": [
+                  "d2799011-ca75-464c-91eb-c2027bd115b2"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "patient": {
+        "id": "55ebd6e7-93c7-489b-83f3-df90c1bbed7a",
+        "name": patientName,
+        "email": "patient@example.com",
+        "medicalProfile": {
+          "medicalProfileId": "medical-profile-id-string",
+          "medicalHistory": "Medical History",
+          "medications": "Current Medications",
+          "allergies": "Known Allergies",
+          "bloodType": "Blood Type",
+          "attachmentUrl": "http://example.com/attachment.jpg",
+          "patient": "55ebd6e7-93c7-489b-83f3-df90c1bbed7a"
+        }
+      }
+    }}
 
   fetch(`${window.currentEnv.apiUrl}/api/appointment`, {
     method: 'POST',
