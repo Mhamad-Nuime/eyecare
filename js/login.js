@@ -17,10 +17,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (response.ok) {
                 const data = await response.json();
-                // localStorage.setItem('userToken', data.token); // Store JWT token
+                localStorage.setItem('userToken', data.token); // Store JWT token
                 // Use jwt-decode to decode token
-                // const decodedToken = jwt_decode(data.token);
-                // const userRole = decodedToken.role; // Ensure role is part of the token payload
+                const userData = data.user;
+                localStorage.setItem("user-role", JSON.stringify(userData.role));
+                localStorage.setItem("user-data", JSON.stringify(userData));
                 // Redirect based on role
                 switch (data.user.role) {
                     case 'Patient':

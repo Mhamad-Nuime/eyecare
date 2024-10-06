@@ -3,31 +3,23 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   
   function checkUserLoggedIn() {
+    const userData = JSON.parse(localStorage.getItem('user-data'));
+    const userRole = JSON.parse(localStorage.getItem('user-role'));
     const token = localStorage.getItem('userToken');
     if (!token) {
-      window.location.href = '../login.html';
+      window.location.href = '../../login.html';
     } else {
+      if(userData){
+          document.getElementById('username').textContent = userData.name;
+          document.getElementById('email').textContent = userData.email;
+          loadRoleSpecificHeader(userRole);
+      } else {
+          console.error('Error fetching profile:', error);
+          localStorage.removeItem('userToken');
+          window.location.href = '../../login.html';
+      }
       fetchUserProfile(token);
     }
-  }
-  
-  function fetchUserProfile(token) {
-    fetch(`${window.currentEnv.apiUrl}/api/user/profile`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('username').textContent = data.username;
-        document.getElementById('email').textContent = data.email;
-        loadRoleSpecificHeader(data.role);
-      })
-      .catch(error => {
-        console.error('Error fetching profile:', error);
-        localStorage.removeItem('userToken');debugger
-        window.location.href = '../login.html';
-      });
   }
   
   function loadRoleSpecificHeader(role) {

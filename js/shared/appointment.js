@@ -49,7 +49,7 @@ function fetchDepartments() {
 
       if (Array.isArray(departments)) {
         departments.forEach(department => {
-          departmentSelect.innerHTML += `<option value="${department.departmentId}">${department.name}</option>`;
+          departmentSelect.innerHTML += `<option value="${department}">${department.name}</option>`;
         });
       } else {
         console.error('Expected $values array, but got:', data);
@@ -69,35 +69,76 @@ function fetchDoctors() {
       const doctorSelect = document.getElementById('doctorSelect');
       doctorSelect.innerHTML = '<option value="">Select Doctor</option>';
       data.$values.forEach(doctor => {
-        doctorSelect.innerHTML += `<option value="${doctor.id}">${doctor.name}</option>`;
+        doctorSelect.innerHTML += `<option value="${doctor}">${doctor.name}</option>`;
       });
     })
     .catch(error => console.error('Error fetching doctors:', error));
 }
 
 function bookAppointment() {
-  const departmentId = document.getElementById('departmentSelect').value;
-  const doctorId = document.getElementById('doctorSelect').value;
-  const date = document.getElementById('appointmentDate').value;
-  const time = document.getElementById('appointmentTime').value;
+
+  const department = document.getElementById('departmentSelect').value;
+  const doctor = document.getElementById('doctorSelect').value;
+  const appointmentDate = document.getElementById('appointmentDate').value;
+  const appointmentTime = document.getElementById('appointmentTime').value;
   const patientName = document.getElementById('patientName').value;
   const patientPhone = document.getElementById('patientPhone').value;
   const message = document.getElementById('message').value;
 
-  fetch(`${window.currentEnv.apiUrl}/api/admin/appointments`, {
+  
+  const appointment = {
+    "appointmentDto": {
+      "appointmentDate": appointmentDate,
+    "appointmentTime": appointmentTime,
+      "status": "Scheduled",
+      "doctor": {
+        "id": doctor.id,
+        "name": doctor.name,
+        "specialization": "Specialization",
+        "bio": "Doctor bio",
+        "phone": "Doctor phone number",
+        "profileImageUrl": "http://example.com/doctor.jpg",
+        "clinics": [
+          {
+            "clinicId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+            "name": "Clinic Name",
+            "address": "Clinic Address",
+            "departments": [
+              {
+                "departmentId": department.id,
+                "name": department.name,
+                "phone": "Department Phone",
+                "departmentImageUrl": "http://example.com/department.jpg",
+                "doctors": [
+                  "d2799011-ca75-464c-91eb-c2027bd115b2"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "patient": {
+        "id": "55ebd6e7-93c7-489b-83f3-df90c1bbed7a",
+        "name": patientName,
+        "email": "patient@example.com",
+        "medicalProfile": {
+          "medicalProfileId": "medical-profile-id-string",
+          "medicalHistory": "Medical History",
+          "medications": "Current Medications",
+          "allergies": "Known Allergies",
+          "bloodType": "Blood Type",
+          "attachmentUrl": "http://example.com/attachment.jpg",
+          "patient": "55ebd6e7-93c7-489b-83f3-df90c1bbed7a"
+        }
+      }
+    }}
+
+  fetch(`${window.currentEnv.apiUrl}/api/appointment`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      departmentId,
-      doctorId,
-      date,
-      time,
-      patientName,
-      patientPhone,
-      message
-    })
+    body: JSON.stringify(appointment)
   })
   .then(response => response.json())
   .then(data => {

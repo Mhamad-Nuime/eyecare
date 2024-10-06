@@ -1,5 +1,4 @@
 let addBoolean = true;
-let arr = [];
 document.addEventListener("DOMContentLoaded", function () {
   loadClinics();
   const openAddFormm = document.getElementById("open-add-clinic"); 
@@ -18,59 +17,44 @@ function edit(clinicId){
     openAddForm(clinicId);
 }
 function loadClinics() {
-  fetch(`${window.currentConfig.apiUrl}/api/admin/clinic`)
+  fetch(`${window.currentConfig.apiUrl}/api/clinic`)
       .then(response => response.json())
       .then(data => {
           const clinicTable = document.getElementById("clinic-list");
           clinicTable.innerHTML = "";
-          if(Array.isArray(data)){
-            data.forEach(clinic => {
+            data.$values.forEach(clinic => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${clinic.name}</td>
-                    <td>${clinic.location || "Not specified"}</td>
-                    <td>${clinic.openTime}</td>
-                    <td>${clinic.closeTime}</td>
-                    <td>${clinic.daysOpen}</td>
-                    <td>${clinic.emergencyContact}</td>
+                    <td>${clinic.address || "Not specified"}</td>
+                    <td>${clinic?.openTime || "Not specified"}</td>
+                    <td>${clinic?.closeTime  || "Not specified"}</td>
+                    <td>${clinic?.daysOpen || "Not specified"}</td>
+                    <td>${clinic?.emergencyContact || "Not specified"}</td>
                     <td class="actions">
                         <button class="btn btn-sm btn-primary" onclick="edit('${clinic.id}')">Edit</button>
                         <button class="btn btn-sm btn-danger" onclick="deleteClinic('${clinic.id}')">Delete</button>
                     </td>`;
                 clinicTable.appendChild(row);
-                arr.push(clinic);
             });
-          } else {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-            <td>${data.name}</td>
-            <td>${data.location || "Not specified"}</td>
-            <td>${data.openTime}</td>
-            <td>${data.closeTime}</td>
-            <td>${data.daysOpen}</td>
-            <td>${data.emergencyContact}</td>
-            <td class="actions">
-            <button class="btn btn-sm btn-primary" onclick="edit('${clinic.id}')">Edit</button>
-            <button class="btn btn-sm btn-danger" onclick="deleteClinic('${data.id}')">Delete</button>
-            </td>`;
-            clinicTable.appendChild(row);
-            arr.push(data);
-          }
       })
-      .catch(error => console.error("hihiError loading clinics:", error));
+      .catch(error => console.error("Error loading clinics:", error));
 }
 
 function addClinic() {
   const newClinic = {
       name: document.getElementById('clinicName').value,
-      location: document.getElementById('clinicLocation').value,
-      openTime: document.getElementById('clinicOpenTime').value,
-      closeTime: document.getElementById('clinicCloseTime').value,
-      daysOpen: document.getElementById('clinicDaysOpen').value,
-      emergencyContact: document.getElementById('clinicEmergencyContact').value
+      address: document.getElementById('clinicLocation').value,
   };
 
-  fetch(`${window.currentConfig.apiUrl}/api/admin/clinic`, {
+//   newClinic.clinicSettings = {
+//     openTime: document.getElementById('clinicOpenTime').value,
+//     closeTime: document.getElementById('clinicCloseTime').value,
+//     daysOpen: document.getElementById('clinicDaysOpen').value,
+//     emergencyContact: document.getElementById('clinicEmergencyContact').value
+//   }
+
+  fetch(`${window.currentConfig.apiUrl}/api/clinic`, {
       method: "POST",
       headers: {
           'Content-Type': 'application/json'
@@ -96,7 +80,7 @@ function addClinic() {
 }
 
 function deleteClinic(clinicId) {
-  fetch(`${window.currentConfig.apiUrl}/api/admin/clinics/${clinicId}`, {
+  fetch(`${window.currentConfig.apiUrl}/api/clinic/${clinicId}`, {
       method: "DELETE",
   })
   .then(response => {

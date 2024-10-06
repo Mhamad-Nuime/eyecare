@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const token = localStorage.getItem('userToken');
+    if (!token) {
+      window.location.href = '../../login.html';
+    }
     loadAppointments();
     document.getElementById("appoinment-patient-filter").addEventListener("input" , filter("patient"));
     document.getElementById("appoinment-doctor-filter").addEventListener("input" , filter("doctor"));
@@ -16,15 +20,15 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         const appointmentTable = document.getElementById("appointment-list");
         appointmentTable.innerHTML = "";
-        data.$value.forEach((appointment) => {
+        data.$values.forEach((appointment) => {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${appointment.patient.name}</td>
-            <td>${appointment.doctor.name}</td>
-            <td>${appointment.appointmentDate}</td>
-            <td>${appointment.appointmentTime}</td>
-            <td>${appointment.status}</td>
-            <td>
+            <td>${appointment?.patient?.name || "N/A"}</td>
+            <td>${appointment?.doctor?.name || "N/A"}</td>
+            <td>${appointment?.appointmentDate || "N/A"}</td>
+            <td>${appointment?.appointmentTime || "N/A"}</td>
+            <td>${appointment?.status || "N/A"}</td>
+            <td id="actions">
               <button class="btn btn-sm btn-primary" onclick="editAppointment('${appointment.appointmentId}')">Reschedule</button>
               <button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.appointmentId}')">Delete</button>
             </td>`;
@@ -45,18 +49,22 @@ function deleteAppointment(appointmentId) {
   function editAppointment(appointmentId) {
     const editForm = document.getElementById("appoinment-form");
     const appointmentForm = document.getElementById("appointmentForm");
-    const drescheduleField = document.getElementById("reschedule");
+    const rescheduleField = document.getElementById("reschedule");
     const errorMessageField = document.getElementById("error-message");
     const exitButton = document.getElementById("close-form").onclick = () => editForm.style.display = "none";
     editForm.style.display = "block";
+    console.log(rescheduleField.value);
     appointmentForm.addEventListener("submit", (event) => {
       event.preventDefault();
       fetch(`${window.currentConfig.apiUrl}/api/admin/appointments/${appointmentId}/reschedule?`,
         {
           method : "PUT",
-          body : {
-            "newDate": drescheduleField.value,
-          }
+          headers : {
+            "Content-Type" : "Application/json"
+          },
+          body : JSON.stringify({
+            "newDate": rescheduleField.value,
+          })
         }
       )
     .then(() => editForm.style.display = "none")

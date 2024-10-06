@@ -8,12 +8,12 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((data) => {
         const feedbackTable = document.getElementById("feedback-list");
         feedbackTable.innerHTML = "";
-        data.forEach((feedback) => {
+        data.$values.forEach((feedback) => {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${feedback.name}</td>
-            <td>${feedback.email}</td>
-            <td>${feedback.message}</td>
+            <td>${feedback?.name || "N/A"}</td>
+            <td>${feedback?.email || "N/A"}</td>
+            <td>${feedback?.message || "N/A"}</td>
             <td>
               <button class="btn btn-sm btn-danger" onclick="deleteFeedback('${feedback.id}')">Delete</button>
             </td>`;
