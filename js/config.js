@@ -9,5 +9,14 @@ let currentEnv = "development";
             debug: false,
         },
         };
+
+let users = [];
+let appointments = [];
+let clinic = [];
+let doctors = [];
+window.users = users;
+window.appointment = appointments;
+window.clinic = clinic;
+window.doctors =doctors;
 window.currentEnv = config[currentEnv];
 window.currentConfig = config[currentEnv];

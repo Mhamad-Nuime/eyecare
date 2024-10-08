@@ -31,8 +31,21 @@ function fetchDoctors() {
                 doctorList.innerHTML = '<p>No doctors found.</p>';
                 return;
             }
-
-            doctors.forEach(doctor => {
+            fetch(`${window.currentConfig.apiUrl}/api/users/all`, {
+                headers: {
+                  //   'Authorization': `Bearer ${token}`,  // Include token in Authorization header
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                data.$values.forEach((user) => {
+                console.log(user);
+                if(user.role == "doctor") window.doctors.push(user);
+            });
+            })
+            doctors.forEach(doctor =>  window.doctors.push(doctor));
+            window.doctors.forEach(doctor =>  {
                 const doctorCard = document.createElement('div');
                 doctorCard.classList.add('col-lg-4', 'mb-5');
                 doctorCard.innerHTML = `
