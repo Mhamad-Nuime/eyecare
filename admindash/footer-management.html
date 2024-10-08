@@ -17,6 +17,10 @@
   <div id="header-placeholder"></div>
 
   <main class="container mt-5">
+     <!-- Back Button -->
+     <a href="admin-dashboard.html" class="btn btn-secondary mb-4">
+      <i class="icofont-arrow-left"></i> Back to Dashboard
+  </a>
     <h2>Footer Management</h2>
     <form id="footerForm">
       <div class="form-group">
@@ -82,5 +86,7 @@
         .catch(error => console.error("Error updating footer:", error));
     }
   </script>
+   <script src="../js/shared/header.js"></script>
+   <script src="../js/shared/footer.js"></script>
 </body>
 </html>

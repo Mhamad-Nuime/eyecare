@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
-  loadUsers(undefined);
+  loadUsers();
 });
-let arr = [];
-function loadUsers(users = undefined) {
+
+function loadUsers() {
   // Get the JWT token from localStorage
   const token = localStorage.getItem('token');
   
@@ -12,23 +12,7 @@ function loadUsers(users = undefined) {
 //       return;
 //   }
 
-  if(users){
-    const userTable = document.getElementById("user-list");
-      userTable.innerHTML = "";
-      users.forEach((user) => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-              <td>${user.name}</td>
-              <td>${user.email}</td>
-              <td>${user.role}</td>
-              <td>
-                  <button class="btn btn-sm btn-primary" onclick="editUser('${user.id}')">Edit</button>
-                  <button class="btn btn-sm btn-danger" onclick="deleteUser('${user.id}')">Delete</button>
-              </td>`;
-          userTable.appendChild(row);
-      });
-  } else {
-    fetch(`${window.currentConfig.apiUrl}/api/users/all`, {
+  fetch(`${window.currentConfig.apiUrl}/api/users/all`, {
       headers: {
         //   'Authorization': `Bearer ${token}`,  // Include token in Authorization header
           'Content-Type': 'application/json'
@@ -45,7 +29,6 @@ function loadUsers(users = undefined) {
       const userTable = document.getElementById("user-list");
       userTable.innerHTML = "";
       data.$values.forEach((user) => {
-        window.users.push(user);
           const row = document.createElement("tr");
           row.innerHTML = `
               <td>${user.name}</td>
@@ -59,23 +42,20 @@ function loadUsers(users = undefined) {
       });
   })
   .catch((error) => console.error("Error loading users:", error));
-  }
 }
 
 function deleteUser(userId) {
-  // const token = localStorage.getItem('token');
-  window.users = window.users.filter(user => user.id != userId)
-  loadUsers(window.users);
+  const token = localStorage.getItem('token');
   
-  // fetch(`${window.currentConfig.apiUrl}/api/patient/${userId}`, {
-  //     method: "DELETE",
-  //     headers: {
-  //           // Include token in Authorization header
-  //         'Content-Type': 'application/json'
-  //     }
-  // })
-  // .then(() => loadUsers())
-  // .catch((error) => console.error("Error deleting user:", error.$values[0].description));
+  fetch(`${window.currentConfig.apiUrl}/api/admin/users/${userId}`, {
+      method: "DELETE",
+      headers: {
+          'Authorization': `Bearer ${token}`,  // Include token in Authorization header
+          'Content-Type': 'application/json'
+      }
+  })
+  .then(() => loadUsers())
+  .catch((error) => console.error("Error deleting user:", error.$values[0].description));
 }
 
 function editUser(userId) {
@@ -87,42 +67,31 @@ function editUser(userId) {
   });
   const form = document.getElementById("user-form");
   const nameField = document.getElementById("name").value;
+  const emailField = document.getElementById("email").value;
   const currentPasswordField = document.getElementById("currentPassword").value;
   const newPasswordField = document.getElementById("newPassword").value;
   form.addEventListener("submit",
-    (e) => {
-      e.preventDefault();
-      window.users = window.users.map(user => {
-        if(user.id == userId){
-          editWrapper.style.display = "none";
-          return {...user, name: document.getElementById("name").value};
-        } 
-        else return user;
-      })
-      loadUsers(window.users)
+    () => {
+    fetch(`${window.currentConfig.apiUrl}/api/users/${userId}`,{
+      method : "PUT",
+      headers: {
+        'Authorization': `Bearer ${token}`,  // Include token in Authorization header
+        'Content-Type': 'application/json'
+    },
+      body : {
+        "name": nameField,
+        "email": emailField,
+        "currentPassword": currentPasswordField,
+        "newPassword": newPasswordField
+      }
+    })
+    .then(()=>{
+      editWrapper.style.display = "none";
+      loadUsers();
+    })
+    .catch((error)=>{
+      alert(error.$values[0].description);
+    })
   })
-  // form.addEventListener("submit",
-  //   () => {
-  //   fetch(`${window.currentConfig.apiUrl}/api/patient/${userId}`,{
-  //     method : "PUT",
-  //     headers: {
-  //       // 'Authorization': `Bearer ${token}`,  // Include token in Authorization header
-  //       'Content-Type': 'application/json'
-  //   },
-  //     body : {
-  //       "name": nameField,
-  //       "email": emailField,
-  //       "currentPassword": currentPasswordField,
-  //       "newPassword": newPasswordField
-  //     },
-  //   })
-  //   .then(()=>{
-  //     editWrapper.style.display = "none";
-  //     loadUsers();
-  //   })
-  //   .catch((error)=>{
-  //     alert(error.$values[0].description);
-  //   })
-  // })
 
 }

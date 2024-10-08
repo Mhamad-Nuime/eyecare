@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 method: 'POST',
                 headers : {
                     "Content-Type" : "Application/json",
+                    
                 },
                 body: JSON.stringify({ email, password }),
             });
@@ -25,19 +26,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Redirect based on role
                 switch (data.user.role) {
                     case 'Patient':
-                        window.location.href = '/Patientdashboard/patient-dashboard.html';
+                        window.location.href = 'Patientdashboard/patient-dashboard.html';
                         break;
                     case 'Doctor':
-                        window.location.href = '/doctordash/doctor-dashboard.html';
+                        window.location.href = 'doctordash/doctor-dashboard.html';
                         break;
                     case 'Admin':
-                        window.location.href = '/admindash/admin-dashboard.html';
+                        window.location.href = 'admindash/admin-dashboard.html';
                         break;
                     case 'SuperAdmin':
-                        window.location.href = '/Superadmindash/superadmin-dashboard.html';
+                        window.location.href = 'Superadmindash/superadmin-dashboard.html';
                         break;
                     default:
-                        window.location.href = '/shared/profile.html'; // Default fallback
+                        window.location.href = 'shared/profile.html'; // Default fallback
                         break;
                 }
             } else {
@@ -96,10 +97,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Redirect based on role
                 switch (userRole) {
                     case 'Patient':
-                        window.location.href = '/Patientdashboard/patient-dashboard.html';
+                        window.location.href = 'Patientdashboard/patient-dashboard.html';
                         break;
                     case 'Doctor':
-                        window.location.href = '/doctordash/doctor-dashboard.html';
+                        window.location.href = 'doctordash/doctor-dashboard.html';
                         break;
                     case 'Admin':
                         window.location.href = 'admindash/admin-dashboard.html';

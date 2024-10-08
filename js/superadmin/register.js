@@ -18,7 +18,6 @@ function setupSuperAdminRegisterForm() {
         const response = await fetch(`${window.currentEnv.apiUrl}/api/account/register`, {  // Replace with your actual API endpoint
           method: 'POST',
           headers: {
-            
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(data)

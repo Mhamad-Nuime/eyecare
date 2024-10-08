@@ -3,73 +3,47 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!token) {
       window.location.href = '../../login.html';
     }
-    loadAppointments(undefined,undefined);
+    loadAppointments();
     document.getElementById("appoinment-patient-filter").addEventListener("input" , filter("patient"));
     document.getElementById("appoinment-doctor-filter").addEventListener("input" , filter("doctor"));
   });
 
-  function loadAppointments(appointment = undefined,query = undefined) {
-    if(appointment){
-      const appointmentTable = document.getElementById("appointment-list");
-          appointmentTable.innerHTML = "";
-          window.appointment.forEach((appointment) => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-              <td>${appointment?.patient?.name || "hussam"}</td>
-              <td>${appointment?.doctor?.name || "nader"}</td>
-              <td>${appointment?.appointmentDate || "N/A"}</td>
-              <td>${appointment?.appointmentTime || "N/A"}</td>
-              <td>${appointment?.status || "N/A"}</td>
-              <td id="actions">
-                <button class="btn btn-sm btn-primary" onclick="editAppointment('${appointment.appointmentId}')">Reschedule</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.appointmentId}')">Delete</button>
-              </td>`;
-            appointmentTable.appendChild(row);
-          });
+  function loadAppointments(query = undefined) {
+    let url;
+    if(query){
+      url = `${window.currentConfig.apiUrl}/api/admin/appointments?${query}`
     } else {
-      let url;
-      if(query){
-        url = `${window.currentConfig.apiUrl}/api/admin/appointments?${query}`
-      } else {
-        url =  `${window.currentConfig.apiUrl}/api/admin/appointments`
-      }
-      fetch(url)
-        .then((response) => response.json())
-        .then((data) => {
-          const appointmentTable = document.getElementById("appointment-list");
-          appointmentTable.innerHTML = "";
-          data.$values.forEach((appointment) => {
-            window.appointment.push(appointment);
-            const row = document.createElement("tr");
-            row.innerHTML = `
-              <td>${appointment?.patient?.name || "hussam"}</td>
-              <td>${appointment?.doctor?.name || "nader"}</td>
-              <td>${appointment?.appointmentDate || "N/A"}</td>
-              <td>${appointment?.appointmentTime || "N/A"}</td>
-              <td>${appointment?.status || "N/A"}</td>
-              <td id="actions">
-                <button class="btn btn-sm btn-primary" onclick="editAppointment('${appointment.appointmentId}')">Reschedule</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.appointmentId}')">Delete</button>
-              </td>`;
-            appointmentTable.appendChild(row);
-          });
-        })
-        .catch((error) => console.error("Error loading appointments:", error));
+      url =  `${window.currentConfig.apiUrl}/api/admin/appointments`
     }
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        const appointmentTable = document.getElementById("appointment-list");
+        appointmentTable.innerHTML = "";
+        data.$values.forEach((appointment) => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${appointment?.patient?.name || "N/A"}</td>
+            <td>${appointment?.doctor?.name || "N/A"}</td>
+            <td>${appointment?.appointmentDate || "N/A"}</td>
+            <td>${appointment?.appointmentTime || "N/A"}</td>
+            <td>${appointment?.status || "N/A"}</td>
+            <td id="actions">
+              <button class="btn btn-sm btn-primary" onclick="editAppointment('${appointment.appointmentId}')">Reschedule</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.appointmentId}')">Delete</button>
+            </td>`;
+          appointmentTable.appendChild(row);
+        });
+      })
+      .catch((error) => console.error("Error loading appointments:", error));
 }
 
 function deleteAppointment(appointmentId) {
-  window.appointment = window.appointment.filter(app => app.appointmentId != appointmentId);
-  console.log(appointmentId)
-  console.log(window.appointment.length)
-  console.log(window.appointment)
-  loadAppointments(window.appointment)
-
-  // fetch(`${window.currentConfig.apiUrl}/api/admin/appointments/${appointmentId}/cancel`, {
-  //     method: "DELETE",
-  // })
-  //     .then(() => loadAppointments())
-  //     .catch((error) => console.error("Error deleting appointment:", error));
+  fetch(`${window.currentConfig.apiUrl}/api/admin/appointments/${appointmentId}`, {
+      method: "DELETE",
+  })
+      .then(() => loadAppointments())
+      .catch((error) => console.error("Error deleting appointment:", error));
   }
   
   function editAppointment(appointmentId) {
@@ -93,7 +67,7 @@ function deleteAppointment(appointmentId) {
           })
         }
       )
-    .then(() => {editForm.style.display = "none";loadAppointments();})
+    .then(() => editForm.style.display = "none")
     .catch(() => errorMessageField.innerHTML = "Error Occured Retry");
     })
     

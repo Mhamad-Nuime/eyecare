@@ -19,6 +19,10 @@
   <div id="header-placeholder"></div>
 
   <main class="container mt-5">
+     <!-- Back Button -->
+     <a href="admin-dashboard.html" class="btn btn-secondary mb-4">
+      <i class="icofont-arrow-left"></i> Back to Dashboard
+  </a>
     <h2>User Management</h2>
     <table class="table table-striped">
       <thead>
@@ -46,6 +50,11 @@
         </div>
         <div class="col-12">
           <div class="form-group">
+            <input class="input" type="email" id="email" class="form-control" placeholder="Email" />
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group">
             <input class="input" type="text" id="currentPassword" class="form-control" placeholder="Current Password" />
           </div>
         </div>
@@ -65,7 +74,8 @@
 
   
   <script src="../js/admin/user-management.js"></script>
-
+  <script src="../js/shared/header.js"></script>
+  <script src="../js/shared/footer.js"></script>
   <script>
     $(function() {
       $("#header-placeholder").load("../shared/header.html");
