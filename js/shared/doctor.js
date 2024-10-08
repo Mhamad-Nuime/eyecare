@@ -41,7 +41,25 @@ function fetchDoctors() {
             .then((data) => {
                 data.$values.forEach((user) => {
                 console.log(user);
-                if(user.role == "doctor") window.doctors.push(user);
+                if(["Doctor","doctor"].includes(user.role)) window.doctors.push(user);
+                });
+            }).then(()=>{
+                doctors.forEach(doctor =>  window.doctors.push(doctor));
+                doctorList.innerHTML ="";
+            window.doctors.forEach(doctor =>  {
+                const doctorCard = document.createElement('div');
+                doctorCard.classList.add('col-lg-4', 'mb-5');
+                doctorCard.innerHTML = `
+                    <div class="card">
+                        <img src="${doctor.imageUrl || 'default-image.jpg'}" alt="${doctor.name || 'No Name Provided'}" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">${doctor.name || 'No Name Provided'}</h5>
+                            <p class="card-text"><strong>Specialization:</strong> ${doctor.specialization || 'Not Specified'}</p>
+                            <p class="card-text">${doctor.bio || 'No Bio Available'}</p>
+                            <a href="doctor-profile.html?id=${doctor.id}" class="btn btn-primary">View Profile</a>
+                        </div>
+                    </div>`;
+                doctorList.appendChild(doctorCard);
             });
             })
             doctors.forEach(doctor =>  window.doctors.push(doctor));
