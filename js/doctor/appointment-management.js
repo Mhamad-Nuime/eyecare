@@ -1,30 +1,55 @@
-// /js/doctor/appointment-management.js
-
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", () => {
     loadAppointments();
-
-    // Event listener for adding an appointment
-    $("#addAppointment").on("click", function() {
-        // Trigger modal or form to add an appointment
-        alert("Feature to add an appointment is not yet implemented.");
-    });
-});
+})
 
 function loadAppointments() {
-    $.ajax({
-        url: `${window.currentEnv.apiUrl}/api/appointment`, // Adjust the API URL based on your structure
-        method: 'GET',
-        success: function(appointments) {
-            if (appointments && Array.isArray(appointments)) {
-                renderAppointments(appointments);
-            } else {
-                console.error("Invalid appointments format:", appointments);
-            }
+    const values = [
+        {
+            id : "2",
+            name : "moe",
+            appointmentDate : "2024/10/01",
+            appointmentTime : "09:30",
+            status : "active"
         },
-        error: function(error) {
-            console.error("Error fetching appointments:", error);
-        }
-    });
+    ]
+    const appointmentList = document.getElementById('appointment-list');
+    values.forEach( item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+        <td>${appointment.id}</td>
+        <td>${appointment.name}</td>
+        <td>${appointment.appointmentDate}</td>
+        <td>${appointment.appointmentTime}</td>
+        <td>${appointment.status}</td>
+        <td>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-whatever='${appointment.id}'>Edit</button>
+            <button class="btn btn-danger" onclick="deleteAppointment('${appointment.id}')">Delete</button>
+        </td>
+        `;
+        appointmentList.appendChild(row);
+    })
+    // fetch()
+    // .then(res => res.json())
+    // .then(
+    //     res => {
+    //         const appointmentList = document.getElementById('#appointment-list');
+    //         res.values.forEach( item => {
+    //             const row = document.createElement("row");
+    //             row.innerHTML = `
+    //             <td>${appointment.id}</td>
+    //             <td>${appointment.patient.name}</td>
+    //             <td>${appointment.appointmentDate}</td>
+    //             <td>${appointment.appointmentTime}</td>
+    //             <td>${appointment.status}</td>
+    //             <td>
+    //                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-whatever='${appointment.id}'>Edit</button>
+    //                 <button class="btn btn-danger" onclick="deleteAppointment('${appointment.id}')">Delete</button>
+    //             </td>
+    //             `;
+    //         })
+    //     }
+    // )
+    // .catch()
 }
 
 function renderAppointments(appointments) {
@@ -40,6 +65,7 @@ function renderAppointments(appointments) {
                 <td>${appointment.appointmentTime}</td>
                 <td>${appointment.status}</td>
                 <td>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Edit</button>
                     <button class="btn btn-warning" onclick="editAppointment('${appointment.id}')">Edit</button>
                     <button class="btn btn-danger" onclick="deleteAppointment('${appointment.id}')">Delete</button>
                 </td>

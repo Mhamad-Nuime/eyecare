@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Appointment Management</title>
+  <title>Your Appointment</title>
   <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
   <link rel="stylesheet" href="../css/style.css">
@@ -20,16 +20,11 @@
   <div id="header-placeholder"></div>
 
   <main class="container mt-5">
-    <h2 class="mb-5">Appointment Management</h2>
-    <div class="mb-30">
-      <label for="appoinment-filter">Filter</label>
-      <input class="input" type="text" id="appoinment-patient-filter" placeholder="By patient">
-        <input class="input" type="text" id="appoinment-doctor-filter" placeholder="By doctor">
-    </div>
+    <h2 class="mb-5">Your Appointment</h2>
     <table class="table table-striped">
       <thead>
         <tr>
-          <th>Patient</th>
+          <th>Clinic</th>
           <th>Doctor</th>
           <th>Date</th>
           <th>Time</th>
@@ -41,22 +36,6 @@
         <!-- Appointments will be loaded here dynamically -->
       </tbody>
     </table>
-    <div id="appoinment-form" style="display : none">
-      <h2>Reschedule Appointment</h2>
-      <button id="close-form">Exit</button>
-      <!-- Appointment Reschedule Form -->
-      <form id="appointmentForm" class="appoinment-form">
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="form-group">
-              <input class="input" type="datetime-local" id="reschedule" class="form-control" placeholder="Select date" />
-            </div>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-main btn-round-full">Edit Appointment</button>
-        <p id="error-message" style="color : red"></p>
-      </form>
-    </div>
   </main>
 
 

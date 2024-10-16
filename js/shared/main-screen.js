@@ -3,16 +3,14 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchEmergencyContact();
     // Populate dropdowns
     populateDepartments();
-    populateDoctors();
-
+    // form Submission event
     const appointmentForm = document.getElementById("appointmentForm");
-
     appointmentForm.addEventListener("submit", function (event) {
         event.preventDefault(); // Prevent the form from submitting immediately
-
+        
         // Check if the user is logged in (this is a placeholder, replace with your actual logic)
         const isUserLoggedIn = checkUserLoggedIn();
-
+        
         if (!isUserLoggedIn) {
             // Redirect to login or registration page
             alert("You must be logged in to book an appointment.");
@@ -22,7 +20,11 @@ document.addEventListener("DOMContentLoaded", function () {
             submitAppointmentForm();
         }
     });
-
+    // select department event
+    const departmentSelect = document.getElementById("departmentSelect");
+    departmentSelect.addEventListener("input" , (event) => {
+        populateDoctors();
+    })
     function populateDepartments() {
         fetch(`${window.currentEnv.apiUrl}/api/department`)
             .then(response => {
