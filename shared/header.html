@@ -1,38 +1,90 @@
 <header>
-    <div class="header-top-bar">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <ul class="top-bar-info list-inline-item pl-0 mb-0">
-              <li class="list-inline-item"><i class="icofont-email"></i> <span id="email"></span></li>
-              <li class="list-inline-item"><i class="icofont-location-pin"></i> <span id="address"></span></li>
-            </ul>
+  <div class="header-top-bar">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6">
+          <ul class="top-bar-info list-inline-item pl-0 mb-0">
+            <li class="list-inline-item">
+              <i class="icofont-email"></i> <span id="email"></span>
+            </li>
+            <li class="list-inline-item">
+              <i class="icofont-location-pin"></i> <span id="address"></span>
+            </li>
+          </ul>
         </div>
         <div class="col-lg-6">
-            <div class="text-lg-right top-right-bar mt-2 mt-lg-0">
-              <li class="list-inline-item"><i class="icofont-phone"></i> <span id="phone"></span></li>
-            </div>
+          <div class="text-lg-end top-right-bar mt-2 mt-lg-0">
+            <li class="list-inline-item">
+              <i class="icofont-phone"></i> <span id="phone"></span>
+            </li>
           </div>
-          
         </div>
       </div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/clientapp/shared/index.html"><img src="/mock-updata/logo.png" alt="Eye Care Logo" class="img-fluid" style="width: 100px;"></a>
-      <button class="navbar-toggler m-0 self-end" style="width: 50px" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="/clientapp/shared/index.html">
+        <img
+          src="/mock-updata/logo.png"
+          alt="Eye Care Logo"
+          class="img-fluid"
+          style="width: 100px"
+        />
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><div id="google_translate_element"></div></li>
-          <li class="nav-item"><a class="nav-link" href="/shared/index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/shared/service.html">Services</a></li>
-          <li class="nav-item"><a class="nav-link" href="/shared/department.html">Departments</a></li>
-          <li class="nav-item"><a class="nav-link" href="/shared/doctor.html">Doctors</a></li>
-          <li class="nav-item"><a class="nav-link" href="/shared/appointment.html">Book Appointment</a></li>
-          <li class="nav-item"><a class="nav-link" href="/shared/contact.html">Contact</a></li>
-          <li class="nav-item"><a style="color : #007bff" class="nav-link" href="../login.html">Login  Signup</a></li>
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <div id="google_translate_element"></div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/shared/index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/shared/department.html">Clinics</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/shared/doctor.html">Doctors</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              href="#"
+              id="profileDropdown"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Profile
+            </a>
+            <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="profileDropdown"
+            >
+              <li>
+                <a class="dropdown-item" id="profile-view-link" href=""></a>
+              </li>
+              <li><a class="dropdown-item" id="profile-logout" href=""></a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/shared/contact.html">Contact</a>
+          </li>
         </ul>
       </div>
-    </nav>
-  </header>
+    </div>
+  </nav>
+</header>

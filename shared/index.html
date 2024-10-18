@@ -8,12 +8,20 @@
   <!-- bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+    <!-- Plugins CSS -->
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
+    <link rel="stylesheet" href="../plugins/slick-carousel/slick/slick.css">
+    <link rel="stylesheet" href="../plugins/slick-carousel/slick/slick-theme.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- <link rel="stylesheet" href="../css/styles.css"> -->
   <!-- jQuery and Bootstrap from CDN -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <!-- Favicon -->
   <link rel="shortcut icon" href="../mock-updata/favicon.ico" type="image/x-icon">
+    <!-- Google Translate -->
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </head>
 <body id="top">
 
@@ -81,8 +89,8 @@
               <label for="departmentSelect" class="form-label">Select Clinic</label>
               <select id="departmentSelect" class="form-select" required>
                 <option value="" disabled selected hidden></option>
+                <div class="invalid-feedback">Please select a clinic.</div>
               </select>
-              <div class="invalid-feedback">Please select a clinic.</div>
             </div>
 
             <div class="col-lg-6">
@@ -94,20 +102,19 @@
             </div>
 
             <div class="col-lg-12">
-              <label for="appointment-booking" class="form-label">Select Appointment Date & Time</label>
-              <appointment-booking id="appointment-booking"></appointment-booking>
+              <appointment-booking id="appointment-booking" disabled></appointment-booking>
               <div class="invalid-feedback">Please choose an appointment time.</div>
             </div>
 
             <div class="col-lg-6">
               <label for="patientName" class="form-label">Full Name</label>
-              <input type="text" id="patientName" class="form-control" placeholder="Enter your name" required disabled>
+              <input type="text" id="patientName" class="form-control" placeholder="" required disabled>
               <div class="invalid-feedback">Please enter your full name.</div>
             </div>
 
             <div class="col-lg-6">
               <label for="patientPhone" class="form-label">Phone Number</label>
-              <input type="tel" id="patientPhone" class="form-control" placeholder="Enter your phone number" required disabled>
+              <input type="tel" id="patientPhone" class="form-control" placeholder="" required disabled>
               <div class="invalid-feedback">Please provide a valid phone number.</div>
             </div>
 
@@ -132,19 +139,19 @@
   <!-- Include Footer -->
   <div id="footer-placeholder"></div>
 
-   <!--google translate-->
-   <script type="text/javascript">
+  <!-- Google Translate Initialization -->
+  <script type="text/javascript">
     function googleTranslateElementInit() {
-        new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+      new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
     }
-</script>
+  </script>
   <!-- Plugins JS -->
   <script defer src="../plugins/slick-carousel/slick/slick.min.js"></script>
 
-  <!-- Main JS -->
-  <script defer  src="../js/shared/header.js"></script>
-  <script defer src="../js/shared/footer.js"></script>
-  <script defer src="../js/shared/main-screen.js"></script>
+    <!-- Main JS -->
+    <script defer  src="../js/shared/header.js"></script>
+    <script defer src="../js/shared/footer.js"></script>
+    <script defer src="../js/shared/main-screen.js"></script>
 
   <!-- appointment element -->
    <script src="../js/custom-elements/appointmentBookingElement.js"></script>
@@ -152,12 +159,48 @@
   <script>
     // Load the shared header and footer
     $(function() {
-      $("#header-placeholder").load("header.html");
-      $("#footer-placeholder").load("footer.html");
+      $("#header-placeholder").load("header.html", function() {
+    // Access the profile links
+    const profile = document.getElementById("profile-view-link");
+    const logout  = document.getElementById("profile-logout");
+    logout.addEventListener("click" , (event) => {
+      if(event.target.innerHTML === "Logout"){
+        localStorage.removeItem("user");
+      }
+    })
+    let user = localStorage.getItem("user");
+    if (user) {
+      let dashUrl;
+      switch (user.role) {
+            case 'Patient':
+                dashUrl = '../Patientdashboard/patient-dashboard.html';
+                break;
+            case 'Doctor':
+                dashUrl = '../doctordash/doctor-dashboard.html';
+                break;
+            case 'Admin':
+                dashUrl = '../admindash/admin-dashboard.html';
+                break;
+            case 'SuperAdmin':
+                dashUrl = '../Superadmindash/superadmin-dashboard.html';
+                break;
+        }
+      profile.innerHTML = "View Profile";
+      profile.setAttribute("href", dashUrl);
+      logout.innerHTML = "Logout";
+      logout.setAttribute("href", "login.html");
+    } else {
+      profile.innerHTML = "View Profile";
+      profile.setAttribute("href", "login.html");
+      logout.innerHTML = "Login";
+      logout.setAttribute("href", "login.html");
+    }
+    fetchHeaderContactInfo();
+  });
+      $("#footer-placeholder").load("footer.html" ,function(){
+        loadFooterContent();
+      });
     });
-    // Fetch dynamic content for features section
-   // fetchWorkHours();
-   // fetchEmergencyContact();
   </script>
 </body>
 </html>

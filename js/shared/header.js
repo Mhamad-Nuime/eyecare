@@ -6,12 +6,6 @@ function googleTranslateElementInit() {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    fetchHeaderContactInfo();
-    loadGoogleTranslate(); // Load Google Translate script dynamically
-});
-
-
 function fetchHeaderContactInfo() {
     fetch(`${window.currentConfig.apiUrl}/api/admin/footer`, {
         

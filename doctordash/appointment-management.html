@@ -4,19 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Appointment Management</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../plugins/icofont/icofont.min.css" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/appoitment.css" />
-    <!-- Bootstrap 5.3 CSS -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <!-- Bootstrap 5.3 JS Bundle (including Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="../js/config.js"></script>
     <!-- jQuery and Bootstrap from CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </head>
   <body id="top">
     <!-- Header -->
@@ -31,7 +38,6 @@
             <th>Patient</th>
             <th>Date</th>
             <th>Time</th>
-            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -39,103 +45,102 @@
           <!-- Appointments will be loaded here dynamically -->
         </tbody>
       </table>
-      <div id="appoinment-form" style="display: none">
-        <h2>Reschedule Appointment</h2>
-        <button id="close-form">Exit</button>
-        <!-- Appointment Reschedule Form -->
-        <form id="appointmentForm" class="appoinment-form">
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="form-group">
-                <input
-                  class="input"
-                  type="datetime-local"
-                  id="reschedule"
-                  class="form-control"
-                  placeholder="Select date"
-                />
-              </div>
+      <!-- Reschedule Modal -->
+      <div
+        class="modal fade"
+        id="editModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                Reschedule Appointment
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
             </div>
-          </div>
-          <button type="submit" class="btn btn-main btn-round-full">
-            Edit Appointment
-          </button>
-          <p id="error-message" style="color: red"></p>
-        </form>
-      </div>
-    </main>
-    <!-- Reschedule Modal -->
-    <div
-      class="modal fade"
-      id="exampleModal"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">
-              Reschedule
-            </h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <div class="">
-              <appointment-booking id="appointmentBooking"></appointment-booking>
+            <div class="modal-body">
+              <input type="hidden" id="appointment-id" name="appointmentId" >
+              <appointment-booking id="appointment-datetime"></appointment-booking>
             </div>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">Save</button>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" id="edit-save" class="btn btn-primary">
+                Save changes
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
+
     <!-- Footer -->
     <div id="footer-placeholder"></div>
-
-    <script>
-      const appointmentBooking = document.getElementById('appointmentBooking');
-
-      // // Listen for the date-selected event
-      // appointmentBooking.addEventListener('date-selected', (event) => {
-      //     const selectedDate = event.detail.date;
-      //     console.log("Selected date:", selectedDate); // For debugging
-      //     // Here you could call your real endpoint to fetch times
-      // });
-
-      // // Listen for the time-selected event to get the combined datetime
-      // appointmentBooking.addEventListener('time-selected', (event) => {
-      //     const combinedDateTime = event.detail.datetime;
-      //     if (combinedDateTime) {
-      //         console.log("Selected DateTime:", combinedDateTime); // For debugging
-      //     } else {
-      //         console.log("DateTime not selected.");
-      //     }
-      // });
-      setInterval(()=> {
-        console.log(appointmentBooking.value)
-      }, 3000)
-  </script>
-
     <script src="../js/doctor/appointment-management.js"></script>
-    <script src="/js/custom-elements/appointmentBookingElement.js"></script> <!-- Import the web component -->
-    <script>
-      $(function () {
-        $("#header-placeholder").load("../shared/header.html");
-        $("#footer-placeholder").load("../shared/footer.html");
+     <!-- Main JS -->
+     <script defer  src="../js/shared/header.js"></script>
+     <script defer src="../js/shared/footer.js"></script>
+    <script src="../js/toaster.js"></script>
+    <script src="../js/back-button.js"></script>
+    <!-- appoitment booking element  -->
+     <script src="../js/custom-elements/appointmentBookingElement.js"></script>
+     <script>
+      // Load the shared header and footer
+      $(function() {
+        $("#header-placeholder").load("../shared/header.html", function() {
+      // Access the profile links
+      const profile = document.getElementById("profile-view-link");
+      const logout  = document.getElementById("profile-logout");
+      logout.addEventListener("click" , (event) => {
+        if(event.target.innerHTML === "Logout"){
+          localStorage.removeItem("user");
+        }
+      })
+      let user = localStorage.getItem("user");
+      if (user) {
+        let dashUrl;
+        switch (user.role) {
+              case 'Patient':
+                  dashUrl = '../Patientdashboard/patient-dashboard.html';
+                  break;
+              case 'Doctor':
+                  dashUrl = '../doctordash/doctor-dashboard.html';
+                  break;
+              case 'Admin':
+                  dashUrl = '../admindash/admin-dashboard.html';
+                  break;
+              case 'SuperAdmin':
+                  dashUrl = '../Superadmindash/superadmin-dashboard.html';
+                  break;
+          }
+        profile.innerHTML = "View Profile";
+        profile.setAttribute("href", dashUrl);
+        logout.innerHTML = "Logout";
+        logout.setAttribute("href", "login.html");
+      } else {
+        profile.innerHTML = "View Profile";
+        profile.setAttribute("href", "login.html");
+        logout.innerHTML = "Login";
+        logout.setAttribute("href", "login.html");
+      }
+      fetchHeaderContactInfo();
+    });
+        $("#footer-placeholder").load("../shared/footer.html" ,function(){
+          loadFooterContent();
+        });
       });
     </script>
   </body>

@@ -52,6 +52,8 @@ class AppointmentBooking extends HTMLElement {
         this.timeDropdown = this.shadowRoot.getElementById("timeDropdown");
         this.noTimesMessage = this.shadowRoot.getElementById("no-times-message");
 
+        this.updateDisabledState(); // Update initial state based on the attribute
+
         if (this.selectedDate) {
             this.datepicker.value = this.selectedDate;
             this.fetchAvailableTimes(this.selectedDate);
@@ -139,7 +141,7 @@ class AppointmentBooking extends HTMLElement {
     }
 
     static get observedAttributes() {
-        return ["date", "time"];
+        return ["date", "time", "disabled"]; // Listen for disabled attribute changes
     }
 
     attributeChangedCallback(name, oldValue, newValue) {
@@ -150,7 +152,15 @@ class AppointmentBooking extends HTMLElement {
         } else if (name === "time") {
             this.selectedTime = newValue;
             this.updateAvailableTimes();
+        } else if (name === "disabled") {
+            this.updateDisabledState(); // Update state when disabled attribute changes
         }
+    }
+
+    updateDisabledState() {
+        const isDisabled = this.hasAttribute("disabled");
+        this.datepicker.disabled = isDisabled;
+        this.timeDropdown.disabled = isDisabled;
     }
 }
 

@@ -3,7 +3,7 @@ $(document).ready(function() {
 
     // Load existing patients on page load
     loadPatients();
-
+    deleteModalConfig();
     // Update modal for adding new patient
     function updateModalForAdd() {
         $('#addPatientModal .modal-title').text('Add Patient');
@@ -110,10 +110,10 @@ $(document).ready(function() {
                         <td>${patient.name}</td>
                         <td>${patient.email}</td>
                         <td>${medicalHistory}</td>
-                        <td>
-                            <button class="btn btn-info btn-sm" onclick="editPatient('${patient.id}')">Edit</button>
-                            <button class="btn btn-danger btn-sm" onclick="deletePatient('${patient.id}')">Delete</button>
-                            <button class="btn btn-primary btn-sm" onclick="viewMedicalProfile('${patient.id}')">View Profile</button>
+                        <td class="row w-100">
+                            <button class="btn btn-info btn-sm col-6" onclick="editPatient('${patient.id}')">Edit</button>
+                            <button class="btn btn-danger btn-sm col-6" data-bs-toggle="modal" data-bs-target="#delete-patient-modal" data-id="${patient.id}">Delete</button>
+                            <button class="btn btn-primary btn-sm col-12 mt-1" onclick="viewMedicalProfile('${patient.id}')">View Profile</button>
                         </td>
                     </tr>
                 `;
@@ -178,21 +178,22 @@ $(document).ready(function() {
     };
 
     // Handle patient deletion
-    window.deletePatient = function(patientId) {
-        if (confirm("Are you sure you want to delete this patient?")) {
-            $.ajax({
-                url: `${window.currentConfig.apiUrl}/api/patient/${patientId}`,
-                method: 'DELETE',
-                success: function() {
-                    alert("Patient deleted successfully!");
-                    loadPatients(); // Reload the patient list
-                },
-                error: function(error) {
-                    handleAjaxError(error, 'Error deleting patient');
-                }
-            });
-        }
-    };
+    // window.deletePatient = function(patientId) {
+    //     if (confirm("Are you sure you want to delete this patient?")) {
+    //         $.ajax({
+    //             url: `${window.currentConfig.apiUrl}/api/patient/${patientId}`,
+    //             method: 'DELETE',
+    //             success: function() {
+    //                 alert("Patient deleted successfully!");
+    //                 loadPatients(); // Reload the patient list
+    //             },
+    //             error: function(error) {
+    //                 handleAjaxError(error, 'Error deleting patient');
+    //             }
+    //         });
+    //     }
+    // };
+
 
     // Search functionality for filtering patients by name or email
     $('#searchInput').on('input', function() {
@@ -210,3 +211,30 @@ $(document).ready(function() {
         lengthMenu: [10, 25, 50, 100] // Customize page size
     });
 });
+function deleteModalConfig() {
+    const deleteModal = document.getElementById("delete-patient-modal");
+    deleteModal.addEventListener("show.bs.modal", (event) => {
+      const btn = event.relatedTarget; // Button that triggered the modal
+      const userId = btn.getAttribute("data-id"); // Get data-id from button
+      // Set the appointment id into the hidden field in the form
+      const idField = document.getElementById("delete-patient-id");
+      idField.value = userId;
+    });
+    const btn = document.getElementById("delete-patient-button");
+    btn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        event.preventDefault();
+        deletePatient();
+    })
+  }
+
+  function deletePatient(){
+    const patientId = document.getElementById("delete-patient-id").value;
+    fetch(`${window.currentConfig.apiUrl}/api/patient/${patientId}`, {
+        method : "DELETE",
+    }).then(res => {
+        showToast("delete patient successfully", true)
+        loadPatients();
+    })
+    .catch((e) => showToast("fail to delete patient", false))
+}

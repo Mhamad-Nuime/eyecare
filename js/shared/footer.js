@@ -1,7 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-  loadFooterContent();
-});
-
 function loadFooterContent() {
   fetch(`${window.currentConfig.apiUrl}/api/admin/footer`)
       .then(response => response.json())

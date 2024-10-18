@@ -1,139 +1,141 @@
-window.addEventListener("DOMContentLoaded", () => {
-  getAppointment();
-});
+// TODO : in line 35 : here we should place the edit endpoint call
+// TODO : implement display appointments in getAppointment()
+// TODO : ensure  delete appointment endpoint path
+// TODP : use toaster with every endpoint
 
-function getAppointment(){
-  fetch()
-  .then(res => res.json())
-  .then(res => {
-    const tbody = document.getElementById("appointment-list");
-    res.forEach(appointment => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-      <td>${appointment.clinic.name}</td>
-      <td>${appointment.doctor.name}</td>
-      <td>${appointment.date}</td>
-      <td>${appointment.time}</td>
-      <td>${appointment.status}</td>
-      <td><button>Delete</button></td>
-      `;
-      tbody.appendChild(row);
-    })
-  })
-  .catch();
-}
-// document.addEventListener("DOMContentLoaded", function () {
-//   const token = localStorage.getItem('userToken');
+window.addEventListener("DOMContentLoaded", () => {
+  //   const token = localStorage.getItem('userToken');
 //     if (!token) {
 //       window.location.href = '../../login.html';
 //     }
-//     loadAppointments(undefined,undefined);
-//     document.getElementById("appoinment-patient-filter").addEventListener("input" , filter("patient"));
-//     document.getElementById("appoinment-doctor-filter").addEventListener("input" , filter("doctor"));
-//   });
+  getAppointment();
+  deleteModalConfig()
+  modalConfig();
+});
 
-//   function loadAppointments(appointment = undefined,query = undefined) {
-//     if(appointment){
-//       const appointmentTable = document.getElementById("appointment-list");
-//           appointmentTable.innerHTML = "";
-//           window.appointment.forEach((appointment) => {
-//             const row = document.createElement("tr");
-//             row.innerHTML = `
-//               <td>${appointment?.patient?.name || "hussam"}</td>
-//               <td>${appointment?.doctor?.name || "nader"}</td>
-//               <td>${appointment?.appointmentDate || "N/A"}</td>
-//               <td>${appointment?.appointmentTime || "N/A"}</td>
-//               <td>${appointment?.status || "N/A"}</td>
-//               <td id="actions">
-//                 <button class="btn btn-sm btn-primary" onclick="editAppointment('${appointment.appointmentId}')">Reschedule</button>
-//                 <button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.appointmentId}')">Delete</button>
-//               </td>`;
-//             appointmentTable.appendChild(row);
-//           });
-//     } else {
-//       let url;
-//       if(query){
-//         url = `${window.currentConfig.apiUrl}/api/admin/appointments?${query}`
-//       } else {
-//         url =  `${window.currentConfig.apiUrl}/api/admin/appointments`
-//       }
-//       fetch(url)
-//         .then((response) => response.json())
-//         .then((data) => {
-//           const appointmentTable = document.getElementById("appointment-list");
-//           appointmentTable.innerHTML = "";
-//           data.$values.forEach((appointment) => {
-//             window.appointment.push(appointment);
-//             const row = document.createElement("tr");
-//             row.innerHTML = `
-//               <td>${appointment?.patient?.name || "hussam"}</td>
-//               <td>${appointment?.doctor?.name || "nader"}</td>
-//               <td>${appointment?.appointmentDate || "N/A"}</td>
-//               <td>${appointment?.appointmentTime || "N/A"}</td>
-//               <td>${appointment?.status || "N/A"}</td>
-//               <td id="actions">
-//                 <button class="btn btn-sm btn-primary" onclick="editAppointment('${appointment.appointmentId}')">Reschedule</button>
-//                 <button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.appointmentId}')">Delete</button>
-//               </td>`;
-//             appointmentTable.appendChild(row);
-//           });
-//         })
-//         .catch((error) => console.error("Error loading appointments:", error));
-//     }
-// }
+function modalConfig() {
+  // Get modal element
+  const editModal = document.getElementById("editModal");
+  const saveBtn = document.getElementById("edit-save");
 
-// function deleteAppointment(appointmentId) {
-//   window.appointment = window.appointment.filter(app => app.appointmentId != appointmentId);
-//   console.log(appointmentId)
-//   console.log(window.appointment.length)
-//   console.log(window.appointment)
-//   loadAppointments(window.appointment)
+  // Pass the appointment id to modal when it's shown
+  editModal.addEventListener("shown.bs.modal", (event) => {
+    const btn = event.relatedTarget; // Button that triggered the modal
+    const appointmentId = btn.getAttribute("data-id"); // Get data-id from button
+    console.log("data-id", appointmentId);
 
-//   // fetch(`${window.currentConfig.apiUrl}/api/admin/appointments/${appointmentId}/cancel`, {
-//   //     method: "DELETE",
-//   // })
-//   //     .then(() => loadAppointments())
-//   //     .catch((error) => console.error("Error deleting appointment:", error));
-//   }
-  
-//   function editAppointment(appointmentId) {
-//     const editForm = document.getElementById("appoinment-form");
-//     const appointmentForm = document.getElementById("appointmentForm");
-//     const rescheduleField = document.getElementById("reschedule");
-//     const errorMessageField = document.getElementById("error-message");
-//     const exitButton = document.getElementById("close-form").onclick = () => editForm.style.display = "none";
-//     editForm.style.display = "block";
-//     console.log(rescheduleField.value);
-//     appointmentForm.addEventListener("submit", (event) => {
-//       event.preventDefault();
-//       fetch(`${window.currentConfig.apiUrl}/api/admin/appointments/${appointmentId}/reschedule?`,
-//         {
-//           method : "PUT",
-//           headers : {
-//             "Content-Type" : "Application/json"
-//           },
-//           body : JSON.stringify({
-//             "newDate": rescheduleField.value,
-//           })
-//         }
-//       )
-//     .then(() => {editForm.style.display = "none";loadAppointments();})
-//     .catch(() => errorMessageField.innerHTML = "Error Occured Retry");
-//     })
-    
-//   }
-//   function filter(type){
-//     if(type == "doctor"){
-//       return (e) => {
-//         const query = e.target.value;
-//         loadAppointments(`doctor=${query}`);
-//       }
-//     }
-//     else if(type == "patient"){
-//       return (e) => {
-//         const query = e.target.value;
-//         loadAppointments(`patient=${query}`);
-//       }
-//     }
-//   }
-  
+    // Set the appointment id into the hidden field in the form
+    const idField = document.getElementById("appointment-id");
+    idField.value = appointmentId;
+  });
+
+  // Add click event listener to the save button (attach this only once)
+  saveBtn.addEventListener("click", (event) => {
+    event.preventDefault(); // Prevent any default form behavior
+
+    // Fetch values when the save button is clicked
+    editAppointment()
+
+
+    // TODO: Call your API here with id and datetime
+  });
+}
+function deleteModalConfig() {
+  const deleteModal = document.getElementById("delete-appointment-modal");
+  deleteModal.addEventListener("show.bs.modal", (event) => {
+    const btn = event.relatedTarget; // Button that triggered the modal
+    const userId = btn.getAttribute("data-id"); // Get data-id from button
+    // Set the appointment id into the hidden field in the form
+    const idField = document.getElementById("delete-appointment-id");
+    idField.value = userId;
+    console.log(userId)
+  });
+}
+
+function getAppointment() {
+  const tbody = document.getElementById("appointment-list");
+  res = [
+    {
+      id: 5,
+      clinic: { name: "Damas" },
+      doctor: { name: "moe" },
+      patient: { name: "japer" },
+      date: "2024/06/01",
+      time: "12:02:02",
+    },
+  ];
+  res.forEach((appointment) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+    <td>${appointment.clinic.name}</td>
+    <td>${appointment.doctor.name}</td>
+    <td>${appointment.patient.name}</td>
+    <td>${appointment.date}</td>
+    <td>${appointment.time}</td>
+    <td class="d-flex gap-1"><button
+      type="button"
+      id="appoitmentId"
+      class="btn btn-primary"
+      data-id="${appointment.id}"
+      data-bs-toggle="modal"
+      data-bs-target="#editModal"
+    >
+      Reschedule
+    </button><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-appointment-modal" data-id="${appointment.id}">Delete</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  // ...................... Ready to use
+  // fetch(`${window.currentConfig.apiUrl}/api/appointments`)
+  // .then(res => res.json())
+  // .then(res => {
+  //   const tbody = document.getElementById("appointment-list");
+  //     res.forEach((appointment) => {
+  //   const row = document.createElement("tr");
+  //   row.innerHTML = `
+  //   <td>${appointment.clinic.name}</td>
+  //   <td>${appointment.doctor.name}</td>
+  //   <td>${appointment.patient.name}</td>
+  //   <td>${appointment.date}</td>
+  //   <td>${appointment.time}</td>
+  //   <td class="d-flex gap-1"><button
+  //     type="button"
+  //     id="appoitmentId"
+  //     class="btn btn-primary"
+  //     data-id="${appointment.id}"
+  //     data-bs-toggle="modal"
+  //     data-bs-target="#editModal"
+  //   >
+  //     Reschedule
+  //   </button><button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.id}')">Delete</button></td>
+  //   `;
+  //   tbody.appendChild(row);
+  // });
+  // })
+  // .catch();
+}
+
+function editAppointment(){
+  const appointmentId = document.getElementById("appointment-id").value;
+  const datetime = document.getElementById("appointment-datetime").value;
+
+  // TODO : Edit API call
+  fetch(`${window.currentConfig.apiUrl}/api/appointments/${appointmentId}`, {
+    method: "PUT",
+    body : { newDate : datetime}
+})
+    .then(() => loadAppointments())
+    .catch((error) => console.error("Error deleting appointment:", error));
+}
+
+
+function deleteAppointment() {
+  const id = document.getElementById("delete-appointment-id").value;
+  console.log(id)
+  // fetch(`${window.currentConfig.apiUrl}/api/appointments/${appointmentId}`, {
+  //     method: "DELETE",
+  // })
+  //     .then(() => loadAppointments())
+  //     .catch((error) => console.error("Error deleting appointment:", error));
+  }

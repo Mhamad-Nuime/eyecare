@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Eye Care - Login and Signup" />
+    <meta name="author" content="eyecare.com" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eye Care - Login and Signup</title>
+
+    <!-- Favicon -->
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="/mock-updata/logo.png"
+    />
+    <!-- Bootstrap 5.3.3 JS & Popper.js -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- CSS Plugins -->
+    <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="plugins/icofont/icofont.min.css" />
+    <link rel="stylesheet" href="plugins/slick-carousel/slick/slick.css" />
+    <link
+      rel="stylesheet"
+      href="plugins/slick-carousel/slick/slick-theme.css"
+    />
+    <script src="../js/config.js"></script>
+    <!-- jQuery and Bootstrap from CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="../css/style.css" />
+    <!-- <link rel="stylesheet" href="css/styles.css" /> -->
+    <link rel="stylesheet" href="../css/login.css" />
+  </head>
+  <body>
+    <!-- Include Header -->
+    <div id="header-placeholder"></div>
+
+    <div class="my-5">
+      <div class="container d-flex align-items-center justify-content-center">
+        <div class="row w-100">
+            <div class="col-12">
+                <div class="card p-4" id="loginCard">
+                    <h3 class="text-center mb-4">Login</h3>
+                    <form id="loginForm" novalidate>
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="loginEmail" required autocomplete="off">
+                            <div class="invalid-feedback">Please enter a valid email address.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                            <div class="invalid-feedback"> Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one special character</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <span class="form-toggle" id="toggleToSignup">Don't have an account? Signup</span>
+                    </div>
+                </div>
+
+                <div class="card p-4 d-none" id="signupCard">
+                    <h3 class="text-center mb-4">Signup</h3>
+                    <form id="signupForm" novalidate>
+                        <div class="mb-3">
+                            <label for="signupName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="signupName" required autocomplete="off">
+                            <div class="invalid-feedback">Please enter your name.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signupEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="signupEmail" required autocomplete="off">
+                            <div class="invalid-feedback">Please enter a valid email address.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signupPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="signupPassword" required minlength="8"
+                                autocomplete="off">
+                            <div class="invalid-feedback">Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one digit, and one special character.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="signupConfirmPassword" required minlength="8" autocomplete="off">
+                            <div class="invalid-feedback">Please confirm your password.</div>
+                        </div>
+                        <div class="invalid-feedback" id="signupError"></div>
+                        <button type="submit" class="btn btn-success w-100">Signup</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <span class="form-toggle" id="toggleToLogin">Already have an account? Login</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Include Footer -->
+    <div id="footer-placeholder"></div>
+
+    <!--google translate-->
+    <!-- <script type="text/javascript">
+      function googleTranslateElementInit() {
+        new google.translate.TranslateElement(
+          {
+            pageLanguage: "en",
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+          },
+          "google_translate_element"
+        );
+      }
+    </script> -->
+    <script src="../js/login.js"></script>
+    <!-- JS Plugins -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script src="plugins/slick-carousel/slick/slick.min.js"></script>
+    <!-- toaster -->
+     <script src="../js/toaster.js"></script>
+    
+    <!-- Main JS -->
+    <script src="../js/shared/header.js"></script>
+    <script src="../js/shared/footer.js"></script>
+    <script>
+      // Load the shared header and footer
+      $(function() {
+        $("#header-placeholder").load("header.html", function() {
+      // Access the profile links
+      const profile = document.getElementById("profile-view-link");
+      const logout  = document.getElementById("profile-logout");
+      logout.addEventListener("click" , (event) => {
+      if(event.target.innerHTML === "Logout"){
+        localStorage.removeItem("user");
+      }
+    })
+    let user = localStorage.getItem("user");
+    if (user) {
+      let dashUrl;
+      switch (user.role) {
+            case 'Patient':
+                dashUrl = '../Patientdashboard/patient-dashboard.html';
+                break;
+            case 'Doctor':
+                dashUrl = '../doctordash/doctor-dashboard.html';
+                break;
+            case 'Admin':
+                dashUrl = '../admindash/admin-dashboard.html';
+                break;
+            case 'SuperAdmin':
+                dashUrl = '../Superadmindash/superadmin-dashboard.html';
+                break;
+        }
+        profile.innerHTML = "View Profile";
+        profile.setAttribute("href", "profile.html");
+        logout.innerHTML = "Logout";
+        logout.setAttribute("href", "login.html");
+      } else {
+        profile.innerHTML = "View Profile";
+        profile.setAttribute("href", "login.html");
+        logout.innerHTML = "Login";
+        logout.setAttribute("href", "login.html");
+      }
+      fetchHeaderContactInfo();
+      loadGoogleTranslate(); // Load Google Translate script dynamically
+    });
+        $("#footer-placeholder").load("footer.html" ,function(){
+          loadFooterContent();
+        });
+      });
+  
+      // Fetch dynamic content for features section
+    //  fetchWorkHours();
+    //  fetchEmergencyContact();
+    </script>
+  </body>
+</html>

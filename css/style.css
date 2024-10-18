@@ -53,7 +53,7 @@ p {
 .navbar-toggle .icon-bar {
   background: #223a66;
 }
-
+/* 
 input[type="email"], input[type="password"], input[type="text"], input[type="tel"] {
   box-shadow: none;
   height: 45px;
@@ -74,7 +74,7 @@ input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focu
 .form-control:focus {
   box-shadow: none;
   border: 1px solid #223a66;
-}
+} */
 
 .py-7 {
   padding: 7rem 0px;
