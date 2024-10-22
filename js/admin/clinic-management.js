@@ -11,16 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
     addClinicModalConfig();
     editmodalConfig();
     deleteModalConfig()
-    loadClinics(undefined);
+    loadClinics();
 });
 function showDoctorsmodalConfig() {
     const showDoctorsModal = document.getElementById("show-doctros-modal");
     showDoctorsModal.addEventListener("show.bs.modal", (event) => {
-      const btn = event.relatedTarget; 
-      const clinicId = btn.getAttribute("data-id"); 
-      console.log("data-id", clinicId);
-      // call doctors?clinicId=__ endpoint
-      //then build the body of the table inside the modal
+        const btn = event.relatedTarget; 
+        const clinicId = btn.getAttribute("data-id"); 
+        fetch(`${window.currentConfig.apiUrl}/api/clinics`)
     });
   }
 function addClinicModalConfig() {
@@ -180,27 +178,34 @@ function deleteClinic() {
     // .catch(error => console.error("Error deleting clinic:", error));
 }
 
-function loadClinics(clinic) {
-        fetch(`${window.currentConfig.apiUrl}/api/clinic`)
+async function loadClinics() {
+        fetch(`${window.currentConfig.apiUrl}/api/clinics`)
         .then(response => response.json())
         .then(data => {
             const clinicTable = document.getElementById("clinic-list");
             clinicTable.innerHTML = "";
-              data.$values.forEach(clinic => {
-                  window.clinic.push(clinic)
-                  const row = document.createElement("tr");
-                  row.innerHTML = `
-                      <td>${clinic.name}</td>
-                      <td>${clinic.address || "Not specified"}</td>
-                      <td>${clinic?.openTime || "Not specified"}</td>
-                      <td>${clinic?.closeTime  || "Not specified"}</td>
-                      <td>${clinic?.daysOpen || "Not specified"}</td>
-                      <td><a id="show-doctors-button" class="text-success" data-id="${clinic.id}" data-bs-toggle="modal" data-bs-target="#show-doctros-modal">show doctors in this clinic</a></td>
-                      <td class="actions">
-                          <button type="button" id="show-doctors-button" class="btn btn-primary" data-clinic=${JSON.stringify(clinic)} data-bs-toggle="modal" data-bs-target="#edit-clinic-modal">Edit</button>
-                          <button type="button" id="show-doctors-button" class="btn btn-danger" data-id="${clinic.clinicId}" data-bs-toggle="modal" data-bs-target="#delete-clinic-modal">Delete</button>
-                      </td>`;
-                  clinicTable.appendChild(row);
+              data.$values.forEach(async (clinic) => {
+                // fetch clinic setting
+                fetch(`${window.currentConfig.apiUrl}/api/clinics/${clinic?.clinicId}/settings`)
+                .then(res => res.json())
+                .then(settings => {
+                    const row = document.createElement("tr");
+                    let openTime = new Date(settings?.openTime);
+                    let closeTime = new Date(settings?.closeTime);
+
+                    row.innerHTML = `
+                        <td>${clinic?.name}</td>
+                        <td>${clinic?.address || "Not specified"}</td>
+                        <td>${openTime.toLocaleTimeString() || "Not specified"}</td>
+                        <td>${closeTime.toLocaleTimeString() || "Not specified"}</td>
+                        <td>${settings?.daysOpen || "Not specified"}</td>
+                        <td><a id="show-doctors-button" class="text-success" data-id="${clinic.clinicId}" data-bs-toggle="modal" data-bs-target="#show-doctros-modal">show doctors in this clinic</a></td>
+                        <td class="actions">
+                            <button type="button" id="show-doctors-button" class="btn btn-primary" data-id=${clinic.clinicId} data-bs-toggle="modal" data-bs-target="#edit-clinic-modal">Edit</button>
+                            <button type="button" id="show-doctors-button" class="btn btn-danger" data-id="${clinic.clinicId}" data-bs-toggle="modal" data-bs-target="#delete-clinic-modal">Delete</button>
+                        </td>`;
+                    clinicTable.appendChild(row);
+                });
               });
               showToast("Clinics loaded successfull", true)
         })

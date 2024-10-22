@@ -334,11 +334,54 @@
     <script src="../js/form-validation.js"></script>
     <script src="../js/admin/clinic-management.js"></script>
 
-    <script>
-      $(function () {
-        $("#header-placeholder").load("../shared/header.html");
-        $("#footer-placeholder").load("../shared/footer.html");
+      <!-- Main js -->
+  <script defer  src="../js/shared/header.js"></script>
+  <script defer src="../js/shared/footer.js"></script>
+  <script>
+    // Load the shared header and footer
+    $(function() {
+      $("#header-placeholder").load("../shared/header.html", function() {
+    // Access the profile links
+    const profile = document.getElementById("profile-view-link");
+    const logout  = document.getElementById("profile-logout");
+    logout.addEventListener("click" , (event) => {
+      if(event.target.innerHTML === "Logout"){
+        localStorage.removeItem("user");
+      }
+    })
+    let user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      let dashUrl;
+      switch(user.role) {
+            case 'Patient':
+                dashUrl = '../Patientdashboard/patient-dashboard.html';
+                break;
+            case 'Doctor':
+                dashUrl = '../doctordash/doctor-dashboard.html';
+                break;
+            case 'Admin':
+                dashUrl = '../admindash/admin-dashboard.html';
+                break;
+            case 'SuperAdmin':
+                dashUrl = '../Superadmindash/superadmin-dashboard.html';
+                break;
+        }
+      profile.innerHTML = "View Profile";
+      profile.setAttribute("href", dashUrl);
+      logout.innerHTML = "Logout";
+      logout.setAttribute("href", "../shared/login.html");
+    } else {
+      profile.innerHTML = "View Profile";
+      profile.setAttribute("href", "../shared/login.html");
+      logout.innerHTML = "Login";
+      logout.setAttribute("href", "../shared/login.html");
+    }
+    fetchHeaderContactInfo();
+  });
+      $("#footer-placeholder").load("../shared/footer.html" ,function(){
+        loadFooterContent();
       });
-    </script>
+    });
+  </script>
   </body>
 </html>

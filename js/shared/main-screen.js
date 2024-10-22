@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     fetchWorkHours();
     fetchEmergencyContact();
+    loadTestimonial()
     // Populate dropdowns
     populateDepartments();
     if(!localStorage.getItem("user")){
@@ -164,3 +165,47 @@ function fetchEmergencyContact() {
 }
 
 
+async function loadTestimonial(){
+    const testimonilRef = document.getElementById("testimonial-container");
+    fetch(`${window.currentEnv.apiUrl}/api/feedback`)
+    .then(res => res.json())
+    .then(res => {
+        res.$values.forEach(async (feedback) => {
+            fetch(`${window.currentEnv.apiUrl}/api/users/${feedback?.userId}`)
+            .then(res => res.json())
+            .then(res => {
+                const userName = res.name;
+                if(userName){
+                    const testimonialMarkup = document.createElement("div")
+                    testimonialMarkup.classList.add("testimonial-block");
+                    testimonialMarkup.classList.add("style-2");
+                    testimonialMarkup.classList.add("gray-bg");
+                    const i = document.createElement("i")
+                    i.classList.add("icofont-quote-right");
+                    const thumb = document.createElement("div")
+                    thumb.classList.add("testimonial-thumb");
+                    const blankImg = document.createElement("img")
+                    blankImg.src = "../images/blank-user.jpg";
+                    blankImg.classList.add("img-fluid");
+                    thumb.appendChild(blankImg);
+                    const info = document.createElement("div")
+                    info.classList.add("client-info");
+                    const text = document.createElement("h4")
+                    text.textContent = feedback?.responseText || "--";
+                    const user_name = document.createElement("span")
+                    user_name.textContent = userName || "";
+                    const msg = document.createElement("p")
+                    msg.textContent = feedback?.message || "..............";
+                    info.appendChild(text);
+                    info.appendChild(user_name);
+                    info.appendChild(msg);
+                    testimonialMarkup.appendChild(i);
+                    testimonialMarkup.appendChild(thumb);
+                    testimonialMarkup.appendChild(info);
+                    testimonilRef.appendChild(testimonialMarkup);
+                }
+
+            })
+        })
+    })
+}

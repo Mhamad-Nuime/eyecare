@@ -10,6 +10,17 @@
   <script src="../js/config.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+  crossorigin="anonymous"
+/>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+  crossorigin="anonymous"
+></script>
     <!-- back button -->
     <script src="../js/back-button.js"></script>
 </head>
@@ -43,25 +54,25 @@
   <script src="../js/admin/footer-management.js"></script>
 
   <script>
-    $(function() {
-      $("#header-placeholder").load("../shared/header.html");
-      $("#footer-placeholder").load("../shared/footer.html");
-      document.addEventListener("DOMContentLoaded", function () {
-        loadFooterContent();
-        document.getElementById("footerForm").addEventListener("submit", updateFooter);
-      });
-    });
+    // $(function() {
+    //   $("#header-placeholder").load("../shared/header.html");
+    //   $("#footer-placeholder").load("../shared/footer.html");
+    //   document.addEventListener("DOMContentLoaded", function () {
+    //     loadFooterContent();
+    //     document.getElementById("footerForm").addEventListener("submit", updateFooter);
+    //   });
+    // });
 
-    function loadFooterContent() {
-      fetch(`${window.currentConfig.apiUrl}/api/admin/footer`)
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById("footerDescription").value = data.Description || "";  // Use Description
-          document.getElementById("footerDepartments").value = data.DepartmentLinks.map(link => link.DepartmentName).join(", ") || "";
-          document.getElementById("footerLinks").value = data.footerSettings.FooterLinks.map(link => link.Text).join(", ") || "";
-        })
-        .catch(error => console.error("Error loading footer content:", error));
-    }
+    // function loadFooterContent() {
+    //   fetch(`${window.currentConfig.apiUrl}/api/admin/footer`)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       document.getElementById("footerDescription").value = data.Description || "";  // Use Description
+    //       document.getElementById("footerDepartments").value = data.DepartmentLinks.map(link => link.DepartmentName).join(", ") || "";
+    //       document.getElementById("footerLinks").value = data.footerSettings.FooterLinks.map(link => link.Text).join(", ") || "";
+    //     })
+    //     .catch(error => console.error("Error loading footer content:", error));
+    // }
 
     function updateFooter(event) {
       event.preventDefault();
@@ -84,5 +95,54 @@
         .catch(error => console.error("Error updating footer:", error));
     }
   </script>
+    <!-- Main js -->
+    <script defer  src="../js/shared/header.js"></script>
+    <script defer src="../js/shared/footer.js"></script>
+    <script>
+      // Load the shared header and footer
+      $(function() {
+        $("#header-placeholder").load("../shared/header.html", function() {
+      // Access the profile links
+      const profile = document.getElementById("profile-view-link");
+      const logout  = document.getElementById("profile-logout");
+      logout.addEventListener("click" , (event) => {
+        if(event.target.innerHTML === "Logout"){
+          localStorage.removeItem("user");
+        }
+      })
+      let user = JSON.parse(localStorage.getItem("user"));
+      if (user) {
+        let dashUrl;
+        switch(user.role) {
+              case 'Patient':
+                  dashUrl = '../Patientdashboard/patient-dashboard.html';
+                  break;
+              case 'Doctor':
+                  dashUrl = '../doctordash/doctor-dashboard.html';
+                  break;
+              case 'Admin':
+                  dashUrl = '../admindash/admin-dashboard.html';
+                  break;
+              case 'SuperAdmin':
+                  dashUrl = '../Superadmindash/superadmin-dashboard.html';
+                  break;
+          }
+        profile.innerHTML = "View Profile";
+        profile.setAttribute("href", dashUrl);
+        logout.innerHTML = "Logout";
+        logout.setAttribute("href", "../shared/login.html");
+      } else {
+        profile.innerHTML = "View Profile";
+        profile.setAttribute("href", "../shared/login.html");
+        logout.innerHTML = "Login";
+        logout.setAttribute("href", "../shared/login.html");
+      }
+      fetchHeaderContactInfo();
+    });
+        $("#footer-placeholder").load("../shared/footer.html" ,function(){
+          loadFooterContent();
+        });
+      });
+    </script>
 </body>
 </html>
