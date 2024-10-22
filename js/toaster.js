@@ -43,7 +43,7 @@ function showToast(message, isSuccess = true) {
   // Hide the toast after 3 seconds
   setTimeout(() => {
     toast.hide();
-  }, 10000);
+  }, 5000);
 
   // Remove from DOM when the toast is hidden
   toastElement.addEventListener('hidden.bs.toast', () => {
@@ -51,7 +51,7 @@ function showToast(message, isSuccess = true) {
   });
 
   // Hide the toast when the user clicks anywhere on the page
-  document.addEventListener('click', () => {
-    toast.hide();
-  }, { once: true });
+  // document.addEventListener('click', () => {
+  //   toast.hide();
+  // }, { once: true });
 }

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
   addValuetoSelectRole();
 });
 function addValuetoSelectRole(){
-  const rolesForAdmin = ["doctor", "patient"]
+  const rolesForAdmin = ["Doctor", "Patient"]
   const selectFields = document.querySelector("select.select-role");
 
   rolesForAdmin.forEach( role => {
@@ -27,25 +27,33 @@ function addModalConfig(){
     document.getElementById("add-user-form").reset();
   })
 }
-function editModalConfig() {
+async function editModalConfig() {
   const editModal = document.getElementById("edit-user-modal");
   const editForm = document.getElementById("edit-user-form");
-  editModal.addEventListener("show.bs.modal", (event) => {
+  editModal.addEventListener("show.bs.modal",async function (event) {
 
     editForm.reset();
 
     const btn = event.relatedTarget; // Button that triggered the modal
-    const userJson = btn.getAttribute("data-user"); // Get data-id from button
-    const user = JSON.parse(userJson);
-
-    const idField = document.getElementById("edit-user-id");
-    idField.value = user.id;
-    const roleField = document.getElementById("edit-user-role");
-    roleField.value = user.role;
-    const nameField = document.getElementById("edit-user-name");
-    nameField.value = user.name;
-    const emailField = document.getElementById("edit-user-email");
-    emailField.value = user.email;
+    const id = btn.getAttribute("data-id"); // Get data-id from button
+    const response = await fetch(`${window.currentConfig.apiUrl}/api/users/${id}`, {
+      method: "GET",
+      headers: {
+            // Include token in Authorization header
+          'Content-Type': 'application/json'
+      }
+    });
+    if(response.ok){
+      const user = await response.json();
+      const idField = document.getElementById("edit-user-id");
+      idField.value = user.id;
+      const roleField = document.getElementById("edit-user-role");
+      roleField.value = user.role;
+      const nameField = document.getElementById("edit-user-name");
+      nameField.value = user.name;
+      const emailField = document.getElementById("edit-user-email");
+      emailField.value = user.email;
+    }
   });
 }
 function deleteModalConfig() {
@@ -59,11 +67,19 @@ function deleteModalConfig() {
     console.log(userId)
   });
 }
-function addUser(){
+async function addUser(){
   const form = document.getElementById("add-user-form");
+  const closeBtn = document.getElementById("add-user-close");
   if(form.checkValidity()){
       const passwordField = document.getElementById('add-user-password');
       const confirmPasswordField = document.getElementById('add-user-confirm-password'); 
+      const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
+      if(!passwordPattern.test(passwordField.value)){
+        passwordField.value = ""
+        confirmPasswordField.value = "";
+        form.checkValidity();
+        return;
+      }
       if(passwordField.value !== confirmPasswordField.value){
         confirmPasswordField.value = "";
         form.checkValidity()
@@ -71,14 +87,31 @@ function addUser(){
         const user = {
           email : document.getElementById("add-user-email").value ,
           name : document.getElementById("add-user-name").value,
-          password : document.getElementById("add-user-password").value,
+          
           role : document.getElementById("add-user-role").value,
         };
-      }
-  }
+        const password =  document.getElementById("add-user-password").value;
+        const response = await fetch(`${window.currentEnv.apiUrl}/api/users/register?password=${password}`, {
+          method : "POST",
+          headers: {
+              
+            'Content-Type': 'application/json'
+          },
+          body : JSON.stringify(user)
+        })
+        if(response.ok){
+          showToast("User has added", true);
+          debugger;
+          closeBtn.click();
+          loadUsers();
+        } else {
+          showToast("fail to add user", false);
+        }
+  }}
 }
-function editUser() {
+async function editUser() {
   const form = document.getElementById("edit-user-form");
+const closeBtn = document.getElementById("edit-user-close");
   if(form.checkValidity()){
       const passwordField = document.getElementById('edit-user-password');
       const confirmPasswordField = document.getElementById('edit-user-confirm-password'); 
@@ -93,24 +126,37 @@ function editUser() {
           password : document.getElementById("edit-user-password").value,
           role : document.getElementById("edit-user-role").value,
         };
-        console.log(user)
-        // call edit endpoint
+        const response = await fetch(`${window.currentEnv.apiUrl}/api/users/${id}`);
+        if(response.ok){
+          closeBtn.click();
+          showToast("User has edited", true);
+          loadUsers();
+        } else {
+          showToast("Fail to edit user", false);
+        }
+
       }
   }
 }
 function deleteUser() {
   const id = document.getElementById("delete-user-id").value;
-  console.log(id)
-  
-  // fetch(`${window.currentConfig.apiUrl}/api/patient/${userId}`, {
-  //     method: "DELETE",
-  //     headers: {
-  //           // Include token in Authorization header
-  //         'Content-Type': 'application/json'
-  //     }
-  // })
-  // .then(() => loadUsers())
-  // .catch((error) => console.error("Error deleting user:", error.$values[0].description));
+  const closeBtn = document.getElementById("delete-user-close")
+  fetch(`${window.currentConfig.apiUrl}/api/users/${id}`, {
+      method: "DELETE",
+      headers: {
+            // Include token in Authorization header
+          'Content-Type': 'application/json'
+      }
+  })
+  .then(() => {
+    closeBtn.click();
+    showToast("User deleted ", true);
+    loadUsers();
+  })
+  .catch((error) => {
+    console.error(error);
+    showToast("fail to delete user ", false);
+  });
 }
 function loadUsers() {
   // Get the JWT token from localStorage
@@ -121,33 +167,27 @@ function loadUsers() {
 //       window.location.href = '../login.html'; // Redirect to login if no token
 //       return;
 //   }
-    fetch(`${window.currentConfig.apiUrl}/api/users/all`, {
+    fetch(`${window.currentConfig.apiUrl}/api/users`, {
       headers: {
         //   'Authorization': `Bearer ${token}`,  // Include token in Authorization header
           'Content-Type': 'application/json'
       }
   })
   .then((response) => {
-      if (response.status === 401) {
-          // If unauthorized, redirect to login
-          window.location.href = '../login.html';
-      }
       return response.json();
   })
-  .then((data) => {
+  .then((users) => {
       const userTable = document.getElementById("user-list");
       userTable.innerHTML = "";
-      data.$values.forEach((user) => {
+      users.$values.forEach((user) => {
         const userJsonFormat = JSON.stringify(user);
-        console.log(userJsonFormat);
-        console.log(typeof userJsonFormat);
           const row = document.createElement("tr");
           row.innerHTML = `
               <td>${user.name}</td>
               <td>${user.email}</td>
               <td>${user.role}</td>
               <td>
-                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-user-modal" data-user=${userJsonFormat}>Edit</button>
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit-user-modal" data-id=${user.id}>Edit</button>
                   <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-user-modal" data-id="${user.id}">Delete</button>
               </td>`;
           userTable.appendChild(row);

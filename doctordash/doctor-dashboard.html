@@ -56,9 +56,9 @@
   <div id="footer-placeholder"></div>
   <script src="../js/checkToken.js"></script>
   <!-- Main js -->
+  <script src="../js/doctor/doctor.js"></script>
   <script defer  src="../js/shared/header.js"></script>
   <script defer src="../js/shared/footer.js"></script>
-  <script src="../js/doctor/doctor.js"></script>
   <script>
     // Load the shared header and footer
     $(function() {
@@ -91,12 +91,12 @@
       profile.innerHTML = "View Profile";
       profile.setAttribute("href", dashUrl);
       logout.innerHTML = "Logout";
-      logout.setAttribute("href", "login.html");
+      logout.setAttribute("href", "../shared/login.html");
     } else {
       profile.innerHTML = "View Profile";
-      profile.setAttribute("href", "login.html");
+      profile.setAttribute("href", "../shared/login.html");
       logout.innerHTML = "Login";
-      logout.setAttribute("href", "login.html");
+      logout.setAttribute("href", "../shared/login.html");
     }
     fetchHeaderContactInfo();
   });

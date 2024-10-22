@@ -1,6 +1,7 @@
 // TODO : in line 35 : here we should place the edit endpoint call
 // TODO : implement display appointments in getAppointment()
 // TODO : ensure  delete appointment endpoint path
+// TODO : implement the logic of createAppointment()
 
 window.addEventListener("DOMContentLoaded", () => {
     //   const token = localStorage.getItem('userToken');
@@ -9,6 +10,7 @@ window.addEventListener("DOMContentLoaded", () => {
   //     }
     getAppointment();
     modalConfig();
+    deleteModalConfig();
   });
   
   function modalConfig() {
@@ -36,6 +38,17 @@ window.addEventListener("DOMContentLoaded", () => {
   
   
       // TODO: Call your API here with id and datetime
+    });
+  }
+  function deleteModalConfig() {
+    const deleteModal = document.getElementById("delete-appointment-modal");
+    deleteModal.addEventListener("show.bs.modal", (event) => {
+      const btn = event.relatedTarget; // Button that triggered the modal
+      const userId = btn.getAttribute("data-id"); // Get data-id from button
+      // Set the appointment id into the hidden field in the form
+      const idField = document.getElementById("delete-appointment-id");
+      idField.value = userId;
+      console.log(userId)
     });
   }
   
@@ -67,7 +80,7 @@ window.addEventListener("DOMContentLoaded", () => {
         data-bs-target="#editModal"
       >
         Reschedule
-      </button><button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.id}')">Delete</button></td>
+      </button><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-appointment-modal" data-id="${appointment.id}">Delete</button></td>
       `;
       tbody.appendChild(row);
     });
@@ -117,11 +130,28 @@ window.addEventListener("DOMContentLoaded", () => {
   }
   
   
-  function deleteAppointment(appointmentId) {
-    fetch(`${window.currentConfig.apiUrl}/api/appointments/${appointmentId}`, {
+  function deleteAppointment() {
+    const id = document.getElementById("delete-appointment-id");
+    fetch(`${window.currentConfig.apiUrl}/api/appointments/${id}`, {
         method: "DELETE",
     })
-        .then(() => loadAppointments())
-        .catch((error) => console.error("Error deleting appointment:", error));
+        .then(() => {
+          showToast("Appointment deleted sucessfully", true)
+          loadAppointments();
+        })
+        .catch((error) =>{
+          showToast("Fail to delete Appointment", false)
+        });
     }
   
+  function createAppointment(){
+    const user = JSON.parse(localStorage.getItem("user"));
+    const data = {
+      clinicId : document.getElementById("clinicSelect"),
+      doctorId : user.id,
+      data : document.getElementById("appointment-booking"),
+      patienName : document.getElementById("patientName"),
+      patientPhone : document.getElementById("patientPhone"),
+      message : document.getElementById("message"),
+    }
+  }

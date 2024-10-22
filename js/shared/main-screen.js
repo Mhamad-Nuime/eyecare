@@ -3,22 +3,20 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchEmergencyContact();
     // Populate dropdowns
     populateDepartments();
+    if(!localStorage.getItem("user")){
+        const selectDoctor = document.getElementById("departmentSelect");
+        selectDoctor.setAttribute("disabled", true);
+        
+    } else {
+        const message = document.getElementById("needs-login");
+        debugger
+        message.style.display = "none";
+    }
     // form Submission event
-    const appointmentForm = document.getElementById("appointmentForm");
-    appointmentForm.addEventListener("submit", function (event) {
+    const appointmentForm = document.getElementById("book-appointment-form");
+    appointmentForm.addEventListener("submit", function (event) { 
         event.preventDefault(); // Prevent the form from submitting immediately
-        
-        // Check if the user is logged in (this is a placeholder, replace with your actual logic)
-        const isUserLoggedIn = checkUserLoggedIn();
-        
-        if (!isUserLoggedIn) {
-            // Redirect to login or registration page
-            alert("You must be logged in to book an appointment.");
-            window.location.href = "../shared/login.html"; // Replace with your actual login page URL
-        } else {
-            // Proceed with form submission
-            submitAppointmentForm();
-        }
+        submitAppointmentForm();
     });
     // select department event
     const departmentSelect = document.getElementById("departmentSelect");
@@ -83,27 +81,33 @@ document.addEventListener("DOMContentLoaded", function () {
     
 
     function checkUserLoggedIn() {
-        const token = localStorage.getItem('userToken');
-        if (!token) {
-            return false; // No token, user is not logged in
+
+        const user = localStorage.getItem("user");
+        if(user) return true;
+        else {
+            return false;
         }
+        // const token = localStorage.getItem('userToken');
+        // if (!token) {
+        //     return false; // No token, user is not logged in
+        // }
     
-        try {
-            // Decode the token to check its expiration
-            const tokenPayload = JSON.parse(atob(token.split('.')[1])); // Extract payload (second part of the token)
+        // try {
+        //     // Decode the token to check its expiration
+        //     const tokenPayload = JSON.parse(atob(token.split('.')[1])); // Extract payload (second part of the token)
     
-            // Check if token is expired
-            const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
-            if (tokenPayload.exp && tokenPayload.exp < currentTime) {
-                console.log('Token expired');
-                return false;
-            }
+        //     // Check if token is expired
+        //     const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+        //     if (tokenPayload.exp && tokenPayload.exp < currentTime) {
+        //         console.log('Token expired');
+        //         return false;
+        //     }
     
-            return true; // Token is valid and not expired
-        } catch (error) {
-            console.error('Error decoding token:', error);
-            return false; // Token is invalid or corrupted
-        }
+        //     return true; // Token is valid and not expired
+        // } catch (error) {
+        //     console.error('Error decoding token:', error);
+        //     return false; // Token is invalid or corrupted
+        // }
     }
 
 
@@ -138,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .catch(error => {
             console.error("Error booking appointment:", error);
             alert("There was an error booking the appointment. Please try again.");
-        });
+        }); 
     }
 });  
 function fetchWorkHours() {

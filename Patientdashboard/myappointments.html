@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Your Appointment</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
   <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../plugins/icofont/icofont.min.css">
   <link rel="stylesheet" href="../css/style.css">
@@ -21,6 +25,7 @@
 
   <main class="container mt-5">
     <h2 class="mb-5">Your Appointment</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-appointment-modal">Create</button>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -35,6 +40,125 @@
         <!-- Appointments will be loaded here dynamically -->
       </tbody>
     </table>
+          <!-- Add Modal -->
+          <div
+          class="modal fade"
+          id="add-appointment-modal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">
+                  Create Appointment
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close close-modal-button"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form  id="add-appointment-form" class="row g-1 needs-validation" novalidate>
+                  <div class="col-lg-6">
+                    <label for="clinicSelect" class="form-label">Select Clinic</label>
+                    <select id="clinicSelect" class="form-select" required>
+                      <option value="" disabled selected hidden></option>
+                      <div class="invalid-feedback">Please select a clinic.</div>
+                    </select>
+                  </div>
+  
+                  <div class="col-lg-6">
+                    <label for="doctorSelect" class="form-label">Select Doctor</label>
+                    <select id="doctorSelect" class="form-select" required disabled>
+                      <option value="" disabled selected hidden></option>
+                    </select>
+                    <div class="invalid-feedback">Please select a doctor.</div>
+                  </div>
+  
+                  <div class="col-lg-12">
+                    <appointment-booking id="appointment-booking" disabled></appointment-booking>
+                    <div class="invalid-feedback">Please choose an appointment time.</div>
+                  </div>
+<!--   
+                  <div class="col-lg-6">
+                    <label for="patientName" class="form-label">Full Name</label>
+                    <input type="text" id="patientName" class="form-control" placeholder="" required disabled>
+                    <div class="invalid-feedback">Please enter your full name.</div>
+                  </div> -->
+  
+                  <div class="col-lg-6">
+                    <label for="patientPhone" class="form-label">Phone Number</label>
+                    <input type="tel" id="patientPhone" class="form-control" placeholder="" required disabled>
+                    <div class="invalid-feedback">Please provide a valid phone number.</div>
+                  </div>
+  
+                  <div class="col-lg-12">
+                    <label for="message" class="form-label">Message</label>
+                    <textarea id="message" class="form-control" rows="6" placeholder="Enter any details" disabled></textarea>
+                    <div class="invalid-feedback">Please enter your message.</div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary close-modal-button"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="button" id="add-appointment-submit-button" class="btn btn-primary" onclick="createAppointment()">
+                  create
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+              <!-- delete user Modal -->
+      <div
+      class="modal fade"
+      id="delete-appointment-modal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">
+              Delete appointment
+            </h1>
+            <button
+              type="button"
+              class="btn-close form-modal-close"
+              data-form-id="delete-user-form"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+                <input type="hidden" id="delete-appointment-id">
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary form-modal-close"
+              data-form-id="edit-user-form"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button type="button" id="delete-appointment-button" class="btn btn-danger" onclick="deleteAppointment()">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
 
@@ -42,12 +166,56 @@
   <div id="footer-placeholder"></div>
 
   
+  <script defer src="../js/toaster.js"></script>
   <script src="../js/patient/appointment.js"></script>
-
+  <script src="../js/back-button.js"></script>
+  <script defer  src="../js/shared/header.js"></script>
+  <script defer src="../js/shared/footer.js"></script>
+  <script defer src="../js/custom-elements/appointmentBookingElement.js"></script>
   <script>
+    // Load the shared header and footer
     $(function() {
-      $("#header-placeholder").load("../shared/header.html");
-      $("#footer-placeholder").load("../shared/footer.html");
+      $("#header-placeholder").load("../shared/header.html", function() {
+    // Access the profile links
+    const profile = document.getElementById("profile-view-link");
+    const logout  = document.getElementById("profile-logout");
+    logout.addEventListener("click" , (event) => {
+      if(event.target.innerHTML === "Logout"){
+        localStorage.removeItem("user");
+      }
+    })
+    let user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      let dashUrl;
+      switch (user.role) {
+            case 'Patient':
+                dashUrl = '../Patientdashboard/patient-dashboard.html';
+                break;
+            case 'Doctor':
+                dashUrl = '../doctordash/doctor-dashboard.html';
+                break;
+            case 'Admin':
+                dashUrl = '../admindash/admin-dashboard.html';
+                break;
+            case 'SuperAdmin':
+                dashUrl = '../Superadmindash/superadmin-dashboard.html';
+                break;
+        }
+      profile.innerHTML = "View Profile";
+      profile.setAttribute("href", dashUrl);
+      logout.innerHTML = "Logout";
+      logout.setAttribute("href", "../shared/login.html");
+    } else {
+      profile.innerHTML = "View Profile";
+      profile.setAttribute("href", "../shared/login.html");
+      logout.innerHTML = "Login";
+      logout.setAttribute("href", "../shared/login.html");
+    }
+    fetchHeaderContactInfo();
+  });
+      $("#footer-placeholder").load("../shared/footer.html" ,function(){
+        loadFooterContent();
+      });
     });
   </script>
 </body>

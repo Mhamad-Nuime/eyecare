@@ -23,12 +23,10 @@ function setupSuperAdminRegisterForm() {
         const data = {
           name: document.getElementById('registerName').value,
           email: document.getElementById('registerEmail').value,
-          password: document.getElementById('registerPassword').value,
-          role: document.getElementById('registerRole').value,
+          role: "Admin",
         };
-    
         try {
-          const response = await fetch(`${window.currentEnv.apiUrl}/api/account/register`, {  // Replace with your actual API endpoint
+          const response = await fetch(`${window.currentEnv.apiUrl}/api/users/register?password=${psd}`, {  // Replace with your actual API endpoint
             method: 'POST',
             headers: {
               
@@ -38,8 +36,7 @@ function setupSuperAdminRegisterForm() {
           });
     
           const result = await response.json();
-          if (response.ok && result.success) {
-            // alert('User registered successfully!');
+          if (response.ok) {
             showToast('User registered successfully!',true)
             registerForm.reset();
             registerForm.classList.remove('was-validated');

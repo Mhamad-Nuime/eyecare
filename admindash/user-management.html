@@ -74,6 +74,7 @@
               </h1>
               <button
                 type="button"
+                id="add-user-close"
                 class="btn-close form-modal-close"
                 data-form-id="add-user-form"
                 data-bs-dismiss="modal"
@@ -139,10 +140,11 @@
           <div class="modal-content">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="exampleModalLabel">
-                Edit User
+            Edit User 
               </h1>
               <button
                 type="button"
+                id="edit-user-close"
                 class="btn-close form-modal-close"
                 data-form-id="edit-user-form"
                 data-bs-dismiss="modal"
@@ -209,6 +211,7 @@
                 type="button"
                 class="btn-close form-modal-close"
                 data-form-id="delete-user-form"
+                id="delete-user-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -225,7 +228,7 @@
               >
                 Close
               </button>
-              <button type="submit" form="edit-user-form" id="edit-user-button" class="btn btn-danger" onclick="deleteUser()">
+              <button type="submit" form="edit-user-form" id="delete-user-button" class="btn btn-danger" onclick="deleteUser()">
                 Delete
               </button>
             </div>
@@ -243,10 +246,53 @@
   <script src="../js/form-validation.js"></script>
   <script src="../js/admin/user-management.js"></script>
 
+  <!-- Main js -->
+  <script defer  src="../js/shared/header.js"></script>
+  <script defer src="../js/shared/footer.js"></script>
   <script>
+    // Load the shared header and footer
     $(function() {
-      $("#header-placeholder").load("../shared/header.html");
-      $("#footer-placeholder").load("../shared/footer.html");
+      $("#header-placeholder").load("../shared/header.html", function() {
+    // Access the profile links
+    const profile = document.getElementById("profile-view-link");
+    const logout  = document.getElementById("profile-logout");
+    logout.addEventListener("click" , (event) => {
+      if(event.target.innerHTML === "Logout"){
+        localStorage.removeItem("user");
+      }
+    })
+    let user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      let dashUrl;
+      switch(user.role) {
+            case 'Patient':
+                dashUrl = '../Patientdashboard/patient-dashboard.html';
+                break;
+            case 'Doctor':
+                dashUrl = '../doctordash/doctor-dashboard.html';
+                break;
+            case 'Admin':
+                dashUrl = '../admindash/admin-dashboard.html';
+                break;
+            case 'SuperAdmin':
+                dashUrl = '../Superadmindash/superadmin-dashboard.html';
+                break;
+        }
+      profile.innerHTML = "View Profile";
+      profile.setAttribute("href", dashUrl);
+      logout.innerHTML = "Logout";
+      logout.setAttribute("href", "../shared/login.html");
+    } else {
+      profile.innerHTML = "View Profile";
+      profile.setAttribute("href", "../shared/login.html");
+      logout.innerHTML = "Login";
+      logout.setAttribute("href", "../shared/login.html");
+    }
+    fetchHeaderContactInfo();
+  });
+      $("#footer-placeholder").load("../shared/footer.html" ,function(){
+        loadFooterContent();
+      });
     });
   </script>
 </body>

@@ -37,7 +37,7 @@
                     <div class="divider mb-3"></div>
       <h1>Welcome to Eye Care</h1>
       <p>Your eye care is our priority.</p>
-      <a href="appointment.html" class="btn btn-primary">Book Appointment</a>
+      <!-- <a href="appointment.html" class="btn btn-primary">Book Appointment</a> -->
       
     </div>
   </div>
@@ -82,9 +82,11 @@
       <div class="col-lg-6 col-md-10">
         <div class="appointment-wrap mt-5 mt-lg-0">
           <h2 class="mb-3 title-color" id="appointment_title">Book Your Appointment</h2>
-
+          <div class="d-flex justify-content-center mt-2 text-danger">
+            <div  id="needs-login">You have to login First to enable this form</div>
+          </div>
           <!-- Appointment Form -->
-          <form id="appointmentForm" class="row g-3 needs-validation" novalidate>
+          <form  id="book-appointment-form" class="row g-1 needs-validation" novalidate>
             <div class="col-lg-6">
               <label for="departmentSelect" class="form-label">Select Clinic</label>
               <select id="departmentSelect" class="form-select" required>
@@ -125,8 +127,12 @@
             </div>
 
             <div class="col-12">
-              <button type="submit" class="btn btn-primary w-100" disabled>Book Appointment</button>
+              <button type="submit" id="add-appointment-submit-button" on class="btn btn-primary w-100" onclick="bookAppointment()" disabled>Book Appointment</button>
             </div>
+            <div class="col-12">
+              <button type="reset" form="book-appointment-form"  class="btn btn-primary w-100 form-modal-close"  data-form-id="book-appointment-form" disabled>Reset</button>
+            </div>
+            
           </form>
         </div>
       </div>
@@ -145,6 +151,9 @@
       new google.translate.TranslateElement({ pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE }, 'google_translate_element');
     }
   </script>
+  
+  <script defer src="../js/toaster.js"></script>
+  <script defer src="../js/form-validation.js"></script>
   <!-- Plugins JS -->
   <script defer src="../plugins/slick-carousel/slick/slick.min.js"></script>
 

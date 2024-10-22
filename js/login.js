@@ -35,23 +35,25 @@ document.addEventListener('DOMContentLoaded', function () {
           }
   
         try {
-            const response = await fetch(`${window.currentConfig.apiUrl}/api/account/login`, {
+            const response = await fetch(`${window.currentConfig.apiUrl}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify(
+                    {
+                        email : email,
+                        password : password,
+                        rememberMe : false
+                    }
+                )
             });
-  
+            const data = response.json();
             if (response.ok) {
-                const data = await response.json();
-                localStorage.setItem('userToken', data.token); // Store JWT token
-                const userData = data.user;
-                localStorage.setItem("user-role", JSON.stringify(userData.role));
-                localStorage.setItem("user-data", JSON.stringify(userData));
-                localStorage.setItem("user", JSON.stringify(userData));
+                showToast("login succesfully", true);
+                localStorage.setItem("user", JSON.stringify(data));
                 // Redirect based on role
-                switch (data.user.role) {
+                switch (data.role) {
                     case 'Patient':
                         window.location.href = '../Patientdashboard/patient-dashboard.html';
                         break;
@@ -62,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         window.location.href = '../admindash/admin-dashboard.html';
                         break;
                     case 'SuperAdmin':
-                        window.location.href = '../Superadmindash/superadmin-dashboard.html';
+                        showToast("something wrong happened while navigate to your dashboard", false);
                         break;
                 }
             } else {
@@ -106,46 +108,44 @@ document.addEventListener('DOMContentLoaded', function () {
         }
   
         try {
-            const response = await fetch(`${window.currentConfig.apiUrl}/api/account/register`, {
+            const response = await fetch(`${window.currentConfig.apiUrl}/api/users/register?password=${password}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    UserName: name.replace(/\s+/g, '').toLowerCase(),
-                    name,
-                    email,
-                    password,
-                    confirmPassword,
-                    role
+                    UserName: name,
+                    name : name,
+                    email :email,
+                    role : role,
                 })
             });
   
             const data = await response.json();
   
             if (response.status === 409) {
-                document.getElementById('signupError').textContent = 'User already registered with this email.';
-            } else if (response.ok) {
-                localStorage.setItem('userToken', data.token); // Store JWT token
-                document.getElementById('signupError').textContent = '';
-                const decodedToken = jwt_decode(data.token);
-                const userRole = decodedToken.role; // Ensure role is part of the token payload
+                showToast("User already registered with this email" ,false);
+                } else if (response.ok) {
+                    showToast("Account get registered successfully",true)
+                    debugger;
+                localStorage.setItem('user', JSON.stringify(data)); // Store JWT token
+                const userRole = data.role; // Ensure role is part of the token payload
                 // Redirect based on role
                 switch (userRole) {
                     case 'Patient':
-                        window.location.href = '/Patientdashboard/patient-dashboard.html';
+                        window.location.href = '../Patientdashboard/patient-dashboard.html';
                         break;
                     case 'Doctor':
-                        window.location.href = '/doctordash/doctor-dashboard.html';
+                        window.location.href = '../doctordash/doctor-dashboard.html';
                         break;
                     case 'Admin':
-                        window.location.href = '/admindash/admin-dashboard.html';
+                        window.location.href = '../admindash/admin-dashboard.html';
                         break;
                     case 'SuperAdmin':
-                        window.location.href = '/Superadmindash/superadmin-dashboard.html';
+                        window.location.href = '../Superadmindash/superadmin-dashboard.html';
                         break;
                     default:
-                        window.location.href = 'shared/profile.html'; // Default fallback
+                        showToast("something wrong happened while navigate to your dashboard", false);
                         break;
                 }
             } else {

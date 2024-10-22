@@ -47,7 +47,7 @@ $(document).ready(function() {
     function handleAjaxError(error, message) {
         console.error(message, error);
         const responseMessage = error.responseJSON?.message || 'An error occurred. Please try again.';
-        alert(`${message}: ${responseMessage}`);
+        showToast(`${message}: ${responseMessage}`, false)
     }
 
     // Handle the form submission to add or update a patient
@@ -84,44 +84,40 @@ $(document).ready(function() {
 
     // Function to load existing patients
     function loadPatients() {
-        $.ajax({
-            url: `${window.currentConfig.apiUrl}/api/patient`, 
-            method: 'GET',
-            success: function(data) {
-                renderPatients(data); // Render the patients in the table
-            },
-            error: function(error) {
-                handleAjaxError(error, 'Error loading patients');
-            }
-        });
+        fetch(`${window.currentConfig.apiUrl}/api/patient`)
+        .then(res => res.json())
+        .then(res => {
+            debugger;
+            showToast("Patients loaded successfully" ,true)
+            renderPatients(res);
+        })
+        .catch((e) =>{
+            showToast("Error while loading patients" ,false)
+        })
     }
 
     // Function to render patients in the table
     function renderPatients(data) {
         const tbody = $('#patientTable tbody');
+        debugger;
         tbody.empty(); // Clear existing patients
 
-        // Check if data has valid structure and is an array
-        if (data && data.$values && Array.isArray(data.$values)) {
-            data.$values.forEach(function(patient) {
-                const medicalHistory = patient.medicalProfile ? patient.medicalProfile.medicalHistory : 'N/A';
-                const row = `
-                    <tr>
-                        <td>${patient.name}</td>
-                        <td>${patient.email}</td>
-                        <td>${medicalHistory}</td>
-                        <td class="row w-100">
-                            <button class="btn btn-info btn-sm col-6" onclick="editPatient('${patient.id}')">Edit</button>
-                            <button class="btn btn-danger btn-sm col-6" data-bs-toggle="modal" data-bs-target="#delete-patient-modal" data-id="${patient.id}">Delete</button>
-                            <button class="btn btn-primary btn-sm col-12 mt-1" onclick="viewMedicalProfile('${patient.id}')">View Profile</button>
-                        </td>
-                    </tr>
-                `;
-                tbody.append(row); // Append new row to the table
-            });
-        } else {
-            handleAjaxError({}, "Invalid patient data format");
-        }
+        data.$values.forEach(function(patient) {
+            const medicalHistory = patient.medicalProfile ? patient.medicalProfile.medicalHistory : 'N/A';
+            const row = `
+                <tr>
+                    <td>${patient.name}</td>
+                    <td>${patient.email}</td>
+                    <td>${medicalHistory}</td>
+                    <td class="row w-100">
+                        <button class="btn btn-info btn-sm col-6" onclick="editPatient('${patient.id}')">Edit</button>
+                        <button class="btn btn-danger btn-sm col-6" data-bs-toggle="modal" data-bs-target="#delete-patient-modal" data-id="${patient.id}">Delete</button>
+                        <button class="btn btn-primary btn-sm col-12 mt-1" onclick="viewMedicalProfile('${patient.id}')">View Profile</button>
+                    </td>
+                </tr>
+            `;
+            tbody.append(row); // Append new row to the table
+        });
     }
 
     // Function to view patient's medical profile
@@ -205,11 +201,11 @@ $(document).ready(function() {
     });
 
     // Pagination handling using DataTables (if needed)
-    $('#patientTable').DataTable({
-        paging: true,
-        searching: false, // Disable built-in search for custom search input
-        lengthMenu: [10, 25, 50, 100] // Customize page size
-    });
+    // $('#patientTable').DataTable({
+    //     paging: true,
+    //     searching: false, // Disable built-in search for custom search input
+    //     lengthMenu: [10, 25, 50, 100] // Customize page size
+    // });
 });
 function deleteModalConfig() {
     const deleteModal = document.getElementById("delete-patient-modal");
@@ -233,8 +229,8 @@ function deleteModalConfig() {
     fetch(`${window.currentConfig.apiUrl}/api/patient/${patientId}`, {
         method : "DELETE",
     }).then(res => {
-        showToast("delete patient successfully", true)
         loadPatients();
+        showToast("delete patient successfully", true)
     })
     .catch((e) => showToast("fail to delete patient", false))
 }
