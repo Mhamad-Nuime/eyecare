@@ -22,11 +22,14 @@ function setupSuperAdminRegisterForm() {
         }
         const data = {
           name: document.getElementById('registerName').value,
+          UserName: document.getElementById('registerName').value,
           email: document.getElementById('registerEmail').value,
+          Password : psd,
+          ConfirmPassword : psd,
           role: "Admin",
         };
         try {
-          const response = await fetch(`${window.currentEnv.apiUrl}/api/users/register?password=${psd}`, {  // Replace with your actual API endpoint
+          const response = await fetch(`${window.currentEnv.apiUrl}/api/User?password=${psd}`, {  // Replace with your actual API endpoint
             method: 'POST',
             headers: {
               

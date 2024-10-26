@@ -44,16 +44,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     {
                         email : email,
                         password : password,
-                        rememberMe : false
                     }
                 )
             });
             const data = response.json();
             if (response.ok) {
                 showToast("login succesfully", true);
-                localStorage.setItem("user", JSON.stringify(data));
+                localStorage.setItem("user", JSON.stringify(data.user));
+                localStorage.setItem("token", JSON.stringify(data.token));
+                debugger;
                 // Redirect based on role
-                switch (data.role) {
+                switch (data.user.role) {
                     case 'Patient':
                         window.location.href = '../Patientdashboard/patient-dashboard.html';
                         break;
@@ -108,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
   
         try {
-            const response = await fetch(`${window.currentConfig.apiUrl}/api/users/register?password=${password}`, {
+            const response = await fetch(`${window.currentConfig.apiUrl}/api/User?password=${password}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -117,6 +118,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     UserName: name,
                     name : name,
                     email :email,
+                    Password : password,
+                    ConfirmPassword : password,
                     role : role,
                 })
             });
@@ -127,27 +130,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 showToast("User already registered with this email" ,false);
                 } else if (response.ok) {
                     showToast("Account get registered successfully",true)
-                    debugger;
-                localStorage.setItem('user', JSON.stringify(data)); // Store JWT token
-                const userRole = data.role; // Ensure role is part of the token payload
-                // Redirect based on role
-                switch (userRole) {
-                    case 'Patient':
-                        window.location.href = '../Patientdashboard/patient-dashboard.html';
-                        break;
-                    case 'Doctor':
-                        window.location.href = '../doctordash/doctor-dashboard.html';
-                        break;
-                    case 'Admin':
-                        window.location.href = '../admindash/admin-dashboard.html';
-                        break;
-                    case 'SuperAdmin':
-                        window.location.href = '../Superadmindash/superadmin-dashboard.html';
-                        break;
-                    default:
-                        showToast("something wrong happened while navigate to your dashboard", false);
-                        break;
-                }
+                // Redirect based on login
+                window.location.href = '../shared/login.html';
             } else {
               showToast("An error occurred. Please try again", false);
             }

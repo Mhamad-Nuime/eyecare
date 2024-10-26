@@ -30,6 +30,9 @@
 
   <main class="container mt-5">
     <h2>Feedback Management</h2>
+    <div class="my-4">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-feedback-modal">Create</button>
+    </div>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -43,6 +46,61 @@
         <!-- Feedback will be dynamically loaded here -->
       </tbody>
     </table>
+            <!-- Add feedback Modal -->
+            <div
+            class="modal fade"
+            id="add-feedback-modal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+          >
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">
+                    Add feedback
+                  </h1>
+                  <button
+                    type="button"
+                    id="add-user-close"
+                    class="btn-close form-modal-close"
+                    data-form-id="add-feedback-form"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <form id="add-feedback-form" class="w-100 row needs-validation" novalidate onsubmit="event.preventDefault()">
+                    <div class="col-12 my-2">
+                      <label for="message" class="form-label">title :</label>
+                      <input type="text" placeholder="responseText" class="form-control" id="responseText" required>
+                      <div class="valid-feedback">looks good</div>
+                      <div class="invalid-feedback">invalid</div>
+                    </div>
+                    <div class="col-12 my-2">
+                      <label for="message" class="form-label">Message :</label>
+                      <textarea id="message" class="form-control" rows="6" placeholder="Enter any details"></textarea>
+                      <div class="valid-feedback">looks good</div>
+                      <div class="invalid-feedback">Please enter your message.</div>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    type="button"
+                    class="btn btn-secondary form-modal-close"
+                    data-form-id="add-feedback-form"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button type="submit" form="add-feedback-form" id="add-feedback-button" onclick="addFeedback()" class="btn btn-primary">
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- delete feedback Modal -->
           <div
           class="modal fade"
@@ -93,7 +151,7 @@
     <script src="../js/back-button.js"></script>
     <script src="../js/form-validation.js"></script>
     <script src="../js/toaster.js"></script>
-  <script src="../js/admin/feedback-management.js"></script>
+  <script src="../js/patient/feedback.js"></script>
 
     <!-- Main js -->
     <script defer  src="../js/shared/header.js"></script>
