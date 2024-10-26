@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 )
             });
-            const data = response.json();
+            const data = await response.json();
             if (response.ok) {
                 showToast("login succesfully", true);
                 localStorage.setItem("user", JSON.stringify(data.user));
