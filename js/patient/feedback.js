@@ -28,21 +28,22 @@ document.addEventListener("DOMContentLoaded", function () {
     feedbackList.innerHTML = "";
     fetch(`${window.currentEnv.apiUrl}/api/feedback`)
     .then(res => res.json())
-    .then(res => {
+    .then(async (res) => {
+      debugger;
         res.$values.forEach(async (feedback) => {
-              const response = await fetch(`${window.currentEnv.apiUrl}/api/users/${feedback?.userId}`)
-              const user = response.json() || ""
+              if(!feedback?.userId) return;
+              const currentUserId = JSON.parse(localStorage.getItem("user")).id;
+              if(feedback.userId != currentUserId) return;
               const tr = document.createElement("tr")
               tr.innerHTML = `
-              <td>${user.name || "UnKnown"}</td>
-              <td>${user.email || "UnKnown"}</td>
+              <td>${feedback.responseText}</td>
               <td>${feedback.message}</td>
               <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-feedback-modal" data-id="${feedback.id}">Delete</button></td>
               `;
               feedbackList.appendChild(tr);
             });
+            showToast("Feedbacks loaded successfully", true);
           });
-          showToast("Feedbacks loaded successfully", true);
 }
   
   function addFeedback() {
@@ -50,20 +51,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const responseText = document.getElementById("responseText").value;
 
     //get user id 
-    const userDataJson = localStorage.getItem("user");
-    const userData = JSON.parse(userDataJson);
-    const userId =  "";
+    const user =  JSON.parse(localStorage.getItem("user"));
 
     let feedbackData = {
-      userId : userId,
+      userId : user.id,
       message : message,
       responseText : responseText
     }
-
+    debugger;
     fetch(`${window.currentConfig.apiUrl}/api/feedback`, {
       method: "POST",
       body : JSON.stringify(feedbackData),
+      headers : {
+        "Content-Type" : "application/json"
+      }
     }).then(() => {
+        document.getElementById("add-user-close").click();
         showToast("Created", true);
         loadFeedback()}).catch((error) => {
         showToast("Not Created", false)
@@ -77,6 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(`${window.currentConfig.apiUrl}/api/feedback/${id}`, {
       method: "DELETE",
     }).then(() => {
+      document.getElementById("delete-user-close").click();
         showToast("Deleted", true);
         loadFeedback()}).catch((error) => {
         showToast("Not Deleted", false)

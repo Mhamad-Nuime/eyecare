@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         window.location.href = '../admindash/admin-dashboard.html';
                         break;
                     case 'SuperAdmin':
-                        showToast("something wrong happened while navigate to your dashboard", false);
+                        window.location.href = '../Superadmindash/superadmin-dashboard.html';
                         break;
                 }
             } else {

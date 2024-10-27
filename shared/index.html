@@ -287,9 +287,11 @@
         localStorage.removeItem("user");
       }
     })
-    let user = localStorage.getItem("user");
+    let userJson = localStorage.getItem("user");
+    let user = JSON.parse(userJson);
     if (user) {
       let dashUrl;
+      debugger;
       switch (user.role) {
             case 'Patient':
                 dashUrl = '../Patientdashboard/patient-dashboard.html';

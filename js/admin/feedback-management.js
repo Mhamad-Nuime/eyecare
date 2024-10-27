@@ -19,26 +19,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const feedbackList = document.getElementById("feedback-list");
     fetch(`${window.currentEnv.apiUrl}/api/feedback`)
     .then(res => res.json())
-    .then(res => {
+    .then(async (res) => {
+      debugger;
         res.$values.forEach(async (feedback) => {
-            fetch(`${window.currentEnv.apiUrl}/api/users/${feedback?.userId}`)
-            .then(res => res.json())
-            .then(res => {
-                const user = res;
-                if(user){
-                    const tr = document.createElement("tr")
-                    tr.innerHTML = `
-                    <td>${user.name}</td>
-                    <td>${user.email}</td>
-                    <td>${feedback.message}</td>
-                    <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-feedback-modal" data-id="${feedback.id}">Delete</button></td>
-                    `;
-                    feedbackList.appendChild(tr);
-                }
-
-            })
-        })
-    })
+              if(!feedback?.userId) return;
+              const response = await fetch(`${window.currentEnv.apiUrl}/api/user/${feedback?.userId}`)
+              const user = await response.json() || "";
+              const tr = document.createElement("tr")
+              debugger;
+              tr.innerHTML = `
+              <td>${user.name || "UnKnown"}</td>
+              <td>${user.email || "UnKnown"}</td>
+              <td>${feedback.message}</td>
+              <td><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-feedback-modal" data-id="${feedback.id}">Delete</button></td>
+              `;
+              feedbackList.appendChild(tr);
+            });
+            showToast("Feedbacks loaded successfully", true);
+          });
 }
   
   function deleteFeedback() {
@@ -47,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
     fetch(`${window.currentConfig.apiUrl}/api/feedback/${id}`, {
       method: "DELETE",
     }).then(() => {
+      document.getElementById("delete-user-close").click();
         showToast("Deleted", true);
         loadFeedback()}).catch((error) => {
         showToast("Not Deleted", false)

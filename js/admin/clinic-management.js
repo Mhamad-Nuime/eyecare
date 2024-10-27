@@ -117,7 +117,7 @@ function addClinic() {
             openTime: document.getElementById('clinicOpenTime').value,
             closeTime: document.getElementById('clinicCloseTime').value,
             daysOpen: document.getElementById('clinicDaysOpen').value,
-            doctors : [document.getElementById("edit-clinic-doctor-select").value],  
+            emergencyContact :  document.getElementById('EmergencyContact').value,
       };
     
       fetch(`${window.currentConfig.apiUrl}/api/clinic`, {

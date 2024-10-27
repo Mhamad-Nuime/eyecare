@@ -36,7 +36,7 @@ async function editModalConfig() {
 
     const btn = event.relatedTarget; // Button that triggered the modal
     const id = btn.getAttribute("data-id"); // Get data-id from button
-    const response = await fetch(`${window.currentConfig.apiUrl}/api/users/${id}`, {
+    const response = await fetch(`${window.currentConfig.apiUrl}/api/user/${id}`, {
       method: "GET",
       headers: {
             // Include token in Authorization header
@@ -84,14 +84,16 @@ async function addUser(){
         confirmPasswordField.value = "";
         form.checkValidity()
       } else {
+        const password =  document.getElementById("add-user-password").value;
         const user = {
-          email : document.getElementById("add-user-email").value ,
+          UserName : document.getElementById("add-user-name").value,
           name : document.getElementById("add-user-name").value,
-          
+          email : document.getElementById("add-user-email").value ,
+          password : password,
+          ConfirmPassword : password,
           role : document.getElementById("add-user-role").value,
         };
-        const password =  document.getElementById("add-user-password").value;
-        const response = await fetch(`${window.currentEnv.apiUrl}/api/users/register?password=${password}`, {
+        const response = await fetch(`${window.currentEnv.apiUrl}/api/User?password=${password}`, {
           method : "POST",
           headers: {
               
@@ -111,7 +113,7 @@ async function addUser(){
 }
 async function editUser() {
   const form = document.getElementById("edit-user-form");
-const closeBtn = document.getElementById("edit-user-close");
+  const closeBtn = document.getElementById("edit-user-close");
   if(form.checkValidity()){
       const passwordField = document.getElementById('edit-user-password');
       const confirmPasswordField = document.getElementById('edit-user-confirm-password'); 
@@ -120,13 +122,25 @@ const closeBtn = document.getElementById("edit-user-close");
         form.checkValidity()
       } else {
         const id = document.getElementById("edit-user-id").value;
-        const user = {
+        const userData = {
+          id : document.getElementById("edit-user-id").value,
           email : document.getElementById("edit-user-email").value ,
           name : document.getElementById("edit-user-name").value,
+          userName : document.getElementById("edit-user-name").value,
           password : document.getElementById("edit-user-password").value,
+          ConfirmPassword : document.getElementById("edit-user-password").value,
           role : document.getElementById("edit-user-role").value,
         };
-        const response = await fetch(`${window.currentEnv.apiUrl}/api/users/${id}`);
+
+        const response = await fetch(`${window.currentEnv.apiUrl}/api/user`,
+          {
+            method : "PUT",
+            headers : {
+              "Content-Type" : "application/json"
+            },
+            body : JSON.stringify(userData),
+          }
+        );
         if(response.ok){
           closeBtn.click();
           showToast("User has edited", true);
@@ -141,7 +155,7 @@ const closeBtn = document.getElementById("edit-user-close");
 function deleteUser() {
   const id = document.getElementById("delete-user-id").value;
   const closeBtn = document.getElementById("delete-user-close")
-  fetch(`${window.currentConfig.apiUrl}/api/users/${id}`, {
+  fetch(`${window.currentConfig.apiUrl}/api/user/${id}`, {
       method: "DELETE",
       headers: {
             // Include token in Authorization header
@@ -159,15 +173,7 @@ function deleteUser() {
   });
 }
 function loadUsers() {
-  // Get the JWT token from localStorage
-  const token = localStorage.getItem('token');
-  
-//   if (!token) {
-//       console.error("No token found. Redirecting to login.");
-//       window.location.href = '../login.html'; // Redirect to login if no token
-//       return;
-//   }
-    fetch(`${window.currentConfig.apiUrl}/api/users`, {
+    fetch(`${window.currentConfig.apiUrl}/api/user`, {
       headers: {
         //   'Authorization': `Bearer ${token}`,  // Include token in Authorization header
           'Content-Type': 'application/json'
@@ -179,8 +185,13 @@ function loadUsers() {
   .then((users) => {
       const userTable = document.getElementById("user-list");
       userTable.innerHTML = "";
+      const currentUser = JSON.parse(localStorage.getItem("user"));
       users.$values.forEach((user) => {
-        const userJsonFormat = JSON.stringify(user);
+        if(user.role == "SuperAdmin") return;
+        if(!(currentUser.role == "SuperAdmin")){
+          if((user.role == "Admin")) return;
+        }
+        debugger;
           const row = document.createElement("tr");
           row.innerHTML = `
               <td>${user.name}</td>
@@ -198,77 +209,3 @@ function loadUsers() {
     showToast("fail to load users" , false);
     console.error("Error loading users:", error)});
 }
-
-
-
-
-
-
-
-    // Signup functionality
-  //   document.getElementById('signupForm').addEventListener('submit', async function(event) {
-  //     event.preventDefault();
-
-  //     const name = document.getElementById('signupName').value;
-  //     const email = document.getElementById('signupEmail').value;
-  //     const password = document.getElementById('signupPassword').value;
-  //     const confirmPassword = document.getElementById('signupConfirmPassword').value;
-  //     const role = "Patient"; // Default role
-
-  //     if (password !== confirmPassword) {
-  //         document.getElementById('signupError').textContent = 'Passwords do not match!';
-  //         return;
-  //     }
-
-  //     try {
-  //         const response = await fetch(`${window.currentConfig.apiUrl}/api/account/register`, {
-  //             method: 'POST',
-  //             headers: {
-  //                 'Content-Type': 'application/json',
-  //             },
-  //             body: JSON.stringify({
-  //                 UserName: name.replace(/\s+/g, '').toLowerCase(),
-  //                 name,
-  //                 email,
-  //                 password,
-  //                 confirmPassword,
-  //                 role
-  //             })
-  //         });
-
-  //         const data = await response.json();
-
-  //         if (response.status === 409) {
-  //             document.getElementById('signupError').textContent = 'User already registered with this email.';
-  //         } else if (response.ok) {
-  //             localStorage.setItem('userToken', data.token); // Store JWT token
-  //             document.getElementById('signupError').textContent = '';
-  //              // Use jwt-decode to decode token
-  //              const decodedToken = jwt_decode(data.token);
-  //              const userRole = decodedToken.role;// Ensure role is part of the token payload
-  //              debugger 
-  //             // Redirect based on role
-  //             switch (userRole) {
-  //                 case 'Patient':
-  //                     window.location.href = '/Patientdashboard/patient-dashboard.html';
-  //                     break;
-  //                 case 'Doctor':
-  //                     window.location.href = '/doctordash/doctor-dashboard.html';
-  //                     break;
-  //                 case 'Admin':
-  //                     window.location.href = 'admindash/admin-dashboard.html';
-  //                     break;
-  //                 case 'SuperAdmin':
-  //                     window.location.href = 'Superadmindash/superadmin-dashboard.html';
-  //                     break;
-  //                 default:
-  //                     window.location.href = 'shared/profile.html'; // Default fallback
-  //                     break;
-  //             }
-  //         } else {
-  //             document.getElementById('signupError').textContent = data.message || 'Signup failed, try again.';
-  //         }
-  //     } catch (error) {
-  //         document.getElementById('signupError').textContent = 'An error occurred. Please try again.';
-  //     }
-  // });

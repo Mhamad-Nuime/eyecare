@@ -117,15 +117,16 @@
                         type="text"
                         class="form-control"
                         id="clinicLocation"
-                        placeholder="Location"
+                        placeholder="Address"
                         required
                       />
                       <div class="valid-feedback">looks good</div>
                       <div class="invalid-feedback">invalid</div>
                     </div>
                     <div class="col-md-6 my-4">
+                      <label for="clinicOpenTime">Open Time</label>
                       <input
-                        type="text"
+                        type="time"
                         class="form-control"
                         id="clinicOpenTime"
                         placeholder="Open Time"
@@ -135,8 +136,9 @@
                       <div class="invalid-feedback">invalid</div>
                     </div>
                     <div class="col-md-6 my-4">
+                      <label for="clinicCloseTime">Close Time</label>
                       <input
-                        type="text"
+                        type="time"
                         class="form-control"
                         id="clinicCloseTime"
                         placeholder="Close Time"
@@ -150,17 +152,20 @@
                         type="text"
                         class="form-control"
                         id="clinicDaysOpen"
-                        placeholder="Days Open"
+                        placeholder="Days Open ,like ' Mon-Fri '"
                         required
                       />
                       <div class="valid-feedback">looks good</div>
                       <div class="invalid-feedback">invalid name</div>
                     </div>
                     <div class="col-md-6 my-4">
-                      <select id="add-clinic-doctor-select" class="form-select" required>
-                          <option selected hidden>Select Doctor</option>
-                         mb-4
-                      </select>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="EmergencyContact"
+                        placeholder="Emergency Contact"
+                        required
+                      />
                       <div class="valid-feedback">looks good</div>
                       <div class="invalid-feedback">select a clinic</div>
                     </div>

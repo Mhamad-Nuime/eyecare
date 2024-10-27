@@ -24,12 +24,11 @@ function setupSuperAdminRegisterForm() {
           name: document.getElementById('registerName').value,
           UserName: document.getElementById('registerName').value,
           email: document.getElementById('registerEmail').value,
-          Password : psd,
+          password : psd,
           ConfirmPassword : psd,
           role: "Admin",
         };
-        try {
-          const response = await fetch(`${window.currentEnv.apiUrl}/api/User?password=${psd}`, {  // Replace with your actual API endpoint
+          const response = await fetch(`${window.currentConfig.apiUrl}/api/User?password=${psd}`, {  // Replace with your actual API endpoint
             method: 'POST',
             headers: {
               
@@ -47,10 +46,6 @@ function setupSuperAdminRegisterForm() {
             // alert('Registration failed: ' + result.message);
             showToast('An error occurred !!',false)
           }
-        } catch (error) {
-          // alert('An error occurred: ' + error.message);
-          showToast('An error occurred !!',false)
-        }
       }
     });
   }

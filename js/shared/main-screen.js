@@ -171,7 +171,7 @@ async function loadTestimonial(){
     .then(res => res.json())
     .then(res => {
         res.$values.forEach(async (feedback) => {
-            fetch(`${window.currentEnv.apiUrl}/api/users/${feedback?.userId}`)
+            fetch(`${window.currentEnv.apiUrl}/api/user/${feedback?.userId}`)
             .then(res => res.json())
             .then(res => {
                 const userName = res.name;
