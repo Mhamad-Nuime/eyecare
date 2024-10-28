@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     addClinicModalConfig();
     editmodalConfig();
     deleteModalConfig()
+    assignDoctorModalConfig()
     loadClinics();
 });
 function showDoctorsmodalConfig() {
@@ -18,7 +19,27 @@ function showDoctorsmodalConfig() {
     showDoctorsModal.addEventListener("show.bs.modal", (event) => {
         const btn = event.relatedTarget; 
         const clinicId = btn.getAttribute("data-id"); 
-        fetch(`${window.currentConfig.apiUrl}/api/clinics`)
+        fetch(`${window.currentConfig.apiUrl}/api/clinics/${clinicId}/doctors`)
+        .then(res => res.json())
+        .then(res => {
+            const doctorsList = document.getElementById("doctor-show-list");
+            doctorsList.innerHTML = "";
+            for(let doctor of res.$values){
+                const doctorListItem = document.createElement("li");
+                doctorListItem.classList.add("d-flex");
+                doctorListItem.classList.add("justify-content-between");
+                const doctorName = document.createElement("p");
+                doctorName.textContent = doctor.name;
+                const doctorEmail = document.createElement("p");
+                doctorEmail.textContent = doctor.email;
+                doctorListItem.appendChild(doctorName)
+                doctorListItem.appendChild(doctorEmail)
+                doctorsList.appendChild(doctorListItem);
+            }
+        })
+        .catch(err => {
+            showToast("Something wrong happened while load doctors for this clinic", false);
+        })
     });
   }
 function addClinicModalConfig() {
@@ -106,7 +127,31 @@ function modalConfig() {
       // TODO: Call your API here with id and datetime
     });
 }
+function assignDoctorModalConfig(){
+    const assingModal = document.getElementById("assign-doctor-modal");
 
+    assingModal.addEventListener("shown.bs.modal", (event) => {
+        const btn = event.relatedTarget; // Button that triggered the modal
+        const clinicId = btn.getAttribute("data-id"); // Get data-id from button
+    
+        // Set the appointment id into the hidden field in the form
+        const idField = document.getElementById("assing-doctor-clinic-id");
+        idField.value = clinicId;
+
+        fetch(`${window.currentConfig.apiUrl}/api/User/doctors`)
+        .then((res) => res.json())
+        .then(res => {
+            const selectDoctor = document.getElementById("doctorSelect");
+            selectDoctor.innerHTML = "";
+            res.$values.forEach((doctor) => {
+                const option = document.createElement("option");
+                option.value = doctor.id;
+                option.textContent = doctor.name;
+                selectDoctor.appendChild(option);
+            })
+        })
+      });
+}
 function addClinic() {
     const form = document.getElementById("add-clinic-form");
     if(form.checkValidity())
@@ -203,6 +248,7 @@ async function loadClinics() {
                         <td class="actions">
                             <button type="button" id="show-doctors-button" class="btn btn-primary" data-id=${clinic.clinicId} data-bs-toggle="modal" data-bs-target="#edit-clinic-modal">Edit</button>
                             <button type="button" id="show-doctors-button" class="btn btn-danger" data-id="${clinic.clinicId}" data-bs-toggle="modal" data-bs-target="#delete-clinic-modal">Delete</button>
+                            <button type="button" id="show-doctors-button" class="btn btn-dark" data-id="${clinic.clinicId}" data-bs-toggle="modal" data-bs-target="#assign-doctor-modal">Assing Doctors</button>
                         </td>`;
                     clinicTable.appendChild(row);
                 });
@@ -265,4 +311,52 @@ function openAddForm(clinicId = undefined){
     } else {
         editClinic(clinicId);
     }
+}
+
+function assignDoctor(){
+    const assingForm = document.getElementById("assing-doctor-form");
+    if(!assingForm.checkValidity()){
+        return;
+    }
+    const clinicId =  document.getElementById("assing-doctor-clinic-id").value;
+    const doctorId =  document.getElementById("doctorSelect").value;
+    const day =  document.getElementById("day").value;
+    const startTime =  document.getElementById("start-time").value;
+    const closeTime =  document.getElementById("close-time").value;
+    let start = new Date(`1970-01-01T${startTime}:00`);
+    let close = new Date(`1970-01-01T${closeTime}:00`);
+    if( start > close ){
+        debugger;
+        document.getElementById("start-time").value = ""
+        document.getElementById("close-time").value = ""
+        showToast("Close time should be bigger than Start time" , false);
+        return;
+    }
+    // const dayDate = new Date(day);
+    // const dayName = dayDate.toLocaleDateString(undefined, { weekday: 'long' });
+
+    const data = {
+        clinicId : clinicId,
+        doctorId : doctorId,
+    };
+    data[`${day}`] = {
+        StartTime : startTime,
+        EndTime : closeTime,
+    }
+    debugger;
+    fetch(`${window.currentConfig.apiUrl}/api/Doctor/availability`,
+        {
+            method : "POST",
+            body : JSON.stringify(data),
+            headers : {
+                "Content-Type" : "application/json"
+            }
+        }
+    ).then(res => res.json())
+    .then(res => {
+        showToast("add it", true);
+    })
+    .catch(err => {
+        showToast("not add it " ,false);
+    })
 }

@@ -20,7 +20,43 @@ async function fetchClinics(){
                     closeTime : res.closeTime,
                     emergencyContact : res.emergencyContact
                 }
-                clinicContainer.appendChild(makeClinicMarkUp(clinic))
+                fetch(`${window.currentConfig.apiUrl}/api/clinics/${data.clinicId}/doctors`)
+                    .then(res => res.json())
+                    .then(res => {
+                        const card = makeClinicMarkUp(clinic);
+                         //list label
+                         const doctorListLabel = document.createElement("p");
+                         doctorListLabel.style.textAlign = "center";
+                         doctorListLabel.textContent = "Doctors";
+
+                         card.appendChild(doctorListLabel);
+
+                        const doctorsList = document.createElement("ul");
+                        if(res.$values.length > 0 ){
+                            for(let doctor of res.$values){
+                                const doctorListItem = document.createElement("li");
+                                doctorListItem.classList.add("d-flex");
+                                doctorListItem.classList.add("justify-content-between");
+                                const doctorName = document.createElement("p");
+                                doctorName.textContent = doctor.name;
+                                const doctorEmail = document.createElement("p");
+                                doctorEmail.textContent = doctor.email;
+                                doctorListItem.appendChild(doctorName)
+                                doctorListItem.appendChild(doctorEmail)
+                                doctorsList.appendChild(doctorListItem);
+                                card.appendChild(doctorsList)
+                            }
+                        } else {
+                            const noDoctors = document.createElement("li");
+                            noDoctors.textContent = "No Doctors Assigned yes";
+                            doctorsList.appendChild(noDoctors);
+                        }
+
+                        clinicContainer.appendChild(card)
+                    })
+                    .catch(err => {
+                        showToast("Something wrong happened while load doctors for this clinic", false);
+                    })
             })
             .catch((e) => showToast(`Fail To load Clinic : ${data.name}`, false))
         });
@@ -43,6 +79,21 @@ function makeClinicMarkUp(clinic){
     const hr = document.createElement("hr");
     hr.classList.add("line-clinic");
     line.appendChild(hr);
+    //line
+    const line2 = document.createElement("div");
+    const hr2 = document.createElement("hr");
+    hr2.classList.add("line-clinic");
+    line2.appendChild(hr2);
+    //line
+    const line3 = document.createElement("div");
+    const hr3 = document.createElement("hr");
+    hr3.classList.add("line-clinic");
+    line3.appendChild(hr3);
+    //line
+    const line4 = document.createElement("div");
+    const hr4 = document.createElement("hr");
+    hr4.classList.add("line-clinic");
+    line4.appendChild(hr4);
 
     // clinic Name
     const divName = document.createElement("div");
@@ -52,7 +103,7 @@ function makeClinicMarkUp(clinic){
     name.textContent = clinic.name;
     divName.appendChild(name);
     card.appendChild(divName);
-    card.appendChild(line);
+    card.appendChild(line4);
 
     // Clinic schedule
     const divDayTime = document.createElement("div");
@@ -87,7 +138,7 @@ function makeClinicMarkUp(clinic){
     addressWrapper.appendChild(address)
     addressWrapper.appendChild(adressDetail)
     card.appendChild(addressWrapper);
-    card.appendChild(line);
+    card.appendChild(line2);
 
     const urgentWrapper = document.createElement("div");
     const needHelp = document.createElement("div"); 
@@ -98,6 +149,7 @@ function makeClinicMarkUp(clinic){
     urgentWrapper.appendChild(needHelp)
     urgentWrapper.appendChild(UrgentNumber)
     card.appendChild(urgentWrapper);
+    card.appendChild(line3);
 
     return card;
 }

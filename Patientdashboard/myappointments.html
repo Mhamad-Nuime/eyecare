@@ -56,6 +56,7 @@
                 </h1>
                 <button
                   type="button"
+                  id="close-add-appointment-icon-button"
                   class="btn-close close-modal-button"
                   data-bs-dismiss="modal"
                   aria-label="Close"
@@ -64,6 +65,7 @@
               <div class="modal-body">
                 <form  id="add-appointment-form" class="row g-1 needs-validation" novalidate>
                   <div class="col-lg-6">
+                    <input type="hidden" id="add-appointment-id">
                     <label for="clinicSelect" class="form-label">Select Clinic</label>
                     <select id="clinicSelect" class="form-select" required>
                       <option value="" disabled selected hidden></option>
@@ -106,6 +108,7 @@
               <div class="modal-footer">
                 <button
                   type="button"
+                  id="close-add-appointment-button"
                   class="btn btn-secondary close-modal-button"
                   data-bs-dismiss="modal"
                 >

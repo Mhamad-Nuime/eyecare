@@ -8,6 +8,7 @@ window.addEventListener("DOMContentLoaded", () => {
 //     if (!token) {
 //       window.location.href = '../../login.html';
 //     }
+  addAppointmentConfig()
   getAppointment();
   deleteModalConfig();
 });
@@ -99,4 +100,53 @@ function deleteAppointment() {
       .catch((error) =>{
         showToast("Fail to delete Appointment", false)
       });
+  }
+
+  function addAppointmentConfig(){
+    const addModal = document.getElementById("add-appointment-modal");
+    const iconCloseBtn = document.getElementById("close-add-appointment-icon-button");
+    iconCloseBtn.addEventListener("click", (event) => {initSetupAddAppointmentModal()})
+    const closeBtn = document.getElementById("close-add-appointment-button");
+    closeBtn.addEventListener("click", (event) => {initSetupAddAppointmentModal()})
+    loadAllClinics()
+    addModal.addEventListener("show.bs.modal", (event) => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const idField = document.getElementById("add-appointment-id");
+      idField.value = user.id;
+    })
+  }
+
+  function loadAllClinics(){
+    fetch(`${window.currentConfig.apiUrl}/api/clinics`)
+    .then(response => response.json())
+    .then(data => {
+        const clinicSelect = document.getElementById("clinicSelect");
+        clinicSelect.innerHTML = "";
+          data.$values.forEach( (clinic) => {
+            const option = document.createElement("option");
+            option.value = clinic.clinicId;
+            option.textContent = clinic.name;
+            clinicSelect.appendChild(option);
+          });
+          clinicSelect.addEventListener("change", (event) => {
+            const doctorSelect = document.getElementById("doctorSelect");
+            doctorSelect.disabled = false;
+          })
+          showToast("Clinics loaded successfull", true)
+    })
+    .catch(error => console.error("Error loading clinics:", error));
+  }
+  function initSetupAddAppointmentModal(){
+    const message = document.getElementById("message");
+    message.value = "";
+    message.disabled = true;
+    const patientPhone = document.getElementById("patientPhone");
+    patientPhone.value = "";
+    patientPhone.disabled = true;
+    const appointmentBooking = document.getElementById("appointment-booking");
+    appointmentBooking.value = "";
+    appointmentBooking.disabled = true;
+    const doctorSelect = document.getElementById("doctorSelect");
+    doctorSelect.value = "";
+    doctorSelect.disabled = true;
   }
