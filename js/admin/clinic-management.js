@@ -344,10 +344,10 @@ function assignDoctor(){
         EndTime : closeTime,
     }
     debugger;
-    fetch(`${window.currentConfig.apiUrl}/api/Doctor/availability`,
+    fetch(`${window.currentConfig.apiUrl}/api/Doctor/${doctorId}/assign-availabilities`,
         {
             method : "POST",
-            body : JSON.stringify(data),
+            body : JSON.stringify([data]),
             headers : {
                 "Content-Type" : "application/json"
             }

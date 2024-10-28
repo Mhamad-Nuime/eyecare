@@ -121,7 +121,7 @@ function deleteAppointment() {
     .then(response => response.json())
     .then(data => {
         const clinicSelect = document.getElementById("clinicSelect");
-        clinicSelect.innerHTML = "";
+        clinicSelect.innerHTML = `<option value="" disabled selected hidden>choose</option>`;
           data.$values.forEach( (clinic) => {
             const option = document.createElement("option");
             option.value = clinic.clinicId;
@@ -131,11 +131,56 @@ function deleteAppointment() {
           clinicSelect.addEventListener("change", (event) => {
             const doctorSelect = document.getElementById("doctorSelect");
             doctorSelect.disabled = false;
+            const clinicSelect = document.getElementById("clinicSelect");
+            loadDoctorsByClinicId(clinicSelect.value);
           })
           showToast("Clinics loaded successfull", true)
     })
     .catch(error => console.error("Error loading clinics:", error));
   }
+
+  function loadDoctorsByClinicId(id){
+    fetch(`${window.currentConfig.apiUrl}/api/clinics/${id}/doctors`)
+                    .then(res => res.json())
+                    .then(res => {
+                         const doctorSelect = document.getElementById("doctorSelect");
+                         doctorSelect.innerHTML = `<option value="" disabled selected hidden>choose</option>`;
+                         if(res.$values.length > 0 ){
+                           for(let doctor of res.$values){
+                              const option = document.createElement("option");
+                              option.value = doctor.id;
+                              option.textContent = doctor.name;
+                              doctorSelect.appendChild(option);
+                            }
+                            doctorSelect.addEventListener("change", (event) => {});
+                          } else {
+                            const option = document.createElement("option");
+                            option.value = "";
+                            option.textContent = "no doctors assigned to this clinic";
+                            doctorSelect.appendChild(option);
+                            showToas("choose another clinic because there's no doctor available in selected clinic", false);
+                        }
+
+                    })
+                    .catch(err => {
+                        showToast("Something wrong happened while load doctors for this clinic", false);
+                    })
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   function initSetupAddAppointmentModal(){
     const message = document.getElementById("message");
     message.value = "";
