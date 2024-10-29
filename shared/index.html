@@ -178,8 +178,8 @@
           <!-- Appointment Form -->
           <form  id="book-appointment-form" class="row g-1 needs-validation" novalidate>
             <div class="col-lg-6">
-              <label for="departmentSelect" class="form-label">Select Clinic</label>
-              <select id="departmentSelect" class="form-select" required>
+              <label for="clinicSelect" class="form-label">Select Clinic</label>
+              <select id="clinicSelect" class="form-select" required>
                 <option value="" disabled selected hidden></option>
                 <div class="invalid-feedback">Please select a clinic.</div>
               </select>
@@ -217,10 +217,10 @@
             </div>
 
             <div class="col-12">
-              <button type="submit" id="add-appointment-submit-button" on class="btn btn-primary w-100" onclick="bookAppointment()" disabled>Book Appointment</button>
+              <button type="submit" id="add-appointment-submit-button" on class="btn btn-primary w-100" onclick="createAppointment()" disabled>Book Appointment</button>
             </div>
             <div class="col-12">
-              <button type="reset" form="book-appointment-form"  class="btn btn-primary w-100 form-modal-close"  data-form-id="book-appointment-form" disabled>Reset</button>
+              <button type="reset" form="book-appointment-form" id="reset-btn" class="btn btn-primary w-100 form-modal-close"  data-form-id="book-appointment-form" onclick="reset()" disabled>Reset</button>
             </div>
             
           </form>

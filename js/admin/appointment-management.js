@@ -52,68 +52,42 @@ function deleteModalConfig() {
   });
 }
 
-function getAppointment() {
+async function getAppointment() {
   const tbody = document.getElementById("appointment-list");
-  res = [
-    {
-      id: 5,
-      clinic: { name: "Damas" },
-      doctor: { name: "moe" },
-      patient: { name: "japer" },
-      date: "2024/06/01",
-      time: "12:02:02",
-    },
-  ];
-  res.forEach((appointment) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-    <td>${appointment.clinic.name}</td>
-    <td>${appointment.doctor.name}</td>
-    <td>${appointment.patient.name}</td>
-    <td>${appointment.date}</td>
-    <td>${appointment.time}</td>
-    <td class="d-flex gap-1"><button
-      type="button"
-      id="appoitmentId"
-      class="btn btn-primary"
-      data-id="${appointment.id}"
-      data-bs-toggle="modal"
-      data-bs-target="#editModal"
-    >
-      Reschedule
-    </button><button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-appointment-modal" data-id="${appointment.id}">Delete</button></td>
-    `;
-    tbody.appendChild(row);
-  });
+  const user = JSON.parse(localStorage.getItem("user"));
+  fetch(`${window.currentConfig.apiUrl}/api/Appointment/patient/${user.id}`)
+  .then(res => res.json())
+  .then(async (res) => {
+    tbody.innerHTML = "";
+    res.$values.forEach( async (appointment) => {
+      const res1 = await fetch(`${window.currentConfig.apiUrl}/api/User/${appointment.doctorId}`)
+      const doctorData = await res1.json();
+      const doctorName = doctorData.name;
 
-  // ...................... Ready to use
-  // fetch(`${window.currentConfig.apiUrl}/api/appointments`)
-  // .then(res => res.json())
-  // .then(res => {
-  //   const tbody = document.getElementById("appointment-list");
-  //     res.forEach((appointment) => {
-  //   const row = document.createElement("tr");
-  //   row.innerHTML = `
-  //   <td>${appointment.clinic.name}</td>
-  //   <td>${appointment.doctor.name}</td>
-  //   <td>${appointment.patient.name}</td>
-  //   <td>${appointment.date}</td>
-  //   <td>${appointment.time}</td>
-  //   <td class="d-flex gap-1"><button
-  //     type="button"
-  //     id="appoitmentId"
-  //     class="btn btn-primary"
-  //     data-id="${appointment.id}"
-  //     data-bs-toggle="modal"
-  //     data-bs-target="#editModal"
-  //   >
-  //     Reschedule
-  //   </button><button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.id}')">Delete</button></td>
-  //   `;
-  //   tbody.appendChild(row);
-  // });
-  // })
-  // .catch();
+      const res3 = await fetch(`${window.currentConfig.apiUrl}/api/User/${appointment.patientId}`)
+      const patientData = await res3.json();
+      const patientName = patientData.name;
+
+      const res2 = await fetch(`${window.currentConfig.apiUrl}/api/clinics/${appointment.clinicId}`)
+      const clinicData = await res2.json();
+      const clinicName = clinicData.name;
+      debugger;
+      const appointmentDate = appointment.appointmentDate.split("T")[0]; // "2024-10-14"
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+      <td>${clinicName}</td>
+      <td>${doctorName}</td>
+      <td>${patientName}</td>
+      <td>${appointmentDate}</td>
+      <td>${appointment.startTime}</td>
+      <td>${appointment.endTime}</td>
+      <td class="d-flex gap-1"><button class="btn btn-danger" data-id='${appointment.appointmentId}' data-bs-toggle="modal" data-bs-target="#delete-appointment-modal">Delete</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+    showToast("Appointment loaded successfully", true);
+  });
 }
 
 function editAppointment(){
@@ -131,11 +105,16 @@ function editAppointment(){
 
 
 function deleteAppointment() {
-  const id = document.getElementById("delete-appointment-id").value;
-  console.log(id)
-  // fetch(`${window.currentConfig.apiUrl}/api/appointments/${appointmentId}`, {
-  //     method: "DELETE",
-  // })
-  //     .then(() => loadAppointments())
-  //     .catch((error) => console.error("Error deleting appointment:", error));
+  const appointmentId = document.getElementById("delete-appointment-id").value;
+  debugger;
+  fetch(`${window.currentConfig.apiUrl}/api/Appointment/${appointmentId}`, {
+      method: "DELETE",
+  })
+      .then((res) => {
+        showToast("Appointment deleted sucessfully", true)
+        getAppointment();
+      })
+      .catch((error) =>{
+        showToast("Fail to delete Appointment", false)
+      });
   }

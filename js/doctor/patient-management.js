@@ -1,236 +1,278 @@
-$(document).ready(function() {
-    let isEditMode = false; // To differentiate between add and edit mode
+let attachmentUrl = ""; // Stores uploaded attachment URL
+let userProfileImageUrl = ""; // Stores uploaded profile image URL
 
-    // Load existing patients on page load
-    loadPatients();
-    deleteModalConfig();
-    // Update modal for adding new patient
-    function updateModalForAdd() {
-        $('#addPatientModal .modal-title').text('Add Patient');
-        $('#savePatientBtn').text('Add Patient');
-        isEditMode = false;
-        $('#patientId').val(''); // Clear hidden field
-    }
-
-    // Update modal for editing a patient
-    function updateModalForEdit() {
-        $('#addPatientModal .modal-title').text('Edit Patient');
-        $('#savePatientBtn').text('Update Patient');
-        isEditMode = true;
-    }
-
-    // Show modal with reset if not in edit mode
-    $('#addPatientModal').on('show.bs.modal', function () {
-        if (!isEditMode) {
-            $('#addPatientForm')[0].reset(); // Reset form when adding new patient
-            $('#patientId').val(''); // Clear hidden field
-        }
-    });
-
-    // Form validation before submission
-    function validatePatientForm() {
-        const email = $('#patientEmail').val();
-        const password = $('#patientPassword').val();
-
-        if (!email.includes('@')) {
-            alert('Please enter a valid email address.');
-            return false;
-        }
-        if (password.length < 6) {
-            alert('Password should be at least 6 characters long.');
-            return false;
-        }
-        return true;
-    }
-
-    // Generalized error handler for AJAX calls
-    function handleAjaxError(error, message) {
-        console.error(message, error);
-        const responseMessage = error.responseJSON?.message || 'An error occurred. Please try again.';
-        showToast(`${message}: ${responseMessage}`, false)
-    }
-
-    // Handle the form submission to add or update a patient
-    $('#addPatientForm').on('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        if (!validatePatientForm()) {
-            return; // Exit if validation fails
-        }
-
-        const patientId = $('#patientId').val(); // Get patient ID (if updating)
-        const formData = new FormData(this); // Use FormData to handle file uploads
-
-        const url = patientId ? `${window.currentConfig.apiUrl}/api/patient/${patientId}/upload-medical-profile` : `${window.currentConfig.apiUrl}/api/patient`;
-        const method = patientId ? 'PUT' : 'POST';
-
-        $.ajax({
-            url: url,
-            method: method,
-            processData: false,
-            contentType: false,
-            data: formData,
-            success: function(response) {
-                alert(isEditMode ? 'Patient updated successfully!' : 'Patient added successfully!');
-                $('#addPatientModal').modal('hide'); // Hide the modal
-                loadPatients(); // Reload the patient list
-                $('#addPatientForm')[0].reset(); // Reset the form
-            },
-            error: function(error) {
-                handleAjaxError(error, 'Error submitting form');
-            }
-        });
-    });
-
-    // Function to load existing patients
-    function loadPatients() {
-        fetch(`${window.currentConfig.apiUrl}/api/patient`)
+// Load all patients for the logged-in doctor
+function loadPatients() {
+    const doctorId = JSON.parse(localStorage.getItem("user")).id;
+    fetch(`${window.currentConfig.apiUrl}/api/doctor/${doctorId}/patients`)
         .then(res => res.json())
-        .then(res => {
-            debugger;
-            showToast("Patients loaded successfully" ,true)
-            renderPatients(res);
-        })
-        .catch((e) =>{
-            showToast("Error while loading patients" ,false)
-        })
-    }
-
-    // Function to render patients in the table
-    function renderPatients(data) {
-        const tbody = $('#patientTable tbody');
-        debugger;
-        tbody.empty(); // Clear existing patients
-
-        data.$values.forEach(function(patient) {
-            const medicalHistory = patient.medicalProfile ? patient.medicalProfile.medicalHistory : 'N/A';
-            const row = `
-                <tr>
-                    <td>${patient.name}</td>
-                    <td>${patient.email}</td>
-                    <td>${medicalHistory}</td>
-                    <td class="row w-100">
-                        <button class="btn btn-info btn-sm col-6" onclick="editPatient('${patient.id}')">Edit</button>
-                        <button class="btn btn-danger btn-sm col-6" data-bs-toggle="modal" data-bs-target="#delete-patient-modal" data-id="${patient.id}">Delete</button>
-                        <button class="btn btn-primary btn-sm col-12 mt-1" onclick="viewMedicalProfile('${patient.id}')">View Profile</button>
-                    </td>
-                </tr>
-            `;
-            tbody.append(row); // Append new row to the table
-        });
-    }
-
-    // Function to view patient's medical profile
-    window.viewMedicalProfile = function(patientId) {
-        $.ajax({
-            url: `${window.currentConfig.apiUrl}/api/patient/${patientId}`, 
-            method: 'GET',
-            success: function(patient) {
-                $('#patientNameView').text(patient.name);
-                $('#patientEmailView').text(patient.email);
-                $('#bloodTypeView').text(patient.medicalProfile?.bloodType || 'N/A');
-                $('#allergiesView').text(patient.medicalProfile?.allergies || 'N/A');
-                $('#medicalHistoryView').text(patient.medicalProfile?.medicalHistory || 'N/A');
-                $('#medicationsView').text(patient.medicalProfile?.medications || 'N/A');
-                $('#patientProfileImage').attr('src', patient.profileImage || '../images/default-profile.png');
-
-                if (patient.medicalProfile?.attachment) {
-                    $('#medicalAttachment').attr('href', patient.medicalProfile.attachment).show();
-                } else {
-                    $('#medicalAttachment').hide();
-                }
-
-                $('#viewProfileModal').modal('show');
-            },
-            error: function(error) {
-                handleAjaxError(error, 'Error loading patient profile');
-            }
-        });
-    };
-
-    // Show modal in edit mode for a patient
-    window.editPatient = function(patientId) {
-        updateModalForEdit();
-
-        $.ajax({
-            url: `${window.currentConfig.apiUrl}/api/patient/${patientId}`, 
-            method: 'GET',
-            success: function(patient) {
-                // Populate the form with patient data
-                $('#patientName').val(patient.name);
-                $('#patientEmail').val(patient.email);
-                $('#patientPassword').val(patient.password); // Set password
-                $('#medicalHistory').val(patient.medicalProfile?.medicalHistory || '');
-                $('#medications').val(patient.medicalProfile?.medications || '');
-                $('#allergies').val(patient.medicalProfile?.allergies || '');
-                $('#bloodType').val(patient.medicalProfile?.bloodType || '');
-                $('#patientId').val(patientId); // Store the ID for update
-                $('#addPatientModal').modal('show');
-            },
-            error: function(error) {
-                handleAjaxError(error, 'Error fetching patient details');
-            }
-        });
-    };
-
-    // Handle patient deletion
-    // window.deletePatient = function(patientId) {
-    //     if (confirm("Are you sure you want to delete this patient?")) {
-    //         $.ajax({
-    //             url: `${window.currentConfig.apiUrl}/api/patient/${patientId}`,
-    //             method: 'DELETE',
-    //             success: function() {
-    //                 alert("Patient deleted successfully!");
-    //                 loadPatients(); // Reload the patient list
-    //             },
-    //             error: function(error) {
-    //                 handleAjaxError(error, 'Error deleting patient');
-    //             }
-    //         });
-    //     }
-    // };
-
-
-    // Search functionality for filtering patients by name or email
-    $('#searchInput').on('input', function() {
-        const searchTerm = $(this).val().toLowerCase();
-
-        $('#patientTable tbody tr').filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(searchTerm) > -1);
-        });
-    });
-
-    // Pagination handling using DataTables (if needed)
-    // $('#patientTable').DataTable({
-    //     paging: true,
-    //     searching: false, // Disable built-in search for custom search input
-    //     lengthMenu: [10, 25, 50, 100] // Customize page size
-    // });
-});
-function deleteModalConfig() {
-    const deleteModal = document.getElementById("delete-patient-modal");
-    deleteModal.addEventListener("show.bs.modal", (event) => {
-      const btn = event.relatedTarget; // Button that triggered the modal
-      const userId = btn.getAttribute("data-id"); // Get data-id from button
-      // Set the appointment id into the hidden field in the form
-      const idField = document.getElementById("delete-patient-id");
-      idField.value = userId;
-    });
-    const btn = document.getElementById("delete-patient-button");
-    btn.addEventListener("click", (event) => {
-        event.stopPropagation();
-        event.preventDefault();
-        deletePatient();
-    })
-  }
-
-  function deletePatient(){
-    const patientId = document.getElementById("delete-patient-id").value;
-    fetch(`${window.currentConfig.apiUrl}/api/patient/${patientId}`, {
-        method : "DELETE",
-    }).then(res => {
-        loadPatients();
-        showToast("delete patient successfully", true)
-    })
-    .catch((e) => showToast("fail to delete patient", false))
+        .then(data => renderPatients(data.$values))
+        .catch(error => console.error("Error loading patients:", error));
 }
+
+// Render patients in the table
+function renderPatients(data) {
+    const tbody = $('#patientTable tbody');
+    tbody.empty();
+
+    data.forEach(patient => {
+        const clinicName = patient.clinic?.name || "N/A";
+        const row = $(`
+            <tr class="patient-row" style="cursor: pointer;">
+                <td>${patient.name}</td>
+                <td>${patient.email}</td>
+                <td>${clinicName}</td>
+            </tr>
+        `);
+        row.on('click', () => viewPatientProfile(patient.id));
+        tbody.append(row);
+    });
+}
+
+// View Patient Profile
+function viewPatientProfile(patientId) {
+    fetch(`${window.currentConfig.apiUrl}/api/user/${patientId}`)
+        .then(res => res.json())
+        .then(patient => {
+            $('#patientId').val(patient.id);
+            $('#patientNameView').text(patient.name);
+            $('#patientEmailView').text(patient.email);
+            $('#patientPhoneView').text(patient.phone || 'N/A');
+
+            loadMedicalProfile(patientId);
+            loadUserProfile(patientId);
+            $('#viewProfileModal').modal('show');
+        })
+        .catch(error => console.error("Error fetching patient profile:", error));
+}
+
+// Load Medical Profile by fetching the profile ID associated with the patient
+function loadMedicalProfile(patientId) {
+    fetch(`${window.currentConfig.apiUrl}/api/user/${patientId}`)
+        .then(res => res.json())
+        .then(patientData => {
+            const medicalProfileId = patientData.medicalProfileId;
+            if (medicalProfileId) {
+                fetch(`${window.currentConfig.apiUrl}/api/MedicalProfile/${medicalProfileId}`)
+                    .then(res => res.json())
+                    .then(profile => {
+                        $('#medicalProfileId').val(profile.medicalProfileId);
+                        $('#medicalHistory').val(profile.medicalHistory);
+                        $('#medications').val(profile.medications);
+                        $('#allergies').val(profile.allergies);
+                        $('#bloodType').val(profile.bloodType);
+                        attachmentUrl = profile.attachmentUrl;
+
+                        // Handle attachment preview
+                        if (profile.attachmentUrl) {
+                            const fileExtension = profile.attachmentUrl.split('.').pop().toLowerCase();
+                            if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension)) {
+                                $('#attachmentPreview').html(`<img src="${profile.attachmentUrl}" class="img-fluid" alt="Medical Attachment">`).show();
+                            } else {
+                                $('#attachmentPreview').html(`<a href="${profile.attachmentUrl}" target="_blank" class="btn btn-secondary">Download Attachment</a>`).show();
+                            }
+                            $('#deleteAttachment').show();
+                        } else {
+                            $('#attachmentPreview').hide();
+                            $('#deleteAttachment').hide();
+                        }
+                    })
+                    .catch(error => console.error("Error loading medical profile:", error));
+            } else {
+                clearMedicalProfileFields();
+            }
+        })
+        .catch(error => console.error("Error retrieving patient data:", error));
+}
+
+function clearMedicalProfileFields() {
+    $('#medicalProfileId').val('');
+    $('#medicalHistory').val('');
+    $('#medications').val('');
+    $('#allergies').val('');
+    $('#bloodType').val('');
+    $('#attachmentPreview').hide();
+    $('#deleteAttachment').hide();
+}
+
+// Upload Medical Attachment
+$('#medicalAttachment').on('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        $('#saveMedicalProfileBtn').prop('disabled', true);
+        uploadMedicalDocument(file).then(url => {
+            if (url) {
+                attachmentUrl = url;
+                $('#medicalAttachmentLink').attr('href', url).show();
+                $('#deleteAttachment').show();
+            }
+            $('#saveMedicalProfileBtn').prop('disabled', false);
+        });
+    }
+});
+
+function uploadMedicalDocument(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return fetch(`${window.currentConfig.apiUrl}/api/files/upload`, {
+        method: "POST",
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => `${window.currentConfig.apiUrl}/api/files/download/${data.fileId}`)
+    .catch(error => {
+        console.error("Error uploading file:", error);
+        alert("File upload failed. Please try again.");
+        return null;
+    });
+}
+
+// Save Medical Profile and assign to patient
+function saveMedicalProfile() {
+    const profileData = {
+        medicalProfileId: $('#medicalProfileId').val(),
+        medicalHistory: $('#medicalHistory').val(),
+        medications: $('#medications').val(),
+        allergies: $('#allergies').val(),
+        bloodType: $('#bloodType').val(),
+        attachmentUrl: attachmentUrl,
+        patientId: $('#patientId').val()
+    };
+
+    const method = profileData.medicalProfileId ? 'PUT' : 'POST';
+    const url = `${window.currentConfig.apiUrl}/api/MedicalProfile`;
+
+    fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profileData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Medical profile saved successfully");
+        const medicalProfileId = data.medicalProfileId || profileData.medicalProfileId;
+        return fetch(`${window.currentConfig.apiUrl}/api/MedicalProfile/${profileData.patientId}/assign/${medicalProfileId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+    })
+    .then(() => alert("Medical profile assigned to patient successfully"))
+    .catch(error => console.error("Error in saving or assigning medical profile:", error));
+}
+// Load User Profile associated with the given patient ID
+function loadUserProfile(patientId) {
+    // Step 1: Fetch the user data associated with this patient
+    fetch(`${window.currentConfig.apiUrl}/api/user/${patientId}`)
+        .then(res => res.json())
+        .then(user => {
+            const userProfileId = user.userProfileId;
+
+            // Step 2: If there's a user profile associated, fetch it
+            if (userProfileId) {
+                fetch(`${window.currentConfig.apiUrl}/api/UserProfile/${userProfileId}`)
+                    .then(res => res.json())
+                    .then(profile => {
+                        // Step 3: Populate the profile data into the form fields
+                        $('#userProfileId').val(profile.userProfileId);
+                        $('#address').val(profile.address || '');
+                        $('#phoneNumber').val(profile.phoneNumber || '');
+                        
+                        // Set the profile image if available
+                        userProfileImageUrl = profile.profileImageUrl;
+                        if (userProfileImageUrl) {
+                            $('#profileImagePreview')
+                                .html(`<img src="${userProfileImageUrl}" class="img-fluid rounded mt-2" alt="Profile Image">`)
+                                .show();
+                        } else {
+                            $('#profileImagePreview').hide();
+                        }
+                    })
+                    .catch(error => console.error("Error loading user profile:", error));
+            } else {
+                // If no profile ID exists, clear fields for a new profile creation
+                clearUserProfileFields();
+            }
+        })
+        .catch(error => console.error("Error retrieving user data:", error));
+}
+
+// Function to clear User Profile fields for a new profile
+function clearUserProfileFields() {
+    $('#userProfileId').val('');
+    $('#address').val('');
+    $('#phoneNumber').val('');
+    $('#profileImagePreview').hide();
+}
+
+function clearUserProfileFields() {
+    $('#userProfileId').val('');
+    $('#address').val('');
+    $('#phoneNumber').val('');
+    $('#profileImagePreview').hide();
+}
+
+// Upload User Profile Image
+$('#profileImageUpload').on('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        uploadUserProfileImage(file);
+    }
+});
+
+function uploadUserProfileImage(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return fetch(`${window.currentConfig.apiUrl}/api/files/upload`, {
+        method: "POST",
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        userProfileImageUrl = `${window.currentConfig.apiUrl}/api/files/download/${data.fileId}`;
+        $('#profileImagePreview').html(`<img src="${userProfileImageUrl}" class="img-fluid rounded mt-2" alt="Profile Image">`);
+        return userProfileImageUrl;
+    })
+    .catch(error => {
+        console.error("Error uploading profile image:", error);
+        alert("Profile image upload failed. Please try again.");
+        return null;
+    });
+}
+
+// Save User Profile and assign to patient
+function saveUserProfile() {
+    const profileData = {
+       
+        address: $('#address').val(),
+        phoneNumber: $('#phoneNumber').val(),
+        profileImageUrl: userProfileImageUrl,
+        userId: $('#patientId').val()
+    };
+
+    const method = profileData.userProfileId ? 'PUT' : 'POST';
+    const url = `${window.currentConfig.apiUrl}/api/UserProfile`;
+
+    fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(profileData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("User profile saved successfully");
+        const userProfileId = data.userProfileId || profileData.userProfileId;
+        return fetch(`${window.currentConfig.apiUrl}/api/UserProfile/${profileData.userId}/assign-profile/${userProfileId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+    })
+    .then(() => alert("User profile assigned to patient successfully"))
+    .catch(error => console.error("Error saving or assigning user profile:", error));
+}
+
+// Initialize loading patients on document ready
+$(document).ready(function() {
+    loadPatients();
+});

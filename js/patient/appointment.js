@@ -22,80 +22,48 @@ function deleteModalConfig() {
     idField.value = userId;
   });
 }
-function getAppointment() {
+async function getAppointment() {
   const tbody = document.getElementById("appointment-list");
-  res = [
-    {
-      id: 5,
-      clinic: { name: "Damas" },
-      doctor: { name: "moe" },
-      patient: { name: "japer" },
-      date: "2024/06/01",
-      time: "12:02:02",
-    },
-  ];
-  res.forEach((appointment) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-    <td>${appointment.clinic.name}</td>
-    <td>${appointment.doctor.name}</td>
-    <td>${appointment.date}</td>
-    <td>${appointment.time}</td>
-    <td class="d-flex gap-1"><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete-appointment-modal">Delete</button></td>
-    `;
-    tbody.appendChild(row);
-  });
-
-  // ...................... Ready to use
-  // const user = localStorage.getItem("user")
-  // const patientId = user.id;
-  // fetch(`${window.currentConfig.apiUrl}/api/appointments?patientId=${patientId}`)
-  // .then(res => res.json())
-  // .then(res => {
-  //   const tbody = document.getElementById("appointment-list");
-  //     res.forEach((appointment) => {
-  //   const row = document.createElement("tr");
-  //   row.innerHTML = `
-  //   <td>${appointment.clinic.name}</td>
-  //   <td>${appointment.doctor.name}</td>
-  //   <td>${appointment.date}</td>
-  //   <td>${appointment.time}</td>
-  //   <td class="d-flex gap-1"><button
-  //     type="button"
-  //     id="appoitmentId"
-  //     class="btn btn-primary"
-  //     data-id="${appointment.id}"
-  //     data-bs-toggle="modal"
-  //     data-bs-target="#editModal"
-  //   >
-  //     Reschedule
-  //   </button><button class="btn btn-sm btn-danger" onclick="deleteAppointment('${appointment.id}')">Delete</button></td>
-  //   `;
-  //   tbody.appendChild(row);
-  // });
-  // })
-  // .catch();
-}
-function createAppointment(){
   const user = JSON.parse(localStorage.getItem("user"));
-  const data = {
-    clinicId : document.getElementById("clinicSelect"),
-    doctorId : document.getElementById("doctorSelect"),
-    data : document.getElementById("appointment-booking"),
-    patienName : user.name,
-    patientPhone : document.getElementById("patientPhone"),
-    message : document.getElementById("message"),
-  
-  }}
+  fetch(`${window.currentConfig.apiUrl}/api/Appointment/patient/${user.id}`)
+  .then(res => res.json())
+  .then(async (res) => {
+    tbody.innerHTML = "";
+    res.$values.forEach( async (appointment) => {
+      const res1 = await fetch(`${window.currentConfig.apiUrl}/api/User/${appointment.doctorId}`)
+      const doctorData = await res1.json();
+      const doctorName = doctorData.name;
+
+      const res2 = await fetch(`${window.currentConfig.apiUrl}/api/clinics/${appointment.clinicId}`)
+      const clinicData = await res2.json();
+      const clinicName = clinicData.name;
+      debugger;
+      const appointmentDate = appointment.appointmentDate.split("T")[0]; // "2024-10-14"
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+      <td>${clinicName}</td>
+      <td>${doctorName}</td>
+      <td>${appointmentDate}</td>
+      <td>${appointment.startTime}</td>
+      <td>${appointment.endTime}</td>
+      <td class="d-flex gap-1"><button class="btn btn-danger" data-id='${appointment.appointmentId}' data-bs-toggle="modal" data-bs-target="#delete-appointment-modal">Delete</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+    showToast("Appointment loaded successfully", true);
+  });
+}
 
 function deleteAppointment() {
-  const id = document.getElementById("delete-appointment-id");
-  fetch(`${window.currentConfig.apiUrl}/api/appointments/${id}`, {
+  const appointmentId = document.getElementById("delete-appointment-id").value;
+  debugger;
+  fetch(`${window.currentConfig.apiUrl}/api/Appointment/${appointmentId}`, {
       method: "DELETE",
   })
-      .then(() => {
+      .then((res) => {
         showToast("Appointment deleted sucessfully", true)
-        loadAppointments();
+        getAppointment();
       })
       .catch((error) =>{
         showToast("Fail to delete Appointment", false)
@@ -115,7 +83,7 @@ function deleteAppointment() {
       idField.value = user.id;
     })
   }
-
+    //create appointment
   function loadAllClinics(){
     fetch(`${window.currentConfig.apiUrl}/api/clinics`)
     .then(response => response.json())
@@ -152,13 +120,16 @@ function deleteAppointment() {
                               option.textContent = doctor.name;
                               doctorSelect.appendChild(option);
                             }
-                            doctorSelect.addEventListener("change", (event) => {});
+                            doctorSelect.addEventListener("change", (event) => {
+                              const doctorSelect = document.getElementById("doctorSelect");
+                              loadAvailabilities(id, doctorSelect.value);
+                            });
                           } else {
                             const option = document.createElement("option");
                             option.value = "";
                             option.textContent = "no doctors assigned to this clinic";
                             doctorSelect.appendChild(option);
-                            showToas("choose another clinic because there's no doctor available in selected clinic", false);
+                            showToast("choose another clinic because there's no doctor available in selected clinic", false);
                         }
 
                     })
@@ -166,8 +137,68 @@ function deleteAppointment() {
                         showToast("Something wrong happened while load doctors for this clinic", false);
                     })
   }
+  function loadAvailabilities(clinicId , doctorId){
+    fetch(`${window.currentConfig.apiUrl}/api/Doctor/${doctorId}/availability?clinicId=${clinicId}`)
+    .then(res => res.json())
+    .then(res => {
+      let data = [];
+      res.workingHours.$values.forEach((availability) => {
+        debugger;
+        let obj = {};
+        let day = availability.day;
+        let halfHours = [];
+        availability.slots.$values.forEach((slot) => {
+          halfHours.push(slot.startTime);
+        });
+        obj[`${day}`] = halfHours;
+        data.push(obj);
+      })
+        document.getElementById("message").disabled = false;
+        document.getElementById("patientPhone").disabled = false;
+        const appointmentComponent = document.getElementById("appointment-booking");
+        appointmentComponent.disabled = false;
+        appointmentComponent.availability = data;
+    })
+    .catch(err => {
+        showToast("Something wrong happened while load doctors for this clinic", false);
+    })
+  }
 
+  function createAppointment(){
+    const user = JSON.parse(localStorage.getItem("user"));
 
+    let date = document.getElementById("appointment-booking").value;
+    // Parse the start time and end time
+    const startDate = new Date(date);
+    const startTime = startDate.toTimeString().split(' ')[0]; 
+
+    const endDate = new Date(startDate.getTime() + 30 * 60 * 1000);
+    const endTime = endDate.toTimeString().split(' ')[0]; 
+
+    const data = {
+      clinicId : document.getElementById("clinicSelect").value,
+      doctorId : document.getElementById("doctorSelect").value,
+      patientId : user.id,
+      appointmentDate : date,
+      status : "active",
+      startTime : startTime,
+      endTime : endTime,
+    }
+  debugger;
+  fetch(`${window.currentConfig.apiUrl}/api/Appointment`,{
+    method : "POST",
+    body : JSON.stringify(data),
+    headers : {
+      "Content-Type" : "application/json"
+    }
+  }).then(res => {
+    getAppointment();
+    showToast("appointment Booked successfully", true);
+    document.getElementById("close-add-appointment-icon-button").click();
+  }).catch(err => {
+    showToast("Something wrong happened while Booking appointment", false);
+  })
+  }
 
 
 

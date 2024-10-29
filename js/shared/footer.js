@@ -1,37 +1,46 @@
 function loadFooterContent() {
-  fetch(`${window.currentConfig.apiUrl}/api/admin/footer`)
-      .then(response => response.json())
-      .then(data => {
-          if (data) {
-              // Static content
-              document.getElementById('footer-description').textContent = data.description || "Not Available";
+    fetch(`${window.currentConfig.apiUrl}/api/footer/settings`, {
+        
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(res => {
+            if(res.$values && res.$values.length == 0){
+                showToast("There is no any footer data" , false );
+                return;
+            }
+            const footerData = res.$values[res.$values.length - 1];
 
-              // Dynamic department list
-              const supportLinks = document.getElementById('footer-support-links');
-              supportLinks.innerHTML = '';
+            document.getElementById('footer-description').textContent = footerData.description
 
-              // Access $values inside footerLinks
-              const footerLinksArray = data.footerLinks.$values;
+            // Dynamic department list
+            const supportLinks = document.getElementById('footer-support-links');
+            supportLinks.innerHTML = '';
 
-              if (Array.isArray(footerLinksArray)) {
-                  footerLinksArray.forEach(link => {
-                      const listItem = document.createElement('li');
-                      const linkElement = document.createElement('a');
-                      linkElement.href = link.url || "#";
-                      linkElement.textContent = link.name || "Not Available";
-                      listItem.appendChild(linkElement);
-                      supportLinks.appendChild(listItem);
-                  });
-              } else {
-                  console.error('Unexpected footerLinks data format:', data.footerLinks);
-              }
+            // Access $values inside footerLinks
+            const footerLinksArray = footerData.footerLinks.$values;
 
-              // Contact info
-              document.getElementById('footer-phone').textContent = data.supportPhone || "Not Available";
-              document.getElementById('footer-email').textContent = data.supportEmail || "Not Available";
-          } else {
-              console.error('No data received');
-          }
-      })
-      .catch(error => console.error('Error loading footer content:', error));
+            if (Array.isArray(footerLinksArray)) {
+                footerLinksArray.forEach(link => {
+                    const listItem = document.createElement('li');
+                    const linkElement = document.createElement('a');
+                    linkElement.href = link.url || "#";
+                    linkElement.textContent = link.text || "Not Available";
+                    listItem.appendChild(linkElement);
+                    supportLinks.appendChild(listItem);
+                });
+            } else {
+                console.error('Unexpected footerLinks data format:', data.footerLinks);
+            }
+
+            document.getElementById('footer-phone').textContent = footerData.supportPhone || "Not Available";
+            document.getElementById('footer-phone').href = `tel:${footerData.supportPhone}` || "#";
+            document.getElementById('footer-email').textContent = footerData.supportEmail || "Not Available";
+            document.getElementById('footer-email').href = `mailto:${footerData.supportEmail}` || "";
+        })
+        .catch(error => console.error('Error fetching contact info:', error));
 }

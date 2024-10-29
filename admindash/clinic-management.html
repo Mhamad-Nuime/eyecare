@@ -348,14 +348,14 @@
             <button
               type="button"
               class="btn-close form-modal-close"
-              data-form-id="delete-user-form"
+              data-form-id="assign-doctor-form"
               data-bs-dismiss="modal"
               aria-label="Close"
             ></button>
           </div>
           <div class="modal-body">
               <input type="hidden" id="assing-doctor-clinic-id">
-              <form  id="assing-doctor-form" class="row g-1 needs-validation" novalidate>
+              <form  id="assign-doctor-form" class="row g-1 needs-validation" novalidate>
                   <div class="col-lg-6">
                     <label for="doctorSelect" class="form-label">Select Doctor</label>
                     <select id="doctorSelect" class="form-select" required>
@@ -366,13 +366,6 @@
                   <div class="col-lg-6">
                     <label for="day" class="form-label">Select day</label>
                     <select id="day" name="dayOfWeek" class="form-select" required>
-                      <option value="Monday">Monday</option>
-                      <option value="Tuesday">Tuesday</option>
-                      <option value="Wednesday">Wednesday</option>
-                      <option value="Thursday">Thursday</option>
-                      <option value="Friday">Friday</option>
-                      <option value="Saturday">Saturday</option>
-                      <option value="Sunday">Sunday</option>
                     </select>
                     <div class="invalid-feedback">Please select a doctor.</div>
                   </div>
@@ -386,13 +379,20 @@
                     <select id="close-time" class="form-select" required></select>
                     <div class="invalid-feedback">Please select a doctor.</div>
                   </div>
+                  <div class="">
+                  </div>
+                  <button type="button" id="add-working-days-button" class="btn btn-light" onclick="assignDay()">
+                    Add working for day +
+                  </button>
+                  <ul id="working-list" class="d-flex"></ul>
               </form>
           </div>
           <div class="modal-footer">
             <button
               type="button"
+              id="assign-doctor-close-button"
               class="btn btn-secondary form-modal-close"
-              data-form-id="edit-user-form"
+              data-form-id="assign-doctor-form"
               data-bs-dismiss="modal"
             >
               Close

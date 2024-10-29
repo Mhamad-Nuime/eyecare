@@ -42,126 +42,118 @@ class AppointmentBooking extends HTMLElement {
                 </div>
             </div>
         `;
-        this.availableTimes = [];
-        this.selectedDate = this.getAttribute("date") || "";
-        this.selectedTime = this.getAttribute("time") || "";
-    }
+        this._availability = [];
+        this.selectedDate = null;
+        this.selectedTime = null;
 
-    connectedCallback() {
         this.datepicker = this.shadowRoot.getElementById("datepicker");
         this.timeDropdown = this.shadowRoot.getElementById("timeDropdown");
         this.noTimesMessage = this.shadowRoot.getElementById("no-times-message");
-
-        this.updateDisabledState(); // Update initial state based on the attribute
-
-        if (this.selectedDate) {
-            this.datepicker.value = this.selectedDate;
-            this.fetchAvailableTimes(this.selectedDate);
-        }
-
-        this.datepicker.addEventListener("change", () => {
-            this.selectedDate = this.datepicker.value;
-            this.dispatchEvent(new CustomEvent('date-selected', {
-                detail: { date: this.selectedDate },
-                bubbles: true,
-                composed: true,
-            }));
-
-            this.fetchAvailableTimes(this.selectedDate);
-        });
-
-        this.timeDropdown.addEventListener("change", () => {
-            this.dispatchEvent(new CustomEvent('time-selected', {
-                detail: { datetime: this.getCombinedDateTime() },
-                bubbles: true,
-                composed: true,
-            }));
-        });
     }
 
-    async fetchAvailableTimes(date) {
-        const times = {
-            "2024-10-15": ["09:00", "09:30", "10:00", "11:00", "13:00", "15:00"],
-            "2024-10-16": ["10:30", "11:30", "14:00", "15:00", "16:00"],
-            "2024-10-17": ["09:30", "10:30", "12:00", "16:00"],
-            "2024-10-18": ["08:00", "09:00", "10:00", "13:00"],
-            "2024-10-19": ["10:30", "11:00", "14:00"],
-        };
+    static get observedAttributes() {
+        return ["disabled"];
+    }
 
-        const availableTimes = await new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(times[date] || []);
-            }, 500); 
-        });
+    connectedCallback() {
+        this.datepicker.addEventListener("change", this.onDateChange.bind(this));
+        this.timeDropdown.addEventListener("change", this.onTimeChange.bind(this));
+        this.updateDisabledState();
+    }
 
-        this.availableTimes = availableTimes;
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === "disabled") {
+            this.updateDisabledState();
+        }
+    }
+
+    set disabled(value) {
+        if (value) {
+            this.setAttribute("disabled", "");
+        } else {
+            this.removeAttribute("disabled");
+        }
+    }
+
+    get disabled() {
+        return this.hasAttribute("disabled");
+    }
+
+    set availability(value) {
+        this._availability = value;
+        this.updateDisabledDays();
+    }
+
+    get availability() {
+        return this._availability;
+    }
+
+    onDateChange() {
+        this.selectedDate = this.datepicker.value;
         this.updateAvailableTimes();
+        this.dispatchEvent(new CustomEvent("date-selected", {
+            detail: { date: this.selectedDate },
+            bubbles: true,
+            composed: true,
+        }));
+    }
+
+    onTimeChange() {
+        this.selectedTime = this.timeDropdown.value;
+        this.dispatchEvent(new CustomEvent("time-selected", {
+            detail: { datetime: this.value },
+            bubbles: true,
+            composed: true,
+        }));
+    }
+
+    updateDisabledState() {
+        const isDisabled = this.disabled;
+        this.datepicker.disabled = isDisabled;
+        this.timeDropdown.disabled = isDisabled;
+    }
+
+    updateDisabledDays() {
+        const enabledDays = this._availability.flatMap(dayObj => Object.keys(dayObj));
+        this.datepicker.addEventListener("input", (e) => {
+            const dayOfWeek = new Date(e.target.value).toLocaleString("en-US", { weekday: "short" });
+            if (!enabledDays.includes(dayOfWeek)) {
+                this.datepicker.setCustomValidity("Date is not selectable.");
+            } else {
+                this.datepicker.setCustomValidity("");
+            }
+        });
     }
 
     updateAvailableTimes() {
-        const times = this.availableTimes;
+        const dayOfWeek = new Date(this.selectedDate).toLocaleString("en-US", { weekday: "short" });
+        const dayTimes = this._availability.find(day => day[dayOfWeek])?.[dayOfWeek] || [];
 
         this.timeDropdown.innerHTML = "";
-        this.noTimesMessage.style.display = times.length === 0 ? "block" : "none";
-
-        if (times.length > 0) {
+        if (dayTimes.length > 0) {
             this.noTimesMessage.style.display = "none";
             this.timeDropdown.style.display = "block";
-            
-            times.forEach((time) => {
+            dayTimes.forEach(time => {
                 const option = document.createElement("option");
                 option.value = time;
                 option.textContent = time;
-
-                if (time === this.selectedTime) {
-                    option.selected = true;
-                }
-
                 this.timeDropdown.appendChild(option);
             });
         } else {
+            this.noTimesMessage.style.display = "block";
             const option = document.createElement("option");
             option.textContent = "No available times";
             option.disabled = true;
             this.timeDropdown.appendChild(option);
-            this.timeDropdown.style.display = "none";
         }
-    }
-
-    getCombinedDateTime() {
-        const selectedTime = this.timeDropdown.value;
-        if (this.selectedDate && selectedTime) {
-            return new Date(`${this.selectedDate}T${selectedTime}`);
-        }
-        return null;
     }
 
     get value() {
-        return this.getCombinedDateTime();
-    }
-
-    static get observedAttributes() {
-        return ["date", "time", "disabled"]; // Listen for disabled attribute changes
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === "date") {
-            this.selectedDate = newValue;
-            this.datepicker.value = this.selectedDate;
-            this.fetchAvailableTimes(this.selectedDate);
-        } else if (name === "time") {
-            this.selectedTime = newValue;
-            this.updateAvailableTimes();
-        } else if (name === "disabled") {
-            this.updateDisabledState(); // Update state when disabled attribute changes
+        if (this.selectedDate && this.selectedTime) {
+            return `${this.selectedDate}T${this.selectedTime}`;
         }
-    }
-
-    updateDisabledState() {
-        const isDisabled = this.hasAttribute("disabled");
-        this.datepicker.disabled = isDisabled;
-        this.timeDropdown.disabled = isDisabled;
+        return null;
     }
 }
 
-customElements.define('appointment-booking', AppointmentBooking);
+customElements.define("appointment-booking", AppointmentBooking);

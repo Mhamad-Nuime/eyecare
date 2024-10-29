@@ -37,64 +37,39 @@
         <textarea class="form-control" id="footerDescription" rows="3"></textarea>
       </div>
       <div class="form-group">
-        <label for="footerDepartments">Departments</label>
-        <input type="text" class="form-control" id="footerDepartments" placeholder="Department Names (comma-separated)">
+        <label for="footerEmail">Support Email</label>
+        <input type="email" class="form-control" id="footerEmail" placeholder="">
       </div>
       <div class="form-group">
-        <label for="footerLinks">Support Links</label>
-        <input type="text" class="form-control" id="footerLinks" placeholder="Support Links (comma-separated)">
+        <label for="footerPhone">Support Phone Number</label>
+        <input type="text" class="form-control" id="footerPhone" placeholder="">
       </div>
-      <button type="submit" class="btn btn-primary">Save Footer</button>
+      <div class="text-color-primary my-3" style="text-align: center;font-size: 2rem;">Support Links</div>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-md-6">
+            <input type="text" class="form-control" id="link-text" placeholder="Link's Text">
+          </div>
+          <div class="col-md-6">
+            <input type="email" class="form-control" id="link-href" placeholder="Link's Href">
+          </div>
+          <div class="my-2 w-100">
+            <button class="btn btn-light w-100" onclick="addLink(event)">Add Support Links +</button>
+          </div>
+        </div>
+        <div>
+          <ul id="links-list" class="d-flex flex-wrap"></ul>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" onclick="saveFooter(event)">Save Footer</button>
     </form>
   </main>
 
   <!-- Footer -->
   <div id="footer-placeholder"></div>
 
+  <script src="../js/toaster.js"></script>
   <script src="../js/admin/footer-management.js"></script>
-
-  <script>
-    // $(function() {
-    //   $("#header-placeholder").load("../shared/header.html");
-    //   $("#footer-placeholder").load("../shared/footer.html");
-    //   document.addEventListener("DOMContentLoaded", function () {
-    //     loadFooterContent();
-    //     document.getElementById("footerForm").addEventListener("submit", updateFooter);
-    //   });
-    // });
-
-    // function loadFooterContent() {
-    //   fetch(`${window.currentConfig.apiUrl}/api/admin/footer`)
-    //     .then(response => response.json())
-    //     .then(data => {
-    //       document.getElementById("footerDescription").value = data.Description || "";  // Use Description
-    //       document.getElementById("footerDepartments").value = data.DepartmentLinks.map(link => link.DepartmentName).join(", ") || "";
-    //       document.getElementById("footerLinks").value = data.footerSettings.FooterLinks.map(link => link.Text).join(", ") || "";
-    //     })
-    //     .catch(error => console.error("Error loading footer content:", error));
-    // }
-
-    function updateFooter(event) {
-      event.preventDefault();
-      const updatedData = {
-        Description: document.getElementById("footerDescription").value,
-        DepartmentLinks: document.getElementById("footerDepartments").value.split(",").map(dept => ({ DepartmentName: dept.trim() })),
-        footerSettings: {
-          FooterLinks: document.getElementById("footerLinks").value.split(",").map(link => ({ Text: link.trim(), Url: `https://example.com/${link.trim().toLowerCase().replace(/ /g, '-')}` }))
-        }
-      };
-
-      fetch(`${window.currentConfig.apiUrl}/api/admin/footer`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
-      })
-        .then(() => alert("Footer updated successfully"))
-        .catch(error => console.error("Error updating footer:", error));
-    }
-  </script>
     <!-- Main js -->
     <script defer  src="../js/shared/header.js"></script>
     <script defer src="../js/shared/footer.js"></script>

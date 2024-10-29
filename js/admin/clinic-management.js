@@ -5,7 +5,7 @@
 //TODO : line 161 : call PUT - /clinic/id
 //TODO : line 171 : call DELETE - /clinic/id
 // NOTE : don't forget to getClinic() after all CRUD Operations
-
+let workingHoursConfig = [];
 document.addEventListener("DOMContentLoaded", function () {
     showDoctorsmodalConfig();
     addClinicModalConfig();
@@ -131,6 +131,22 @@ function assignDoctorModalConfig(){
     const assingModal = document.getElementById("assign-doctor-modal");
 
     assingModal.addEventListener("shown.bs.modal", (event) => {
+        const daySelect = document.getElementById("day");
+        daySelect.disabled = false;
+        daySelect.innerHTML = `
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+        <option value="Sunday">Sunday</option>
+        `;
+        const ul = document.getElementById("working-list");
+        ul.innerHTML = "";
+        document.getElementById("add-working-days-button").disabled = false;
+        workingHoursConfig = [];
+
         const btn = event.relatedTarget; // Button that triggered the modal
         const clinicId = btn.getAttribute("data-id"); // Get data-id from button
     
@@ -315,34 +331,18 @@ function openAddForm(clinicId = undefined){
 
 function assignDoctor(){
     const assingForm = document.getElementById("assing-doctor-form");
-    if(!assingForm.checkValidity()){
+    if(workingHoursConfig.length == 0 ){
+        showToast("you have to assign at least one day ", false);
         return;
     }
     const clinicId =  document.getElementById("assing-doctor-clinic-id").value;
     const doctorId =  document.getElementById("doctorSelect").value;
-    const day =  document.getElementById("day").value;
-    const startTime =  document.getElementById("start-time").value;
-    const closeTime =  document.getElementById("close-time").value;
-    let start = new Date(`1970-01-01T${startTime}:00`);
-    let close = new Date(`1970-01-01T${closeTime}:00`);
-    if( start > close ){
-        debugger;
-        document.getElementById("start-time").value = ""
-        document.getElementById("close-time").value = ""
-        showToast("Close time should be bigger than Start time" , false);
-        return;
-    }
-    // const dayDate = new Date(day);
-    // const dayName = dayDate.toLocaleDateString(undefined, { weekday: 'long' });
 
     const data = {
         clinicId : clinicId,
         doctorId : doctorId,
+        workingHoursConfig : workingHoursConfig,
     };
-    data[`${day}`] = {
-        StartTime : startTime,
-        EndTime : closeTime,
-    }
     debugger;
     fetch(`${window.currentConfig.apiUrl}/api/Doctor/${doctorId}/assign-availabilities`,
         {
@@ -352,11 +352,60 @@ function assignDoctor(){
                 "Content-Type" : "application/json"
             }
         }
-    ).then(res => res.json())
+    )
     .then(res => {
         showToast("add it", true);
+        document.getElementById("assign-doctor-close-button").click();
     })
     .catch(err => {
         showToast("not add it " ,false);
     })
+}
+
+function assignDay(){
+    if(workingHoursConfig.length == 6){
+        document.getElementById("add-working-days-button").disabled = true;
+        document.getElementById("day").disabled = true;
+    }
+    const daySelect = document.getElementById("day");
+    const day =  daySelect.value;
+    const startTime =  document.getElementById("start-time").value;
+    const closeTime =  document.getElementById("close-time").value;
+    let start = new Date(`1970-01-01T${startTime}:00`);
+    let close = new Date(`1970-01-01T${closeTime}:00`);
+    if( start > close ){
+        document.getElementById("start-time").value = ""
+        document.getElementById("close-time").value = ""
+        showToast("Close time should be bigger than Start time" , false);
+        return;
+    }
+
+    const data = {
+        day : day.slice(0,3),
+        startTime : `${startTime}:00`,
+        endTime : `${closeTime}:00`,
+    };
+
+    debugger;
+    workingHoursConfig.push(data);
+
+    const SelectedDayOption = daySelect.options[daySelect.selectedIndex];
+    SelectedDayOption.remove();
+
+    const ul = document.getElementById("working-list")
+    ul.classList.add("my-3");
+    ul.classList.add("d-flex");
+    ul.classList.add("flex-column");
+    const li = document.createElement("li");
+    li.classList.add("w-100");
+    li.classList.add("px-5");
+    li.classList.add("d-flex");
+    li.classList.add("justify-content-between");
+    li.innerHTML = `
+    <div class="me-5">${day}</div><div><span>${startTime}</span>-><span>${closeTime}</span></div>
+    `;
+    ul.appendChild(li);
+
+    showToast(`${day} from ${startTime} to ${closeTime} add successfully to cache`, true);
+
 }

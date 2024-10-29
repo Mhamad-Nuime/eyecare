@@ -10,8 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
         
     } else {
         const message = document.getElementById("needs-login");
-        debugger
         message.style.display = "none";
+        loadAllClinics();
     }
     // form Submission event
     const appointmentForm = document.getElementById("book-appointment-form");
@@ -209,3 +209,138 @@ async function loadTestimonial(){
         })
     })
 }
+
+
+
+    //create appointment
+    function loadAllClinics(){
+        fetch(`${window.currentConfig.apiUrl}/api/clinics`)
+        .then(response => response.json())
+        .then(data => {
+            const clinicSelect = document.getElementById("clinicSelect");
+            clinicSelect.innerHTML = `<option value="" disabled selected hidden>choose</option>`;
+              data.$values.forEach( (clinic) => {
+                const option = document.createElement("option");
+                option.value = clinic.clinicId;
+                option.textContent = clinic.name;
+                clinicSelect.appendChild(option);
+              });
+              clinicSelect.addEventListener("change", (event) => {
+                const doctorSelect = document.getElementById("doctorSelect");
+                doctorSelect.disabled = false;
+                const clinicSelect = document.getElementById("clinicSelect");
+                loadDoctorsByClinicId(clinicSelect.value);
+              })
+              showToast("Clinics loaded successfull", true)
+        })
+        .catch(error => console.error("Error loading clinics:", error));
+      }
+    
+      function loadDoctorsByClinicId(id){
+        fetch(`${window.currentConfig.apiUrl}/api/clinics/${id}/doctors`)
+                        .then(res => res.json())
+                        .then(res => {
+                             const doctorSelect = document.getElementById("doctorSelect");
+                             doctorSelect.innerHTML = `<option value="" disabled selected hidden>choose</option>`;
+                             if(res.$values.length > 0 ){
+                               for(let doctor of res.$values){
+                                  const option = document.createElement("option");
+                                  option.value = doctor.id;
+                                  option.textContent = doctor.name;
+                                  doctorSelect.appendChild(option);
+                                }
+                                doctorSelect.addEventListener("change", (event) => {
+                                  const doctorSelect = document.getElementById("doctorSelect");
+                                  loadAvailabilities(id, doctorSelect.value);
+                                });
+                              } else {
+                                const option = document.createElement("option");
+                                option.value = "";
+                                option.textContent = "no doctors assigned to this clinic";
+                                doctorSelect.appendChild(option);
+                                showToast("choose another clinic because there's no doctor available in selected clinic", false);
+                            }
+    
+                        })
+                        .catch(err => {
+                            showToast("Something wrong happened while load doctors for this clinic", false);
+                        })
+      }
+      function loadAvailabilities(clinicId , doctorId){
+        fetch(`${window.currentConfig.apiUrl}/api/Doctor/${doctorId}/availability?clinicId=${clinicId}`)
+        .then(res => res.json())
+        .then(res => {
+          let data = [];
+          res.workingHours.$values.forEach((availability) => {
+            let obj = {};
+            let day = availability.day;
+            let halfHours = [];
+            availability.slots.$values.forEach((slot) => {
+              halfHours.push(slot.startTime);
+            });
+            obj[`${day}`] = halfHours;
+            data.push(obj);
+          })
+            document.getElementById("message").disabled = false;
+            document.getElementById("patientName").disabled = false;
+            document.getElementById("add-appointment-submit-button").disabled = false;
+            document.getElementById("reset-btn").disabled = false;
+            document.getElementById("patientPhone").disabled = false;
+
+            const appointmentComponent = document.getElementById("appointment-booking");
+            appointmentComponent.disabled = false;
+            appointmentComponent.availability = data;
+        })
+        .catch(err => {
+            showToast("Something wrong happened while load doctors for this clinic", false);
+        })
+      }
+    
+      function createAppointment(){
+        const user = JSON.parse(localStorage.getItem("user"));
+    
+        let date = document.getElementById("appointment-booking").value;
+        // Parse the start time and end time
+        const startDate = new Date(date);
+        const startTime = startDate.toTimeString().split(' ')[0]; 
+    
+        const endDate = new Date(startDate.getTime() + 30 * 60 * 1000);
+        const endTime = endDate.toTimeString().split(' ')[0]; 
+    
+        const data = {
+          clinicId : document.getElementById("clinicSelect").value,
+          doctorId : document.getElementById("doctorSelect").value,
+          patientId : user.id,
+          appointmentDate : date,
+          status : "active",
+          startTime : startTime,
+          endTime : endTime,
+        }
+      debugger;
+      fetch(`${window.currentConfig.apiUrl}/api/Appointment`,{
+        method : "POST",
+        body : JSON.stringify(data),
+        headers : {
+          "Content-Type" : "application/json"
+        }
+      }).then(res => {
+        getAppointment();
+        showToast("appointment Booked successfully", true);
+        document.getElementById("close-add-appointment-icon-button").click();
+      }).catch(err => {
+        showToast("Something wrong happened while Booking appointment", false);
+      })
+      }
+
+      function reset(){
+        const doctorSelect = document.getElementById("doctorSelect");
+        doctorSelect.disabled = true;
+        document.getElementById("message").disabled = false;
+        document.getElementById("message").value = "";
+        document.getElementById("patientName").disabled = true;
+        document.getElementById("patientName").value = "";
+        document.getElementById("add-appointment-submit-button").disabled = true;
+        document.getElementById("reset-btn").disabled = true;
+        document.getElementById("patientPhone").disabled = true;
+        document.getElementById("patientPhone").value = "";
+      }

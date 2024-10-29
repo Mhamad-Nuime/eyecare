@@ -7,7 +7,7 @@ function googleTranslateElementInit() {
 }
 
 function fetchHeaderContactInfo() {
-    fetch(`${window.currentConfig.apiUrl}/api/admin/footer`, {
+    fetch(`${window.currentConfig.apiUrl}/api/footer/settings`, {
         
     })
         .then(response => {
@@ -16,17 +16,17 @@ function fetchHeaderContactInfo() {
             }
             return response.json();
         })
-        .then(data => {
-            if (data) {
-                console.log(data);
-                
-                // Update header contact info
-                document.getElementById('email').innerText = data.supportEmail || "Not Available";
-                document.getElementById('address').textContent = data.description || "Not Available";
-                document.getElementById('phone').textContent = data.supportPhone || "Not Available";
-            } else {
-                console.error('No data received');
+        .then(res => {
+            if(res.$values && res.$values.length == 0){
+                showToast("There is no any footer data" , false );
+                return;
             }
+            const footerData = res.$values[res.$values.length - 1];
+            debugger;
+            document.getElementById("email").textContent = footerData.supportEmail;
+            document.getElementById("email").href = `mailto:${footerData.supportEmail}`;
+            document.getElementById("phone").textContent = footerData.supportPhone;
+            document.getElementById("phone").textContent = `tel:${footerData.supportPhone}`;
         })
         .catch(error => console.error('Error fetching contact info:', error));
 }
